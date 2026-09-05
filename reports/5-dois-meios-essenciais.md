@@ -1,97 +1,239 @@
-# 5 dois meios — atualização dos primeiros cinco itens
+# 5 prioridades + 5 descobertas rápidas — Xclipse Open Project
 
-**Fonte desta revisão:** `5doismeiosresultadosobtidos.zip`, SHA-256 `59ac6221373572024c0967d642f9ead1f970c6791ff2428cb5c49ae73a5fe7fc`.
+**Terminologia:** **Xclipse 940** é o hardware/GPU investigado. **XO940** é apenas o nome interno do projeto Xclipse Open Project.
 
-Esta revisão separa cuidadosamente caminho identificado, símbolo existente, atividade correlacionada, submissão real, execução e readback. Um resultado só é promovido quando o pacote fornece contexto, saída bruta e uma interpretação que não dependa apenas do nome de um arquivo ou de uma função.
+O nome anterior “5 dois meios” foi mantido como referência histórica, mas a ordem de investigação foi substituída. As prioridades agora começam pela **Device Tree e pelo contrato de plataforma**, porque sem entender como o SGPU é ligado ao SoC, à energia, ao IOMMU, à memória e ao firmware, um teste de Vulkan ou de compute pode produzir uma falsa conclusão.
 
-## Resumo de progresso
+## O que é a Device Tree neste projeto
 
-| Item | Estado após o novo pacote | O que foi realmente estabelecido |
-| --- | --- | --- |
-| 1. Loader Android e `VkPhysicalDevice` Samsung | **Parcialmente concluído** | O caminho de produção até o ICD Samsung foi observado no `SurfaceFlinger`: `vulkan.samsung.so` e `libvulkan.so` mapeadas, FDs em `/dev/dri/renderD128`; enumeração Vulkan detalhada no processo ainda não foi capturada. |
-| 2. DRM, BO, VA, IOMMU e cache | **Fortalecido** | A identidade SGPU, `card0`, `renderD128`, `22200000.sgpu`, firmware e a biblioteca `libdrm_sgpu.so` foram correlacionados. O pacote também lista APIs de BO, VA, page fault e query; presença de símbolo não é execução. |
-| 3. Contexto, ring, IB, fence e recuperação | **Mapeado, não executado** | O caminho de submission está mais bem delimitado por APIs `sgpu_cs_*`, `amdgpu_cs_*` e syncobjs. Ainda não há trace de um `submit` real feito pelo projeto nem readback controlado. |
-| 4. Primeiro dispatch compute com readback | **Caminho real identificado, prova ainda aberta** | O serviço real `com.samsung.android.photoremasterservice:photoremasterservice` carrega Vulkan Samsung, `libdrm_sgpu.so`, `libOpenCL.so` e `libSGPUOpenCL.so`, usa `renderD128` e apresenta atividade SGPU correlacionada. Ainda não foi capturado um kernel próprio com BO antes/depois e valor validado. |
-| 5. Correlação shader–binário–ISA | **Evidência estática forte, ISA ainda não provada** | O ICD stripped contém referências a SPIR-V, shader compiler, opcode translation, hardware opcode, `SCAsmEncoder`, `SCEmitter`, VOPC/VOP1/VOP2/VOP3/VOP3P e DPP8/DPP16. Algumas referências individuais são apenas logs; não há ainda shader real → binário → ISA nativa capturado em runtime. |
+A Device Tree é a descrição declarativa, usada pelo kernel, de como o hardware está conectado e quais recursos ele possui. Ela registra, entre outros elementos, endereços de registradores, interrupções, power domains, clocks, DMA/coerência, compatibilidade do dispositivo, revisões e relações com controladores auxiliares.
 
-## 1. Loader Android e enumeração do `VkPhysicalDevice` Samsung
+No caso investigado, os arquivos mais relevantes incluem:
 
-**Pergunta:** qual processo Android suportado carrega `/vendor/lib64/hw/vulkan.samsung.so`, em qual namespace, por qual manifest/HAL e com qual ABI?
+- `arch/arm64/boot/dts/exynos/s5e9945-sgpu_common.dtsi`;
+- `arch/arm64/boot/dts/exynos/s5e9945-sgpu_evt0.dtsi`;
+- o nó `/sgpu@22200000`;
+- o compatível `samsung-sgpu,samsung-sgpu`;
+- caminhos Samsung de IOMMU;
+- heaps Samsung de DMA-BUF;
+- integração com energia e DVFS.
 
-**Nova evidência:** a coleta da Etapa 1 encontrou o `SurfaceFlinger` com PID 995 e, em uma captura posterior válida, mostrou `/vendor/lib64/hw/vulkan.samsung.so` e `/system/lib64/libvulkan.so` mapeadas no processo. O mesmo processo possuía FDs 11 e 12 apontando para `/dev/dri/renderD128`. O mount namespace do `SurfaceFlinger` era `mnt:[4026535441]`, enquanto o Termux observado estava em `mnt:[4026535972]`. Isso confirma uma fronteira real de processo/namespace e o caminho de produção até o SGPU.
+A Device Tree não é, sozinha, o driver. Ela é o mapa de recursos que permite ao driver saber **onde o bloco está, quais interrupções usa, como recebe energia, como acessa memória e com quais revisões de hardware é compatível**.
 
-A primeira parte da coleta falhou porque o PID foi consultado depois de morrer; por isso `/proc/995/status`, `/proc/995/maps` e namespaces apareceram como inexistentes naquela captura inicial. A captura adicional, feita enquanto o processo era válido, é a evidência que deve ser usada.
+## As 5 prioridades atuais
 
-**Classificação:** **caminho de produção confirmado; enumeração Vulkan detalhada ainda pendente**. A presença do ICD mapeado no `SurfaceFlinger` não prova, isoladamente, que o projeto capturou `vkEnumeratePhysicalDevices` ou um `VkPhysicalDevice` Samsung naquele processo.
+### 1. Fechar a Device Tree da Xclipse 940 e o contrato de plataforma
 
-**Próximo teste:** instrumentar ou observar o processo suportado sem substituir bibliotecas, capturando chamadas de criação/enumeração, vendor/device ID, extensões e o vínculo com o serviço gráfico.
+**Pergunta:** quais são exatamente os recursos de hardware fornecidos ao driver SGPU para a revisão do SM-S721B?
 
-## 2. Contrato DRM, BO, VA, IOMMU e cache
+**Precisamos descobrir:**
 
-**Nova evidência:** a Etapa 2 fechou o mapeamento de `card0 → sgpu`, `card1 → exynos-drm`, `/dev/dri/renderD128` e `/dev/dri/renderD129`. O nó SGPU está em `/sys/devices/platform/22200000.sgpu`, com árvore DRM em `/sys/devices/platform/22200000.sgpu/drm/renderD128`, compatível com `samsung-sgpu,samsung-sgpu` em `/sgpu@22200000`.
+- todas as regiões de registradores;
+- interrupções e seus significados;
+- power domain;
+- clocks e OPP/DVFS;
+- `dma-coherent` e propriedades DMA;
+- vínculos com IOMMU;
+- doorbell e regiões de debug;
+- revisão `0x02600200` versus variantes EVT0;
+- diferenças entre `s5e9945-sgpu_common.dtsi` e `s5e9945-sgpu_evt0.dtsi`;
+- dependências de reset, PM runtime e AFM/IFPO.
 
-A Etapa 3 confirmou `sgpu_governor`, frequências disponíveis de 252000 a 1095000, SGPU firmware `2.23.0`, RTL `0x0004ea15`, ME `0x5`, MEC `0x4`, PFP `0x7` e RLC `0x1`. O `v4` também identifica `libdrm_sgpu.so` e símbolos para `sgpu_bo_alloc`, `sgpu_bo_export`, `sgpu_bo_import`, `sgpu_bo_list_create`, `sgpu_bo_va_op`, `sgpu_create_bo_from_user_mem`, `sgpu_query_gpu_page_faults` e `sgpu_va_range_alloc`.
+**Por que é a prioridade número 1:** sem isso, qualquer driver pode acessar endereço errado, usar interrupção errada, assumir clock incorreto ou ignorar uma dependência de energia. O resultado pode ser hang, reset ou corrupção de memória.
 
-**Classificação:** **contrato estrutural e bibliotecas correlacionados; execução de cada API ainda não demonstrada**. O probe anterior continua sendo a prova direta de BO GTT, mapeamento de CPU e VA. Strings e exports ampliam o mapa, mas não devem ser descritos como chamadas realizadas.
+**Evidência mínima de saída:** um diagrama `Device Tree → kernel SGPU → IOMMU/power/clock → DRM node`, com cada propriedade ligada a uma função ou subsistema do driver.
 
-**Próximo teste:** correlacionar uma chamada real do serviço Samsung com o FD SGPU, o BO/VA correspondente, flags de memória e eventual page fault, preservando a recuperação.
+### 2. Fechar memória, IOMMU, DMA-BUF e segurança de buffers
 
-## 3. Contexto, ring, IB, fence e recuperação
+**Pergunta:** como um BO sai da memória Android, passa pelo IOMMU e se torna acessível à GPU?
 
-**Nova evidência:** a preparação da Etapa 4 lista `amdgpu_cs_ctx_create`, `amdgpu_cs_submit`, `amdgpu_cs_submit_raw`, `amdgpu_cs_wait_fences`, criação/import/export de syncobj e equivalentes `sgpu_cs_ctx_create`, `sgpu_cs_submit`, `sgpu_cs_submit_raw`, `sgpu_cs_wait_fences`, `sgpu_cs_syncobj_*`.
+**Precisamos descobrir:**
 
-Isto é um avanço importante no mapa do caminho de submission. Ainda assim, o próprio relatório da Etapa 4 registra que o requisito forte não foi demonstrado:
+- heaps usados por cada processo;
+- relação entre GEM, TTM, DMA-BUF e IOMMU;
+- flags de cache e coerência;
+- VA range e permissões;
+- alinhamento e page size;
+- residency e eviction;
+- buffers seguros/protegidos;
+- page faults e recuperação;
+- diferença entre CPU mapping e GPU access;
+- cache flush/invalidate e sincronização.
 
-> `BO antes → submit real → execução GPU → sincronização/fence → BO depois/readback → recuperação`
+**Por que é prioridade:** o probe atual provou criação de BO, mapeamento CPU e VA map/unmap, mas ainda não provou que a GPU acessou aquele BO. A maior fonte de risco em um primeiro driver móvel é confundir “mapeável pela CPU” com “corretamente visível para a GPU”.
 
-**Classificação:** **interfaces de contexto/submission/sincronização localizadas; execução de submission do projeto não confirmada**. O nome `sgpu_cs_submit` em uma biblioteca ou relatório é capability disponível, não prova de uma chamada bem-sucedida.
+**Evidência mínima de saída:** uma tabela de lifecycle de BO com handle, DMA-BUF, VA, permissões, cache, fence e resultado de fault/readback.
 
-**Próximo teste:** observar primeiro uma operação real do Photo Remaster com instrumentação não invasiva; só depois desenhar um submit mínimo próprio com timeout, fence, consulta de reset e rollback.
+### 3. Documentar o caminho vendor Android suportado
 
-## 4. Primeiro dispatch compute com readback
+**Pergunta:** como o Android de produção chega ao ICD Samsung e às bibliotecas SGPU?
 
-**Nova evidência:** o processo correto não era `com.samsung.android.app.remaster`. A investigação encontrou:
+**Precisamos descobrir:**
 
-- `com.sec.android.mimage.photoretouching`, com `/dev/dri/renderD128` e `vulkan.samsung.so`/`libdrm_sgpu.so`;
-- `com.samsung.android.photoremasterservice:photoremasterservice`, com `/dev/dri/renderD128`, `/dev/dri/card0`, `vulkan.samsung.so`, `libdrm_sgpu.so`, `libOpenCL.so` e `libSGPUOpenCL.so`.
+- processo responsável;
+- linker namespace;
+- manifest/HAL;
+- dependências e SONAMEs;
+- permissões dos nós DRM;
+- relação com `SurfaceFlinger`;
+- relação com `com.samsung.android.photoremasterservice:photoremasterservice`;
+- diferenças entre Vulkan e OpenCL;
+- bibliotecas de mapper/gralloc;
+- SELinux domains e regras relevantes;
+- quais interfaces são públicas, vendor-only ou privadas.
 
-A biblioteca OpenCL contém APIs para contexto, filas, buffers, imagens, programas, kernels, `clEnqueueNDRangeKernel`, `clEnqueueTask`, `clFlush`, `clFinish`, eventos, barreiras e `clEnqueueReadBuffer`. Durante atividade do Photo Remaster, `runtime_status` apareceu como `active`, `cur_freq` variou de 252000 para 500000 e os FDs continuaram apontando para `renderD128`.
+**Por que é prioridade:** já observamos que o `SurfaceFlinger` mapeia o ICD Samsung, enquanto o Termux encontra `llvmpipe`. Portanto, a primeira barreira não é necessariamente a GPU: pode ser o ambiente de carregamento.
 
-**Classificação:** **o caminho real Samsung de compute está identificado e há correlação operacional com o SGPU; o primeiro dispatch verificável continua aberto**. Símbolos OpenCL, frequência variável e atividade do processo não provam que um kernel específico foi submetido, concluído e validado.
+**Evidência mínima de saída:** um mapa reproduzível `processo → namespace → biblioteca → DRM FD → serviço/HAL`, sem substituir arquivos de `/system` ou `/vendor`.
 
-**Próximo teste:** capturar uma operação controlada do Photo Remaster com entrada conhecida, saída conhecida e observação de evento/fence. Em paralelo, determinar se é possível executar um kernel mínimo por uma interface suportada, sem submit cego e sem reutilizar command buffers opacos.
+### 4. Reconstituir firmware, filas, reset e submission a partir de uma operação real
 
-## 5. Correlação shader–binário–ISA
+**Pergunta:** como o SGPU inicializa, recebe trabalho, sinaliza conclusão e se recupera de erro?
 
-**Nova evidência:** a análise estática do `vulkan.samsung.so` encontrou strings e referências relacionadas a:
+**Precisamos descobrir:**
 
-- `ShaderCompile`, SPIR-V, pipeline e `COMPUTE_SHADER_CHKSUM`;
-- `MGFX1_GEN`, `MGFX2_GEN`, `MGFX3_GEN`, `MGFX4_GEN` e `gfx10_4_GEN`;
-- `SCEmitterGFX103.cpp`, `SCAsmEncoder.cpp`, `SCAsmEncoder.hpp`;
-- `GetOpcode`, `gen_opcode`, `XlateOpcode`, `GetHwOpcode`;
-- `EncodeDPP`, `EncodeSDWA`, `EncodeWaitDepctr`, `EncodeImmediateBuffer`, `EncodeMaccDelay`;
-- `SCEmitVOp1`, `SCEmitScratch`, `SCEmitFlat`, `SCEmitVOp3`;
-- famílias VOPC, VOP1, VOP2, VOP3, VOP3P, DPP8 e DPP16;
-- mensagens `No encoding found for instruction pattern`, `Invalid encoding`, `Unexpected operand for this encoding` e `SPIR-V OpCode unsupported`.
+- ordem de carregamento dos firmwares;
+- GFX/COMPUTE/DMA IPs realmente ativos;
+- rings e queues utilizados;
+- IB/chunk format;
+- doorbells;
+- contexto e prioridade;
+- fences, syncobjs e semáforos;
+- reset state;
+- timeout e recuperação;
+- quais interfaces `sgpu_cs_*` são realmente chamadas.
 
-Também houve uma primeira disassembly AArch64 real da seção `.text`, localizada corretamente no endereço virtual `0x143fb30`, e o ELF foi identificado como AArch64 stripped com BuildID `7b6134ba45f561f28b006e07ef075b4d4c429bcd`.
+**Por que é prioridade:** a existência de `sgpu_cs_submit` no binário não prova que conhecemos o pacote aceito pelo firmware. Um submit cego pode travar a GPU ou exigir recuperação que ainda não entendemos.
 
-A análise corrigiu três riscos de interpretação. Primeiro, `gfx10_4_GEN` não prova que a Xclipse 940 seja GFX10.4. Segundo, referências a `AMD Shader Compiler`, `SCAsmEncoder.cpp` e `SCEmitVOp3` podem ser apenas logging quando a referência termina em `__android_log_print`. Terceiro, nomes de strings não são símbolos de função em um ELF stripped.
+**Evidência mínima de saída:** trace de uma operação vendor real correlacionando FD, contexto, queue/ring, submission, fence, conclusão e eventual reset.
 
-**Classificação:** **infraestrutura interna de compilação/encoding é uma hipótese fortemente sustentada por análise estática; ISA efetivamente utilizada pela Xclipse 940 ainda não foi capturada**. A cadeia `SPIR-V → IR/tradução → opcode → hardware opcode → emitter → encoder → binary` é uma inferência conjunta, não uma prova de cada chamada.
+### 5. Capturar compute e shader reais pelo caminho suportado
 
-**Próximo teste:** obter shader controlado pelo caminho Samsung real, capturar binário ou metadados produzidos/consumidos, correlacionar uma instrução com execução e comparar revisões. Não publicar o `vulkan.samsung.so` proprietário no Git.
+**Pergunta:** conseguimos sair da análise de nomes e observar uma operação Xclipse 940 completa?
 
-## Estado dos cinco itens
+**Precisamos descobrir:**
 
-A ordem de trabalho permanece **1 → 2 → 3 → 4 → 5**, mas o Item 1 agora tem caminho de produção identificado, o Item 4 tem o caminho OpenCL/Photo Remaster identificado e o Item 5 possui evidência estática substancial do backend interno. Nenhum desses avanços deve ser convertido em “driver aberto funcionando” ou “ISA decodificada” antes da captura de execução correspondente.
+- entrada controlada;
+- kernel ou shader identificado;
+- recurso/BO associado;
+- dispatch ou draw real;
+- fence/evento;
+- saída conhecida;
+- binary ou metadado produzido;
+- relação entre SPIR-V/OpenCL e o backend vendor;
+- estabilidade entre revisões.
+
+**Por que é prioridade:** esse é o ponto que transforma infraestrutura documentada em comportamento comprovado. A operação deve ser observada primeiro pelo Photo Remaster ou por outro caminho suportado, antes de tentar um submit próprio.
+
+**Evidência mínima de saída:** `input conhecido → operação vendor → execução Xclipse 940 → output conhecido`, com hashes, timestamps e classificação de cada artefato.
+
+## As 5 descobertas mais fáceis e rápidas
+
+Estas tarefas não substituem as cinco prioridades. Elas são escolhidas para gerar avanço rápido com baixo risco e pouca dependência de execução GPU.
+
+### R1. Extrair e comparar todos os nós Device Tree SGPU
+
+Comparar `s5e9945-sgpu_common.dtsi`, `s5e9945-sgpu_evt0.dtsi`, includes relacionados, `Kconfig` e `Makefile`. Gerar uma tabela com endereço, tamanho, interrupção, clock, power domain, compatível e revisão.
+
+**Resultado esperado:** primeiro mapa técnico confiável da plataforma.
+
+### R2. Inventariar o estado runtime já disponível
+
+Consolidar em uma única tabela:
+
+- `/dev/dri/card0`;
+- `/dev/dri/renderD128`;
+- sysfs do SGPU;
+- driver platform;
+- firmware;
+- frequência atual e faixa disponível;
+- módulos carregados;
+- permissões;
+- processos com FDs para `renderD128`.
+
+**Resultado esperado:** eliminar coletas duplicadas e identificar rapidamente mudanças entre sessões.
+
+### R3. Mapear bibliotecas, BuildIDs e dependências
+
+Registrar tamanho, ELF class, arquitetura, BuildID, SONAME, NEEDED e caminho de cada biblioteca relacionada:
+
+- `vulkan.samsung.so`;
+- `libdrm_sgpu.so`;
+- `libOpenCL.so`;
+- `libSGPUOpenCL.so`;
+- `libvulkan.so`;
+- mapper/gralloc relacionado.
+
+**Resultado esperado:** mapa ABI/vendor sem precisar executar comandos perigosos.
+
+### R4. Indexar UAPI, Kconfig, Makefile e símbolos por subsistema
+
+Gerar índices separados para:
+
+- GEM/TTM;
+- VM/IOMMU;
+- CS/IB/rings;
+- fences/syncobjs;
+- firmware/reset;
+- GFX/COMPUTE/SDMA;
+- DVFS/debug.
+
+Cada item deve apontar para o caminho fonte e ser marcado como **interface**, **implementação**, **configuração**, **log** ou **hipótese**.
+
+**Resultado esperado:** reduzir o tempo necessário para encontrar a implementação de uma função observada no runtime.
+
+### R5. Catalogar a análise estática do ICD com níveis de confiança
+
+Organizar strings, referências AArch64, nomes de arquivos internos e mensagens de erro em três níveis:
+
+1. presença textual;
+2. referência em código/log;
+3. comportamento confirmado em runtime.
+
+Incluir `SPIR-V`, `SCEmitter`, `SCAsmEncoder`, `GetHwOpcode`, `XlateOpcode`, VOP e DPP, sem tratá-los automaticamente como ISA decodificada.
+
+**Resultado esperado:** acelerar hipóteses do compiler sem transformar strings em falsas provas.
+
+## Ordem operacional recomendada
+
+A ordem mais segura agora é:
+
+```text
+R1 + R2 + R3 + R4 + R5
+        ↓
+P1 Device Tree e plataforma
+        ↓
+P2 memória/IOMMU/DMA-BUF
+        ↓
+P3 loader/vendor Android
+        ↓
+P4 firmware/queues/reset
+        ↓
+P5 compute/shader real
+```
+
+A antiga prioridade de “começar logo pelo dispatch” foi rebaixada. O dispatch continua sendo essencial, mas só depois de sabermos que o processo, o BO, o IOMMU, a fila, o firmware e a recuperação estão corretamente compreendidos.
+
+## Critério contra falsos positivos
+
+Os seguintes resultados continuam insuficientes isoladamente:
+
+- `compute pipeline ok`;
+- presença de `clEnqueueNDRangeKernel`;
+- presença de `sgpu_cs_submit`;
+- frequência SGPU mudando;
+- biblioteca vendor carregada;
+- string `GetHwOpcode`;
+- pipeline criado;
+- BO mapeado pela CPU;
+- nome de teste ou diretório de teste.
+
+Um resultado só entra como execução real quando existe contexto, ação observável, sincronização e validação independente da saída.
 
 ## Referências locais
 
-- `STATUS.md` — ledger consolidado do projeto.
-- `reports/new-results-analysis.md` — análise do ZIP recebido nesta revisão.
-- `docs/21-android-loader.md` — loader e namespaces.
-- `docs/19-compute-pipeline.md` — dispatch e readback.
-- `docs/14-shader-isa.md` — evidência estática do compiler/encoding.
-- `docs/25-kernel-drm-uapi.md` — DRM/UAPI e SGPU.
-- `docs/23-icd-and-manifests.md` — ICD e caminho Android.
+- `docs/00-project-scope.md` — escopo e terminologia.
+- `source-analysis/selected-paths.md` — caminhos Samsung já mapeados.
+- `source-analysis/new-results-paths.md` — caminhos do novo pacote.
+- `ROADMAP.md` — fases e critérios de saída.
+- `STATUS.md` — ledger de evidências.

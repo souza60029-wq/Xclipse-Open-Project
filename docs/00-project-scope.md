@@ -6,6 +6,8 @@ Xclipse Open Project aims to make the hardware/software contract of Samsung Xcli
 
 The target is the Xclipse 940 associated with the Samsung SM-S721B, while XO940 is the internal name of the documentation project. The repository is designed so that later Xclipse generations and revisions can be represented without silently merging incompatible observations.
 
+In this project, the **Device Tree** is the kernel-facing description of the Xclipse platform: register regions, interrupts, power domains, clocks, DMA/coherency, IOMMU relationships, reset dependencies, compatible strings, and revision-specific properties. It is not the repository directory tree and it is not the complete driver by itself. It is the platform contract that the SGPU driver consumes to bring the GPU into the DRM/runtime system.
+
 ## Technical vocabulary
 
 The work combines GPU reverse engineering, open GPU documentation, driver bring-up, and open-source Vulkan driver development. A future Mesa integration would be a Mesa Vulkan driver backend. Transforming shader representations into Xclipse instructions is compiler-backend work, normally involving an intermediate representation such as NIR or LLVM. Describing kernel interfaces, memory, queues, and firmware is GPU hardware enablement and DRM driver bring-up.

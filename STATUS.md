@@ -6,7 +6,7 @@
 
 ## Executive status
 
-The project is at **Phase 1: platform and kernel mapping**, with the original Quick Share package and the new results package hashed, integrity-checked, extracted outside Git, and indexed. The new results package SHA-256 is `59ac6221373572024c0967d642f9ead1f970c6791ff2428cb5c49ae73a5fe7fc`; it contains stage reports, Etapa 4 logs, Etapa 5 compiler analysis, and the vendor ICD. The archives and vendor binaries remain external evidence because license and redistribution status are not yet complete.
+The project is at the **Phase 0 → Phase 1 boundary: Device Tree and platform mapping**. The original Quick Share package and the new results package are hashed, integrity-checked, extracted outside Git, and indexed. The new results package SHA-256 is `59ac6221373572024c0967d642f9ead1f970c6791ff2428cb5c49ae73a5fe7fc`; it contains stage reports, Etapa 4 logs, Etapa 5 compiler analysis, and the vendor ICD. The archives and vendor binaries remain external evidence because license and redistribution status are not yet complete.
 
 The project is not yet at the driver bring-up phase. No statement in this file should be read as proof of a working independent ICD, custom queue submission, compute execution, ISA decoding, compiler lowering, or Mesa integration.
 
@@ -16,6 +16,7 @@ The project is not yet at the driver bring-up phase. No statement in this file s
 | --- | --- | --- | --- |
 | Device | SM-S721B (`r12s`), platform `erd9945`, hardware `s5e9945`. | Confirmed from device logs | Correlate exact build with source revision. |
 | Target GPU | Xclipse 940; family `147 (MGFX)`, device `0x73a0`. | Confirmed for capture | Keep later revisions separate. |
+| Device Tree | `/sgpu@22200000`, compatible `samsung-sgpu,samsung-sgpu`, common/EVT0 DTSI paths, six register regions, interrupts, power and DMA properties. | Source-backed and partially runtime-correlated | Close clocks, reset, IOMMU, revision and power sequencing. |
 | SGPU DRM | `/dev/dri/renderD128` bound to `sgpu`; display is separate on `renderD129`. | Confirmed | Map complete runtime ABI. |
 | ASIC/queues | GFX 1 × 10.0 rings `0xf`; COMPUTE 1 × 10.0 rings `0x7`; DMA 0. | Confirmed for capture | Safe ring and queue lifecycle remain open. |
 | Memory/VM | 64 KiB GTT BO, CPU touch, VA map/unmap and close worked. | Confirmed for capture | GPU access, residency, cache, and page tables remain open. |
@@ -53,9 +54,9 @@ The following questions are intentionally unresolved:
 
 Any new claim must link to a report, raw artifact, source path, or reproduction command. A test harness name alone is never evidence that the underlying GPU operation ran.
 
-## First 5 dois meios
+## Current five priorities
 
-The first five essential discoveries are updated in `reports/5-dois-meios-essenciais.md`. Item 1 now has a confirmed production ICD/DRM path through SurfaceFlinger; Item 4 has a confirmed Photo Remaster/OpenCL/SGPU path; and Item 5 has strong static compiler/encoding evidence. None of these three advances is a substitute for detailed Vulkan enumeration, a project-controlled submit/readback, or native ISA correlation.
+The old five-item ordering was replaced. The current priorities are: (1) complete Device Tree/platform mapping; (2) memory, IOMMU, DMA-BUF and buffer protection; (3) supported Android vendor path; (4) firmware, queues and recovery; and (5) controlled compute/shader capture. Five lower-cost read-only discoveries are listed in the same report to accelerate progress without skipping safety prerequisites.
 
 ## References
 
