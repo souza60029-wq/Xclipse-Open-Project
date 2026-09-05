@@ -1,0 +1,14 @@
+# SM-S721B source bundle manifest
+
+ARCHIVE=SM-S721B.zip
+OUTER_SHA256=f9d847cef4fe214c3421951d63ebcdb192b988bf3bcc62b2237dbebb35632bd9
+OUTER_SIZE_BYTES=414414944
+INNER_MAIN=SM-S721B_16_Opensource.zip
+INNER_MAIN_SHA256=8feff8c7ada98d654dbabfd9c4eff6d88dbbdf1b90625c719bd356010e3ae363
+INNER_MAIN_SIZE_BYTES=405898948
+PREVIOUS_ANALYZED_MAIN=SM-S721B_16_Opensource.zip
+PREVIOUS_ANALYZED_MAIN_SHA256=8feff8c7ada98d654dbabfd9c4eff6d88dbbdf1b90625c719bd356010e3ae363
+
+## Interpretation
+
+The nested `SM-S721B_16_Opensource.zip` is byte-identical to the Samsung source archive already used in the project analysis. The outer bundle adds four small variant Device Tree/kernel packages for S7210 China, S721J Japan, S721Q Japan and S721U/S721U1/S721W North America, plus six build-specific source packages. The outer archive itself is retained as external evidence and is not redistributed by this repository.

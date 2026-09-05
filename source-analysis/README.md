@@ -20,3 +20,5 @@ The private status of this repository does not create a license. Until the licen
 - `vulkan-integration.md` for HAL, loader, manifest, namespace, SELinux, and HWC paths.
 - `source-cross-reference.csv` mapping project questions to source files and evidence labels.
 - `../reports/source-archive-initial-analysis.md` summarizing counts and high-value findings.
+- `variant-device-trees.md` comparing the additional S7210/S721J/S721Q/S721U Device Tree packages from the outer `SM-S721B.zip` bundle.
+- `../data/sm-s721b-bundle-manifest.txt` recording the outer and nested archive hashes.
