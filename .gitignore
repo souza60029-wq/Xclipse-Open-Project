@@ -1,0 +1,36 @@
+# Raw/vendor artifacts and potentially sensitive captures
+*.zip
+*.tar
+*.tar.gz
+*.7z
+*.img
+*.bin
+*.elf
+*.so
+*.ko
+*.apk
+*.aab
+*.core
+*.dmp
+
+# Device dumps and private lab material
+data/raw/
+data/memory-dumps/
+data/queue-dumps/
+data/command-captures/
+captures/raw/
+
+# Local build and analysis output
+build/
+out/
+.cache/
+.venv/
+__pycache__/
+*.pyc
+*.log
+
+# Secrets and local machine state
+.env
+*.pem
+*.key
+*.token
