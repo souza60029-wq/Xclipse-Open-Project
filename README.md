@@ -39,7 +39,7 @@ The repository is organized by the dependency order of the work:
 - `tests/` distinguishes harness initialization, observation, and actual GPU work. A test is only a test of a capability when it executes and validates that capability.
 - `compiler/`, `driver/`, `layers/`, and `android/` are implementation areas that remain experimental until their entry criteria are met.
 - `reports/` stores experiment reports, failures, comparisons, and milestone decisions.
-- `artifacts/` stores downloadable PDF versions of the technical plan: one clean version and one version with the complete project tree.
+- `artifacts/` stores the downloadable principal PDF and the separate PDF-only ramificação. The principal PDF documents the chip paths and tests; the ramificação contains only the project tree.
 
 ## Investigation sequence
 

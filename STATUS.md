@@ -52,6 +52,10 @@ The following questions are intentionally unresolved:
 
 Any new claim must link to a report, raw artifact, source path, or reproduction command. A test harness name alone is never evidence that the underlying GPU operation ran.
 
+## First 5 dois meios
+
+The first five essential discoveries are operationally specified in `reports/5-dois-meios-essenciais.md`: Android loader and Samsung device enumeration; DRM/BO/VA/IOMMU/cache contract; context/ring/IB/fence/recovery; first compute dispatch with readback; and shader-to-binary-to-ISA correlation. These are priorities to investigate, not five completed tests.
+
 ## References
 
 [1]: https://quickshare.samsungcloud.com/cN3RdfqvjU6y "Quick Share archive supplied for Xclipse Open Project analysis"
