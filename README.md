@@ -2,7 +2,7 @@
 
 **Xclipse Open Project** is an evidence-driven effort to document Samsung Xclipse GPU platforms and, only when the evidence supports it, build open analysis tools, compiler components, diagnostic layers, and an experimental Vulkan driver.
 
-The first target is the **Samsung Xclipse 940** found in the **SM-S721B**, with the internal target name **XO940**. The repository is intentionally conservative: it separates direct observations, source-backed facts, reproducible experiments, hypotheses, and failed approaches. A documentation milestone is not presented as a driver milestone.
+The first target is the **Samsung Xclipse 940** found in the **SM-S721B**, while **XO940** is the internal name of this documentation project. The repository is intentionally conservative: it separates direct observations, source-backed facts, reproducible experiments, hypotheses, and failed approaches. A documentation milestone is not presented as a driver milestone.
 
 > **Current conclusion:** the project has a real-device laboratory target, a hashed and indexed Samsung source/evidence archive, a confirmed SGPU DRM/memory bring-up path, and an unresolved Android loader/namespace boundary. It does **not** yet demonstrate an independent Vulkan driver, custom command submission, compute dispatch/readback, a decoded ISA, or a compiler backend.
 

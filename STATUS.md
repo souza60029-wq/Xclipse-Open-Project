@@ -1,7 +1,7 @@
 # Project Status
 
-**Status date:** 2026-09-05  
-**Initial target:** Samsung Xclipse 940 / SM-S721B / XO940  
+**Status date:** 2026-09-05
+**Initial target:** Samsung Xclipse 940 / SM-S721B
 **Repository posture:** private, evidence collection and documentation phase
 
 ## Executive status
@@ -15,7 +15,7 @@ The project is not yet at the driver bring-up phase. No statement in this file s
 | Area | Current statement | Evidence class | What is still required |
 | --- | --- | --- | --- |
 | Device | SM-S721B (`r12s`), platform `erd9945`, hardware `s5e9945`. | Confirmed from device logs | Correlate exact build with source revision. |
-| Target GPU | Xclipse 940 / XO940; family `147 (MGFX)`, device `0x73a0`. | Confirmed for capture | Keep later revisions separate. |
+| Target GPU | Xclipse 940; family `147 (MGFX)`, device `0x73a0`. | Confirmed for capture | Keep later revisions separate. |
 | SGPU DRM | `/dev/dri/renderD128` bound to `sgpu`; display is separate on `renderD129`. | Confirmed | Map complete runtime ABI. |
 | ASIC/queues | GFX 1 × 10.0 rings `0xf`; COMPUTE 1 × 10.0 rings `0x7`; DMA 0. | Confirmed for capture | Safe ring and queue lifecycle remain open. |
 | Memory/VM | 64 KiB GTT BO, CPU touch, VA map/unmap and close worked. | Confirmed for capture | GPU access, residency, cache, and page tables remain open. |

@@ -76,9 +76,9 @@ A biblioteca OpenCL contém APIs para contexto, filas, buffers, imagens, program
 
 Também houve uma primeira disassembly AArch64 real da seção `.text`, localizada corretamente no endereço virtual `0x143fb30`, e o ELF foi identificado como AArch64 stripped com BuildID `7b6134ba45f561f28b006e07ef075b4d4c429bcd`.
 
-A análise corrigiu três riscos de interpretação. Primeiro, `gfx10_4_GEN` não prova que XO940 seja GFX10.4. Segundo, referências a `AMD Shader Compiler`, `SCAsmEncoder.cpp` e `SCEmitVOp3` podem ser apenas logging quando a referência termina em `__android_log_print`. Terceiro, nomes de strings não são símbolos de função em um ELF stripped.
+A análise corrigiu três riscos de interpretação. Primeiro, `gfx10_4_GEN` não prova que a Xclipse 940 seja GFX10.4. Segundo, referências a `AMD Shader Compiler`, `SCAsmEncoder.cpp` e `SCEmitVOp3` podem ser apenas logging quando a referência termina em `__android_log_print`. Terceiro, nomes de strings não são símbolos de função em um ELF stripped.
 
-**Classificação:** **infraestrutura interna de compilação/encoding é uma hipótese fortemente sustentada por análise estática; ISA efetivamente utilizada pelo XO940 ainda não foi capturada**. A cadeia `SPIR-V → IR/tradução → opcode → hardware opcode → emitter → encoder → binary` é uma inferência conjunta, não uma prova de cada chamada.
+**Classificação:** **infraestrutura interna de compilação/encoding é uma hipótese fortemente sustentada por análise estática; ISA efetivamente utilizada pela Xclipse 940 ainda não foi capturada**. A cadeia `SPIR-V → IR/tradução → opcode → hardware opcode → emitter → encoder → binary` é uma inferência conjunta, não uma prova de cada chamada.
 
 **Próximo teste:** obter shader controlado pelo caminho Samsung real, capturar binário ou metadados produzidos/consumidos, correlacionar uma instrução com execução e comparar revisões. Não publicar o `vulkan.samsung.so` proprietário no Git.
 

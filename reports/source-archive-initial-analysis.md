@@ -1,9 +1,9 @@
 # Initial Source Archive Analysis
 
-**Archive:** `Tudo sobre a xclipse.zip`  
-**SHA-256:** `cd73e2fa24ac083b9babf243b39772065b060abc9cd30fb476acabe74433e67f`  
-**Archive members:** 17 total, 16 files  
-**Local extraction:** `/home/ubuntu/xclipse-evidence/source-archive`  
+**Archive:** `Tudo sobre a xclipse.zip`
+**SHA-256:** `cd73e2fa24ac083b9babf243b39772065b060abc9cd30fb476acabe74433e67f`
+**Archive members:** 17 total, 16 files
+**Local extraction:** `/home/ubuntu/xclipse-evidence/source-archive`
 
 ## Scope of this pass
 

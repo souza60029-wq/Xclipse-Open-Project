@@ -4,7 +4,7 @@
 
 Xclipse Open Project aims to make the hardware/software contract of Samsung Xclipse GPUs understandable to independent developers. The scope begins with documentation and reproducible observation. Implementation follows only where the evidence, legal status, and recovery model justify it.
 
-The target is the Xclipse 940 associated with the Samsung SM-S721B, internally called XO940 in this repository. The repository is designed so that later Xclipse generations and revisions can be represented without silently merging incompatible observations.
+The target is the Xclipse 940 associated with the Samsung SM-S721B, while XO940 is the internal name of the documentation project. The repository is designed so that later Xclipse generations and revisions can be represented without silently merging incompatible observations.
 
 ## Technical vocabulary
 

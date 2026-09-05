@@ -1,9 +1,10 @@
 # Initial Evidence Review
 
-**Evidence set:** Quick Share package `Tudo sobre a xclipse.zip`  
-**Archive SHA-256:** `cd73e2fa24ac083b9babf243b39772065b060abc9cd30fb476acabe74433e67f`  
-**Review date:** 2026-09-05  
-**Target:** Samsung SM-S721B / Xclipse 940 / XO940
+**Evidence set:** Quick Share package `Tudo sobre a xclipse.zip`
+**Archive SHA-256:** `cd73e2fa24ac083b9babf243b39772065b060abc9cd30fb476acabe74433e67f`
+**Review date:** 2026-09-05
+**Target hardware:** Samsung SM-S721B / Xclipse 940
+**Project:** Xclipse Open Project (internal name: XO940)
 
 ## Executive conclusion
 

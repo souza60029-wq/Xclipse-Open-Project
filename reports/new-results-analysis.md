@@ -1,7 +1,7 @@
 # Análise do pacote `5doismeiosresultadosobtidos.zip`
 
-**Hash SHA-256:** `59ac6221373572024c0967d642f9ead1f970c6791ff2428cb5c49ae73a5fe7fc`  
-**Tamanho comprimido:** aproximadamente 14 MiB  
+**Hash SHA-256:** `59ac6221373572024c0967d642f9ead1f970c6791ff2428cb5c49ae73a5fe7fc`
+**Tamanho comprimido:** aproximadamente 14 MiB
 **Data de análise:** 05 de setembro de 2026
 
 O pacote foi lido e extraído fora do Git. O binário proprietário `vulkan.samsung.so` não foi copiado para o repositório. O relatório abaixo registra somente metadados, caminhos e conclusões derivadas.
@@ -40,7 +40,7 @@ A análise do ICD encontrou strings e contexto relacionados a SPIR-V, shader com
 
 ## Negativas importantes
 
-O pacote não fornece um trace comprovando a cadeia completa `BO antes → submit real → execução GPU → fence → BO depois/readback → recuperação`. A presença de `sgpu_cs_submit`, `amdgpu_cs_submit`, `clEnqueueNDRangeKernel` ou `clEnqueueReadBuffer` como símbolos não altera essa negativa. Também não fornece uma relação runtime entre shader SPIR-V controlado, binary gerado e instrução ISA nativa do XO940.
+O pacote não fornece um trace comprovando a cadeia completa `BO antes → submit real → execução GPU → fence → BO depois/readback → recuperação`. A presença de `sgpu_cs_submit`, `amdgpu_cs_submit`, `clEnqueueNDRangeKernel` ou `clEnqueueReadBuffer` como símbolos não altera essa negativa. Também não fornece uma relação runtime entre shader SPIR-V controlado, binary gerado e instrução ISA nativa da Xclipse 940.
 
 ## Política de publicação
 

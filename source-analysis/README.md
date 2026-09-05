@@ -6,7 +6,7 @@ The Quick Share archive is an evidence package, not automatically an open-source
 
 Record the archive SHA-256, file count, compressed and uncompressed sizes, top-level directories, duplicate files, generated files, copyright notices, SPDX identifiers, license texts, and paths related to GPU/DRM, UAPI, Device Tree, firmware, IOMMU, memory management, queues, scheduling, reset, power, Vulkan HAL, manifests, linker namespaces, SELinux, and HWC.
 
-For each relevant file, record its path, type, license/provenance, relevant symbols, relation to SM-S721B/XO940, and whether it is a public interface, reference implementation, generated artifact, or proprietary implementation detail.
+For each relevant file, record its path, type, license/provenance, relevant symbols, relation to SM-S721B/Xclipse 940 (XO940 is the project name), and whether it is a public interface, reference implementation, generated artifact, or proprietary implementation detail.
 
 ## Legal boundary
 

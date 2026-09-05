@@ -1,6 +1,6 @@
 # Plano técnico em PDF
 
-Este diretório contém duas versões do plano atualizado do projeto **Xclipse Open 940 — XO940**.
+Este diretório contém duas versões do plano atualizado do projeto **Xclipse Open Project — XO940**.
 
 | Arquivo | Conteúdo |
 | --- | --- |
