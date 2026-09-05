@@ -4,7 +4,7 @@
 
 The first target is the **Samsung Xclipse 940** found in the **SM-S721B**, with the internal target name **XO940**. The repository is intentionally conservative: it separates direct observations, source-backed facts, reproducible experiments, hypotheses, and failed approaches. A documentation milestone is not presented as a driver milestone.
 
-> **Current conclusion:** the project has a strong initial plan, a real-device laboratory target, a Samsung source archive awaiting inventory, and early Android loader observations. It does **not** yet demonstrate an independent Vulkan driver, a working custom command submission path, a decoded ISA, or a compiler backend.
+> **Current conclusion:** the project has a real-device laboratory target, a hashed and indexed Samsung source/evidence archive, a confirmed SGPU DRM/memory bring-up path, and an unresolved Android loader/namespace boundary. It does **not** yet demonstrate an independent Vulkan driver, custom command submission, compute dispatch/readback, a decoded ISA, or a compiler backend.
 
 ## Evidence-first policy
 
@@ -23,6 +23,8 @@ The project uses five evidence labels:
 ## What is currently known
 
 The Samsung Vulkan ICD is reported at `/vendor/lib64/hw/vulkan.samsung.so`, and the system loader is reported at `/system/lib64/libvulkan.so`. The original Vulkan probe, when run from the Termux namespace, exposed only `llvmpipe` with vendor `0x10005`; the Samsung GPU with vendor `0x144d` was not visible in that namespace. The same visibility result was observed in a root session with SELinux temporarily permissive. Directly opening the Samsung ICD from the Termux environment was blocked by the linker namespace and ended in a segmentation fault. The defensible interpretation is an Android loader/namespace/ICD integration problem, not proof that the vendor driver is absent.
+
+The SGPU path is independently visible through DRM: `/dev/dri/renderD128` is bound to the `sgpu` platform driver, while `/dev/dri/renderD129` belongs to `exynos-drm`. The supplied SGPU probe completed a 64 KiB GTT allocation, CPU map/touch, VA map/unmap, and close; its source explicitly submits no GPU work. The Vulkan probe creates a pipeline candidate but has no queue, dispatch, submit, or readback.
 
 These observations are recorded as initial project evidence, not as a claim that a custom driver already works.
 
@@ -46,7 +48,7 @@ This order is deliberate. Vulkan API work cannot substitute for understanding me
 
 ## Immediate next step
 
-Catalog the shared Samsung source archive and record its SHA-256, top-level tree, licenses, GPU/DRM/UAPI paths, firmware references, Device Tree entries, Vulkan integration paths, and security policy references. Then update `STATUS.md` and the source-analysis inventory with the observed paths. Do not copy proprietary code into new implementation files before a license review.
+Complete file-level license/provenance review for the Samsung source and vendor binaries, then map the production Android process and linker namespace that loads the Samsung ICD. Only after that should the project design a minimal queue/submit/readback experiment. Do not copy proprietary code or firmware into new implementation files before a license review.
 
 ## Safety and provenance
 

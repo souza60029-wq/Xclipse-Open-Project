@@ -1,32 +1,21 @@
 # Compute Pipeline
 
-**Status:** planned investigation; no result is claimed until an evidence record is linked.
+**Status:** no end-to-end compute execution is demonstrated.
 
-## Purpose
+The project plan correctly defines the minimum compute experiment as allocation, binding, dispatch, synchronization, and validated readback. The supplied SGPU probe stops before command submission. The supplied Vulkan probe creates a trivial compute pipeline but never retrieves a queue, records a command buffer, calls `vkCmdDispatch`, submits work, waits for completion, or reads a result.
 
-Define the minimum end-to-end compute experiment: allocation, binding, dispatch, synchronization, and validated readback.
+| Required step | Supplied evidence | Status |
+| --- | --- | --- |
+| Allocate a resource | 64 KiB GEM allocation exists in the DRM probe. | Partial; CPU/GTT path only. |
+| Bind/map for GPU use | VA map/unmap succeeds. | Partial; no GPU access proven. |
+| Record dispatch | No `vkCmdDispatch` in the Vulkan probe. | Missing. |
+| Submit | No queue submit in either supplied probe. | Missing. |
+| Synchronize | No execution fence or queue completion. | Missing. |
+| Validate readback | No GPU-produced result. | Missing. |
 
-## Current boundary
-
-The project plan identifies this area as necessary for an independent Xclipse driver, but the supplied plan is not itself proof that the area has been implemented or experimentally validated. This chapter must distinguish source-backed facts, direct observations, probable interpretations, hypotheses, and discarded approaches.
-
-## Evidence table
-
-| Question | Evidence required | Current state | Confidence |
-| --- | --- | --- | --- |
-| What is known? | Raw artifact, source path, or reproducible output. | Initial plan only. | Hypothesis until an artifact is attached. |
-| What is executable? | A test that reaches the target layer and validates a result. | Not demonstrated by the plan. | Not established. |
-| What can be reused? | License and provenance review. | Pending archive inventory. | Not established. |
-
-## Method
-
-Start with read-only observations and source inventory. Preserve raw outputs without cosmetic edits. Add an interpretation report beside each raw artifact. If a harness initializes a test but does not submit and validate work on the target GPU, record it as an initializer or probe rather than an execution test.
-
-## Open questions
-
-The chapter remains open until the relevant source paths, device revision, firmware context, safety boundary, and reproducible validation procedure are documented.
+The correct next milestone is a bounded, reversible compute test after the Android loader, queue, synchronization, and reset paths are understood. A line such as `compute pipeline ok` must remain classified as pipeline creation, not compute execution.
 
 ## References
 
 [1]: https://registry.khronos.org/vulkan/specs/1.3-extensions/html/ "Vulkan API specification"
-[2]: https://source.android.com/docs/core/architecture/vndk/linker-namespace "Android linker namespaces"
+[2]: https://quickshare.samsungcloud.com/cN3RdfqvjU6y "Quick Share archive supplied for Xclipse Open Project analysis"

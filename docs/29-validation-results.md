@@ -1,20 +1,29 @@
 # Validation Results
+# Validation Results
 
-This document is a results index, not a claim that all planned milestones have passed.
+This document is a results index, not a claim that all planned milestones have passed. It records the strongest evidence currently extracted from the supplied package.
 
 | Milestone | Current state | Evidence status |
 | --- | --- | --- |
-| Platform identity | SM-S721B and Xclipse 940/XO940 are the initial target identifiers. | Plan-backed; device-level reproduction pending. |
-| Kernel/UAPI | Samsung kernel source is available for inventory. | Not yet mapped in this repository. |
-| Android loader | Samsung ICD and system loader paths are reported; Termux sees only llvmpipe. | Initial observation; exact reproduction pending. |
-| GPU enumeration | Samsung vendor `0x144d` is not visible in the observed Termux namespace. | Confirmed for that environment only. |
-| Compute | No independent compute execution is demonstrated. | Not started. |
-| ISA | No instruction format is decoded with confidence. | Not started. |
-| Compiler | No Xclipse compiler backend is demonstrated. | Not started. |
-| Vulkan | No independent device/queue/buffer/compute path is demonstrated. | Not started. |
-| Layers | No diagnostic layer is demonstrated as loaded without modifying the ICD. | Not started. |
-| Driver | No independent driver feature is demonstrated. | Not started. |
+| Platform identity | SM-S721B (`r12s`), `erd9945`, `s5e9945`; SGPU node at `/dev/dri/renderD128`. | Confirmed from device logs. |
+| Kernel/UAPI | `sgpu_drm.h`, SGPU driver tree, s5e9945 Device Tree, IOMMU and DMA-BUF paths inventoried. | Confirmed by source; runtime correlation pending. |
+| Android loader | System loader and vendor ICD paths are present; Termux sees only llvmpipe. | Confirmed for observed process. |
+| GPU enumeration | DRM probe identifies MGFX family `147`, device `0x73a0`; Vulkan vendor `0x144d` is not visible in Termux namespace. | Confirmed for separate paths. |
+| Memory/VM | 64 KiB GTT BO, CPU mmap/touch, VA map/unmap and close succeeded. | Confirmed for capture. |
+| Queue inventory | One GFX and one COMPUTE IP instance reported; ring masks `0xf` and `0x7`. | Confirmed for capture; no submit. |
+| Firmware metadata | SGPU `2.23.0`, RTL `0x4ea15`, component versions recorded. | Confirmed for capture. |
+| Compute execution | No queue submit, dispatch, synchronization, or validated readback exists in supplied probes. | Not demonstrated. |
+| ISA | No instruction format decoded with confidence; pipeline IR path not reached on Samsung GPU. | Not demonstrated. |
+| Compiler | No Xclipse compiler backend. | Not started. |
+| Vulkan | Instance and pipeline metadata probe exists; no independent target-device execution path. | Partial observation only. |
+| Layers | No diagnostic layer proven on Samsung ICD. | Not started. |
+| Driver | No independent Vulkan driver feature demonstrated. | Not started. |
 
 ## Interpretation rule
 
-A row can move to “confirmed” only when the repository contains the raw artifact and a report that proves the exact milestone. The existence of planned directories, initializers, capability queries, or buildable stubs does not change this table.
+A row can move to “confirmed” only when the repository contains an evidence report that proves the exact milestone. The existence of planned directories, initializers, capability queries, pipeline creation, or buildable stubs does not change this table.
+
+## References
+
+[1]: https://quickshare.samsungcloud.com/cN3RdfqvjU6y "Quick Share archive supplied for Xclipse Open Project analysis"
+[2]: https://registry.khronos.org/vulkan/specs/1.3-extensions/html/ "Vulkan API specification"

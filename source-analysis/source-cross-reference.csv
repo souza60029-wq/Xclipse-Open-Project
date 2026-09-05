@@ -1,0 +1,6 @@
+question_id,question,archive_path,evidence_class,license_status,notes
+Q-PLATFORM-001,Which Device Tree compatible and probe path initializes the GPU?,,pending,pending,Populate from archive inventory
+Q-DRM-001,Which DRM nodes and UAPI operations expose memory and queues?,,pending,pending,Populate from archive inventory
+Q-FW-001,Which firmware files and boot sequence are involved?,,pending,pending,Populate from archive inventory
+Q-VK-001,Which HAL and manifest paths load the Samsung ICD?,,pending,pending,Populate from archive inventory
+Q-ANDROID-001,Which linker namespace exposes the vendor ICD?,,pending,pending,Populate from device/source evidence

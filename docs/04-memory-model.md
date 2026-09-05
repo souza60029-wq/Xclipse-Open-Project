@@ -1,32 +1,27 @@
 # Memory Model
 
-**Status:** planned investigation; no result is claimed until an evidence record is linked.
+**Status:** first reversible memory path confirmed; full residency, cache, and synchronization model pending.
 
-## Purpose
+The SGPU probe successfully executed a bounded memory sequence on `/dev/dri/renderD128`: it requested a 64 KiB GEM object in the GTT domain with 4 KiB alignment, obtained a handle, queried a mmap offset, mapped it into the process, wrote `0xAB` across the allocation, unmapped the CPU view, mapped the object into GPU virtual address `0x8000000`, unmapped that VA range, and closed the GEM handle.
 
-Describe heaps, buffer objects, DMA-BUF, alignment, cache behavior, CPU visibility, and ownership transitions.
+| Operation | Observed result | Interpretation |
+| --- | --- | --- |
+| `DRM_IOCTL_AMDGPU_GEM_CREATE` | `ok handle=1` | A GTT-domain GEM allocation path worked for this request. |
+| `DRM_IOCTL_AMDGPU_GEM_MMAP` + `mmap` | `mmap+touch ok` | CPU mapping and access worked for this buffer. |
+| VA map | `ok @0x8000000` | A VA mapping path accepted the requested range and flags. |
+| VA unmap | `ok` | The mapping was removed in the same probe. |
+| GEM close | `ok` | The probe cleaned up the handle. |
+| GPU page faults | `faults=0` | No page faults were reported at the query point. |
 
-## Current boundary
+The source UAPI defines AMDGPU-derived domains and flags, including GTT, VRAM, CPU access, uncached, encrypted, and explicit synchronization flags. It defines `drm_amdgpu_gem_va` with map, unmap, clear, and replace operations, plus readable, writable, executable, and memory-type flags.
 
-The project plan identifies this area as necessary for an independent Xclipse driver, but the supplied plan is not itself proof that the area has been implemented or experimentally validated. This chapter must distinguish source-backed facts, direct observations, probable interpretations, hypotheses, and discarded approaches.
+## Important limits
 
-## Evidence table
+The successful CPU map does not prove that a GPU instruction read or wrote the buffer. The VA map does not prove that a command processor consumed the mapping. No command stream was submitted by `sgpu_raw_probe.c`, and no GPU readback was performed. The next memory phase must therefore study cache visibility, DMA-BUF ownership, residency, page tables, faults, and synchronization before any custom submission.
 
-| Question | Evidence required | Current state | Confidence |
-| --- | --- | --- | --- |
-| What is known? | Raw artifact, source path, or reproducible output. | Initial plan only. | Hypothesis until an artifact is attached. |
-| What is executable? | A test that reaches the target layer and validates a result. | Not demonstrated by the plan. | Not established. |
-| What can be reused? | License and provenance review. | Pending archive inventory. | Not established. |
-
-## Method
-
-Start with read-only observations and source inventory. Preserve raw outputs without cosmetic edits. Add an interpretation report beside each raw artifact. If a harness initializes a test but does not submit and validate work on the target GPU, record it as an initializer or probe rather than an execution test.
-
-## Open questions
-
-The chapter remains open until the relevant source paths, device revision, firmware context, safety boundary, and reproducible validation procedure are documented.
+The device capture reports `dma-coherent` in the Device Tree and `ids_flags=0x4` in the device information. These are source/driver signals that require careful interpretation; they are not a complete cache-coherency specification.
 
 ## References
 
-[1]: https://registry.khronos.org/vulkan/specs/1.3-extensions/html/ "Vulkan API specification"
-[2]: https://source.android.com/docs/core/architecture/vndk/linker-namespace "Android linker namespaces"
+[1]: https://quickshare.samsungcloud.com/cN3RdfqvjU6y "Quick Share archive supplied for Xclipse Open Project analysis"
+[2]: https://docs.kernel.org/gpu/drm-mm.html "Linux DRM memory management documentation"

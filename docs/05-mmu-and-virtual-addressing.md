@@ -1,32 +1,29 @@
 # MMU and Virtual Addressing
 
-**Status:** planned investigation; no result is claimed until an evidence record is linked.
+**Status:** basic VA mapping confirmed; page-table format and fault recovery remain open.
 
-## Purpose
+The observed SGPU device reports a virtual-address offset of `0x8000000`, maximum address `0x800000000000`, alignment `0x1000`, and GART page size `0x1000`. The raw probe uses the same offset for a temporary 64 KiB mapping with readable and writable flags, then removes it.
 
-Describe address spaces, page tables, permissions, faults, mapping lifetimes, and invalidation.
+| Field | Observed value | Confidence |
+| --- | --- | --- |
+| VA offset | `0x8000000` | Confirmed for capture |
+| VA maximum | `0x800000000000` | Confirmed for capture |
+| VA alignment | `0x1000` | Confirmed for capture |
+| GART page size | `0x1000` | Confirmed for capture |
+| Probe flags | readable + writable | Confirmed from source |
+| Page faults at query | `0` | Confirmed at probe time |
 
-## Current boundary
+The UAPI header exposes `AMDGPU_VA_OP_MAP`, `AMDGPU_VA_OP_UNMAP`, `AMDGPU_VM_PAGE_READABLE`, `AMDGPU_VM_PAGE_WRITEABLE`, and `AMDGPU_VM_PAGE_EXECUTABLE`. It also defines memory-type flags and delayed page-table update semantics. These definitions are an interface surface, not a complete hardware page-table specification.
 
-The project plan identifies this area as necessary for an independent Xclipse driver, but the supplied plan is not itself proof that the area has been implemented or experimentally validated. This chapter must distinguish source-backed facts, direct observations, probable interpretations, hypotheses, and discarded approaches.
+## What remains unknown
 
-## Evidence table
+The project still needs the page-table hierarchy, PTE encoding, invalidation timing, fault reporting, residency rules, protected-memory behavior, and interaction between TTM/GART/IOMMU and the SGPU firmware. The probe's successful map/unmap sequence is a prerequisite result, not proof that executable GPU virtual memory is ready for custom work.
 
-| Question | Evidence required | Current state | Confidence |
-| --- | --- | --- | --- |
-| What is known? | Raw artifact, source path, or reproducible output. | Initial plan only. | Hypothesis until an artifact is attached. |
-| What is executable? | A test that reaches the target layer and validates a result. | Not demonstrated by the plan. | Not established. |
-| What can be reused? | License and provenance review. | Pending archive inventory. | Not established. |
+## Safety boundary
 
-## Method
-
-Start with read-only observations and source inventory. Preserve raw outputs without cosmetic edits. Add an interpretation report beside each raw artifact. If a harness initializes a test but does not submit and validate work on the target GPU, record it as an initializer or probe rather than an execution test.
-
-## Open questions
-
-The chapter remains open until the relevant source paths, device revision, firmware context, safety boundary, and reproducible validation procedure are documented.
+Do not test arbitrary GPU virtual addresses, executable mappings, or opaque command buffers until reset and recovery are understood. Keep mappings bounded and cleanly released.
 
 ## References
 
-[1]: https://registry.khronos.org/vulkan/specs/1.3-extensions/html/ "Vulkan API specification"
-[2]: https://source.android.com/docs/core/architecture/vndk/linker-namespace "Android linker namespaces"
+[1]: https://quickshare.samsungcloud.com/cN3RdfqvjU6y "Quick Share archive supplied for Xclipse Open Project analysis"
+[2]: https://docs.kernel.org/gpu/drm-mm.html "Linux DRM memory management documentation"

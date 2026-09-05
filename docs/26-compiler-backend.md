@@ -1,32 +1,22 @@
 # Compiler Backend
 
-**Status:** planned investigation; no result is claimed until an evidence record is linked.
+**Status:** no open Xclipse compiler backend is present in the supplied project evidence.
 
-## Purpose
+The package contains a Vulkan probe with embedded SPIR-V and calls to pipeline executable property interfaces. It does not contain a NIR/LLVM lowering pass, instruction selector, register allocator, code emitter, assembler, or disassembler for Xclipse. The Samsung source release contains kernel-side GPU support and register/firmware material, which is useful reference evidence but is not a user-space compiler backend.
 
-Define the path from shader IR to Xclipse code emission, validation, register allocation, and test vectors.
+| Needed component | Current state |
+| --- | --- |
+| Shader IR input | Minimal SPIR-V exists in the probe. |
+| Xclipse instruction specification | Not established. |
+| Instruction selection | Not present. |
+| Register allocation | Not present. |
+| Code emission | Not present. |
+| Binary validation | Not present. |
+| Execution test vectors | Not present. |
 
-## Current boundary
-
-The project plan identifies this area as necessary for an independent Xclipse driver, but the supplied plan is not itself proof that the area has been implemented or experimentally validated. This chapter must distinguish source-backed facts, direct observations, probable interpretations, hypotheses, and discarded approaches.
-
-## Evidence table
-
-| Question | Evidence required | Current state | Confidence |
-| --- | --- | --- | --- |
-| What is known? | Raw artifact, source path, or reproducible output. | Initial plan only. | Hypothesis until an artifact is attached. |
-| What is executable? | A test that reaches the target layer and validates a result. | Not demonstrated by the plan. | Not established. |
-| What can be reused? | License and provenance review. | Pending archive inventory. | Not established. |
-
-## Method
-
-Start with read-only observations and source inventory. Preserve raw outputs without cosmetic edits. Add an interpretation report beside each raw artifact. If a harness initializes a test but does not submit and validate work on the target GPU, record it as an initializer or probe rather than an execution test.
-
-## Open questions
-
-The chapter remains open until the relevant source paths, device revision, firmware context, safety boundary, and reproducible validation procedure are documented.
+The compiler phase must begin only after the Samsung device produces controlled shader binaries or other trustworthy representations. Source reuse also requires file-level license review.
 
 ## References
 
 [1]: https://registry.khronos.org/vulkan/specs/1.3-extensions/html/ "Vulkan API specification"
-[2]: https://source.android.com/docs/core/architecture/vndk/linker-namespace "Android linker namespaces"
+[2]: https://quickshare.samsungcloud.com/cN3RdfqvjU6y "Quick Share archive supplied for Xclipse Open Project analysis"

@@ -6,7 +6,7 @@
 
 ## Executive status
 
-The project is at **Phase 0: governance and inventory**, with initial observations from the attached plan. The Quick Share package is being treated as an external evidence set that must be hashed, inventoried, and license-reviewed before any file is treated as reusable implementation material.
+The project is at **Phase 0: governance and inventory**, with the Quick Share package now hashed, integrity-checked, extracted outside Git, and indexed. The archive SHA-256 is `cd73e2fa24ac083b9babf243b39772065b060abc9cd30fb476acabe74433e67f`; it contains 17 members, including a 405 MB Samsung source release, probe binaries/source, reports, PDFs, and logs. The archive remains external evidence because license and redistribution status are not yet complete.
 
 The project is not yet at the driver bring-up phase. No statement in this file should be read as proof of a working independent ICD, custom queue submission, compute execution, ISA decoding, compiler lowering, or Mesa integration.
 
@@ -14,22 +14,27 @@ The project is not yet at the driver bring-up phase. No statement in this file s
 
 | Area | Current statement | Evidence class | What is still required |
 | --- | --- | --- | --- |
-| Device | SM-S721B is the first laboratory target. | Confirmed by project plan | Device build, board identifiers, revision, and reproducible properties. |
-| Target GPU | Xclipse 940 / XO940 is the initial target name. | Confirmed by project plan | Correlate target name with device revision and source identifiers. |
-| Vendor ICD path | `/vendor/lib64/hw/vulkan.samsung.so` is reported. | Confirmed by observation in plan | Preserve command output and verify on the device. |
-| Android loader path | `/system/lib64/libvulkan.so` is reported. | Confirmed by observation in plan | Preserve command output and record build/ABI context. |
-| Termux Vulkan probe | Only `llvmpipe`, vendor `0x10005`, was visible. | Confirmed by observation in plan | Reproduce with exact binary, environment, loader search paths, and output. |
-| Samsung GPU enumeration | Vendor `0x144d` was not visible in that namespace. | Confirmed by observation in plan | Test from a correctly configured Android process and compare namespaces. |
-| Root | KernelSU root was available; a root session was confirmed. | Confirmed by observation in plan | Record exact root method and avoid treating root as a namespace bypass. |
-| SELinux | Permissive was used during an experiment and Enforcing was restored. | Confirmed by observation in plan | Record policy, timestamps, and safe recovery procedure. |
-| Direct ICD loading | Direct `dlopen` from the Termux context was blocked by the linker namespace and ended in SIGSEGV. | Confirmed by observation in plan | Capture the exact error and test supported loader/manifest paths. |
-| Kernel/UAPI | Samsung kernel source is available for analysis. | Confirmed by project plan | Inventory Kconfig, DRM, IOCTL/UAPI, VM, scheduler, reset, firmware, and DT paths. |
-| Custom GPU work | No custom submission or independent driver is demonstrated. | Confirmed negative status | Build a reversible minimal experiment only after memory, VM, queue, and recovery are understood. |
-| ISA/compiler | No decoded instruction format or compiler backend is demonstrated. | Confirmed negative status | Collect controlled shaders and correlate binaries with disassembly/IR. |
+| Device | SM-S721B (`r12s`), platform `erd9945`, hardware `s5e9945`. | Confirmed from device logs | Correlate exact build with source revision. |
+| Target GPU | Xclipse 940 / XO940; family `147 (MGFX)`, device `0x73a0`. | Confirmed for capture | Keep later revisions separate. |
+| SGPU DRM | `/dev/dri/renderD128` bound to `sgpu`; display is separate on `renderD129`. | Confirmed | Map complete runtime ABI. |
+| ASIC/queues | GFX 1 × 10.0 rings `0xf`; COMPUTE 1 × 10.0 rings `0x7`; DMA 0. | Confirmed for capture | Safe ring and queue lifecycle remain open. |
+| Memory/VM | 64 KiB GTT BO, CPU touch, VA map/unmap and close worked. | Confirmed for capture | GPU access, residency, cache, and page tables remain open. |
+| Firmware | SGPU `2.23.0`, RTL `0x4ea15`; ME/MEC/PFP/RLC metadata observed. | Confirmed for capture | Map exact blobs/load order and licenses. |
+| Vendor ICD path | `/vendor/lib64/hw/vulkan.samsung.so` (44,423,944 bytes). | Confirmed by supplied report | Identify production loading bridge. |
+| Android loader path | `/system/lib64/libvulkan.so` (240,208 bytes). | Confirmed by supplied report | Compare process namespaces. |
+| Termux Vulkan probe | Only `llvmpipe`, vendor `0x10005`, visible. | Confirmed for this process | Test from a production graphics namespace. |
+| Samsung Vulkan enumeration | Vendor `0x144d` not visible in observed namespace. | Confirmed for this environment | Does not prove ICD absence. |
+| Direct ICD loading | Linker namespace blocked `/vendor/lib64/hw`; attempt ended in SIGSEGV. | Confirmed for this approach | Do not repeat without a different bridge. |
+| SGPU probe class | Memory/VM bring-up probe; explicitly submits nothing. | Confirmed from source | Not a compute or rendering test. |
+| Vulkan probe class | Pipeline metadata probe; no queue, dispatch, submit, or readback. | Confirmed from source | Not a compute execution test. |
+| Root/SELinux | Root plus temporary `Permissive` did not change loader result; restored to `Enforcing`. | Confirmed for experiment | Root is not namespace membership. |
+| Kernel/UAPI | `sgpu_drm.h`, SGPU driver, s5e9945 DT, IOMMU/DMA-BUF paths inventoried. | Confirmed by source | File-level licensing and runtime correlation pending. |
+| Custom GPU work | No custom submission or independent driver demonstrated. | Confirmed negative status | Do not advance before queue/recovery evidence. |
+| ISA/compiler | No decoded instruction format or compiler backend demonstrated. | Confirmed negative status | Controlled shader correlation remains future work. |
 
 ## Entry criteria for the next phase
 
-Phase 0 is complete only when the source archive has a cryptographic hash, a complete file inventory, a license inventory, a device/build identity, a firmware inventory, and a list of open questions. The next phase is platform/kernel mapping, not layer development.
+Phase 0 is complete only when the source archive has a cryptographic hash, a complete file inventory, a reviewed license inventory, a device/build identity, a firmware inventory, and a list of open questions. The first five inventory items now exist; license review and source-path correlation remain open. The next phase is platform/kernel mapping, not layer development.
 
 ## Open questions
 

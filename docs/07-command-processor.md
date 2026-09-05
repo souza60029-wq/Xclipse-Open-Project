@@ -1,30 +1,24 @@
 # Command Processor
 
-**Status:** planned investigation; no result is claimed until an evidence record is linked.
+**Status:** UAPI and source paths identified; no custom command submission has been demonstrated.
 
 ## Purpose
 
-Identify command processors, rings, doorbells, firmware mediation, submission boundaries, and recovery behavior.
+The supplied `sgpu_raw_probe.c` intentionally stops before command submission. Its source comment states `Submits NOTHING to the GPU`; the observed output ends after GEM close with `DONE fails=2`. Therefore the package does not contain a packet capture or a proven command-processor execution trace.
 
-## Current boundary
+The Samsung UAPI nevertheless exposes an AMDGPU-derived command-stream interface. `drm_amdgpu_cs_in` carries a context ID, BO-list handle, chunk count, flags, and a pointer to chunks. `drm_amdgpu_cs_chunk` identifies an IB, fence, dependency, sync object, BO-handle, or timeline operation. `drm_amdgpu_cs_chunk_ib` carries a virtual address, byte size, IP type, IP instance, ring, and flags such as secure, preempt, cache synchronization, performance counter, and SQ thread trace.
 
-The project plan identifies this area as necessary for an independent Xclipse driver, but the supplied plan is not itself proof that the area has been implemented or experimentally validated. This chapter must distinguish source-backed facts, direct observations, probable interpretations, hypotheses, and discarded approaches.
+| Evidence | What it establishes | What it does not establish |
+| --- | --- | --- |
+| UAPI `DRM_IOCTL_AMDGPU_CS` definition | A command submission contract exists in the source interface. | That the SGPU accepts every upstream AMDGPU packet or flag. |
+| UAPI IB/chunk structures | The shape of a possible submission path. | The packet encoding placed inside an IB. |
+| Observed GFX/COMPUTE ring masks `0xf` and `0x7` | Ring availability was reported by `HW_IP_INFO`. | Which ring is safe or correct for custom work. |
+| `sgpu_raw_probe` | Memory and VA prerequisites worked. | Any GPU command executed. |
+| `libdrm_sgpu.so` symbols | Wrappers for `amdgpu_cs_submit` and `sgpu_cs_submit` exist in the vendor library. | ABI compatibility or safe use outside its intended runtime. |
 
-## Evidence table
+## Required next evidence
 
-| Question | Evidence required | Current state | Confidence |
-| --- | --- | --- | --- |
-| What is known? | Raw artifact, source path, or reproducible output. | Initial plan only. | Hypothesis until an artifact is attached. |
-| What is executable? | A test that reaches the target layer and validates a result. | Not demonstrated by the plan. | Not established. |
-| What can be reused? | License and provenance review. | Pending archive inventory. | Not established. |
-
-## Method
-
-Start with read-only observations and source inventory. Preserve raw outputs without cosmetic edits. Add an interpretation report beside each raw artifact. If a harness initializes a test but does not submit and validate work on the target GPU, record it as an initializer or probe rather than an execution test.
-
-## Open questions
-
-The chapter remains open until the relevant source paths, device revision, firmware context, safety boundary, and reproducible validation procedure are documented.
+Before constructing an IB, document context creation, BO lists, firmware mediation, synchronization, ring selection, reset behavior, and a bounded recovery path. A real execution test must submit known work and validate an independent result. Opaque command-buffer replay is out of scope until provenance and safety are understood.
 
 ## References
 

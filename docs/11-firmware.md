@@ -1,32 +1,26 @@
 # Firmware
 
-**Status:** planned investigation; no result is claimed until an evidence record is linked.
+**Status:** version metadata confirmed; load order, contents, and redistribution status remain open.
 
-## Purpose
+The device exposes SGPU firmware metadata through sysfs and the SGPU information query. The supplied capture reports SGPU firmware `2.23.0` and RTL change-list number `0x0004ea15`. Component queries returned ME `0x00000005`, MEC `0x00000004`, PFP `0x00000007`, and RLC `0x00000001`. CE, MC, SDMA, SDMA2, SMC, and the RLC restore-list components reported zero in this capture.
 
-Inventory firmware names, versions, load order, interfaces, provenance, and what remains closed or opaque.
+| Component | Observed value | Interpretation |
+| --- | ---: | --- |
+| SGPU | `2.23.0` | Vendor-facing SGPU version string. |
+| SGPU RTL CL | `0x0004ea15` | Runtime metadata associated with this build. |
+| ME | `0x5` | Firmware query result. |
+| MEC | `0x4` | Firmware query result. |
+| PFP | `0x7` | Firmware query result. |
+| RLC | `0x1` | Firmware query result. |
+| CE/MC/SDMA/SMC | `0x0` | Zero returned; meaning must be verified against driver semantics. |
 
-## Current boundary
-
-The project plan identifies this area as necessary for an independent Xclipse driver, but the supplied plan is not itself proof that the area has been implemented or experimentally validated. This chapter must distinguish source-backed facts, direct observations, probable interpretations, hypotheses, and discarded approaches.
-
-## Evidence table
-
-| Question | Evidence required | Current state | Confidence |
-| --- | --- | --- | --- |
-| What is known? | Raw artifact, source path, or reproducible output. | Initial plan only. | Hypothesis until an artifact is attached. |
-| What is executable? | A test that reaches the target layer and validates a result. | Not demonstrated by the plan. | Not established. |
-| What can be reused? | License and provenance review. | Pending archive inventory. | Not established. |
-
-## Method
-
-Start with read-only observations and source inventory. Preserve raw outputs without cosmetic edits. Add an interpretation report beside each raw artifact. If a harness initializes a test but does not submit and validate work on the target GPU, record it as an initializer or probe rather than an execution test.
+The source release contains `amdgpu_ucode.c`, `amdgpu_atomfirmware.c`, and signed/unified firmware header material for multiple revisions. The Kconfig can enable built-in firmware, while the default shown for that option is disabled. These source paths document the integration mechanism; they do not grant permission to redistribute runtime blobs or claim that every source variant corresponds to the tested handset.
 
 ## Open questions
 
-The chapter remains open until the relevant source paths, device revision, firmware context, safety boundary, and reproducible validation procedure are documented.
+The project still needs the exact firmware file names loaded on the SM-S721B, load order, signature checks, firmware-to-revision mapping, command-processor responsibilities, and reset behavior. Keep firmware binaries outside Git until provenance and license review are complete.
 
 ## References
 
-[1]: https://registry.khronos.org/vulkan/specs/1.3-extensions/html/ "Vulkan API specification"
-[2]: https://source.android.com/docs/core/architecture/vndk/linker-namespace "Android linker namespaces"
+[1]: https://quickshare.samsungcloud.com/cN3RdfqvjU6y "Quick Share archive supplied for Xclipse Open Project analysis"
+[2]: https://docs.kernel.org/driver-api/firmware/intro.html "Linux firmware loading API"

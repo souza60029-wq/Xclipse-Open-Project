@@ -1,32 +1,20 @@
 # ICD and Manifests
 
-**Status:** planned investigation; no result is claimed until an evidence record is linked.
+**Status:** vendor ICD presence is confirmed; a usable manifest/loader path is not.
 
-## Purpose
+The device report identifies `/vendor/lib64/hw/vulkan.samsung.so` at 44,423,944 bytes and `/system/lib64/libvulkan.so` at 240,208 bytes. `readelf` reported instance-level Vulkan exports from the vendor library, including `vkCreateInstance` and enumeration functions. The same report did not find a standard Vulkan JSON manifest in the searched locations; it did find `/vendor/etc/Khronos/OpenCL/samsung.icd`, which is an OpenCL manifest and must not be treated as a Vulkan manifest.
 
-Document ICD discovery, JSON/XML or Android manifest data, ABI expectations, and the distinction between presence and usability.
+| Artifact | Meaning | Current status |
+| --- | --- | --- |
+| `vulkan.samsung.so` | Vendor Vulkan implementation/ICD candidate. | Present; standalone usability unproven. |
+| `libvulkan.so` | Android/system loader visible to the probe. | Present; selected llvmpipe in Termux. |
+| `samsung.icd` | OpenCL ICD file. | Present; irrelevant as Vulkan JSON. |
+| Vulkan JSON | Standard external-loader manifest. | Not found in searched paths. |
 
-## Current boundary
-
-The project plan identifies this area as necessary for an independent Xclipse driver, but the supplied plan is not itself proof that the area has been implemented or experimentally validated. This chapter must distinguish source-backed facts, direct observations, probable interpretations, hypotheses, and discarded approaches.
-
-## Evidence table
-
-| Question | Evidence required | Current state | Confidence |
-| --- | --- | --- | --- |
-| What is known? | Raw artifact, source path, or reproducible output. | Initial plan only. | Hypothesis until an artifact is attached. |
-| What is executable? | A test that reaches the target layer and validates a result. | Not demonstrated by the plan. | Not established. |
-| What can be reused? | License and provenance review. | Pending archive inventory. | Not established. |
-
-## Method
-
-Start with read-only observations and source inventory. Preserve raw outputs without cosmetic edits. Add an interpretation report beside each raw artifact. If a harness initializes a test but does not submit and validate work on the target GPU, record it as an initializer or probe rather than an execution test.
-
-## Open questions
-
-The chapter remains open until the relevant source paths, device revision, firmware context, safety boundary, and reproducible validation procedure are documented.
+Exported Vulkan entry points do not prove that the library is a complete loader or that an external Mesa loader can call it. The next step is to identify the Android/HAL discovery path and ABI contract that production processes use.
 
 ## References
 
 [1]: https://registry.khronos.org/vulkan/specs/1.3-extensions/html/ "Vulkan API specification"
 [2]: https://source.android.com/docs/core/architecture/vndk/linker-namespace "Android linker namespaces"
+[3]: https://quickshare.samsungcloud.com/cN3RdfqvjU6y "Quick Share archive supplied for Xclipse Open Project analysis"

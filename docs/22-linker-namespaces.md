@@ -1,32 +1,20 @@
 # Linker Namespaces
 
-**Status:** planned investigation; no result is claimed until an evidence record is linked.
+**Status:** one namespace boundary is confirmed; namespace identity and the production bridge remain to be mapped.
 
-## Purpose
+The direct ICD experiment attempted to open `/vendor/lib64/hw/vulkan.samsung.so` from the Termux process and received a linker warning that the library was not accessible for the namespace, followed by a segmentation fault. Opening `/system/lib64/libvulkan.so` did work, but it exposed only llvmpipe. A root shell and temporary SELinux `Permissive` state did not alter this result.
 
-Record namespace names, permitted paths, public/vendor visibility, and supported loading experiments.
+| Observation | Evidence label | Limit |
+| --- | --- | --- |
+| Vendor path is inaccessible to the Termux namespace. | Confirmed for this approach | Does not name the namespace or prove every process is blocked. |
+| Root did not change loader visibility. | Confirmed for this experiment | Root does not imply linker-namespace membership. |
+| System loader is callable. | Confirmed for this process | It may select different ICDs in another Android process. |
 
-## Current boundary
+## Next safe work
 
-The project plan identifies this area as necessary for an independent Xclipse driver, but the supplied plan is not itself proof that the area has been implemented or experimentally validated. This chapter must distinguish source-backed facts, direct observations, probable interpretations, hypotheses, and discarded approaches.
-
-## Evidence table
-
-| Question | Evidence required | Current state | Confidence |
-| --- | --- | --- | --- |
-| What is known? | Raw artifact, source path, or reproducible output. | Initial plan only. | Hypothesis until an artifact is attached. |
-| What is executable? | A test that reaches the target layer and validates a result. | Not demonstrated by the plan. | Not established. |
-| What can be reused? | License and provenance review. | Pending archive inventory. | Not established. |
-
-## Method
-
-Start with read-only observations and source inventory. Preserve raw outputs without cosmetic edits. Add an interpretation report beside each raw artifact. If a harness initializes a test but does not submit and validate work on the target GPU, record it as an initializer or probe rather than an execution test.
-
-## Open questions
-
-The chapter remains open until the relevant source paths, device revision, firmware context, safety boundary, and reproducible validation procedure are documented.
+Identify the production graphics process and its linker configuration using read-only inspection. Do not modify namespace configuration, `/system`, `/vendor`, manifests, or persistent properties. Do not use a segmentation fault as evidence of ICD incompatibility; it proves only that this loading approach is invalid in this namespace.
 
 ## References
 
-[1]: https://registry.khronos.org/vulkan/specs/1.3-extensions/html/ "Vulkan API specification"
-[2]: https://source.android.com/docs/core/architecture/vndk/linker-namespace "Android linker namespaces"
+[1]: https://source.android.com/docs/core/architecture/vndk/linker-namespace "Android linker namespaces"
+[2]: https://quickshare.samsungcloud.com/cN3RdfqvjU6y "Quick Share archive supplied for Xclipse Open Project analysis"

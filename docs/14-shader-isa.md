@@ -1,32 +1,23 @@
 # Shader ISA
 
-**Status:** planned investigation; no result is claimed until an evidence record is linked.
+**Status:** no Xclipse instruction format is decoded with confidence.
 
-## Purpose
+The supplied Vulkan probe was designed to query `VK_KHR_pipeline_executable_properties`, including executable statistics and internal representations, from a minimal compute pipeline. The observed loader exposed only llvmpipe, so the Samsung UMD path was never reached by that probe. No ISA text, IR blob, or instruction capture from the Xclipse device is present in the evidence set.
 
-Use controlled shader pairs to infer instruction encoding, operands, register classes, control flow, and confidence.
+The source release contains GPU register headers, firmware handling, and SGPU implementation material. Those paths are useful context but do not constitute a shader disassembler or a proof of user-space ISA availability.
 
-## Current boundary
+| Evidence | Current interpretation |
+| --- | --- |
+| Embedded SPIR-V in the Vulkan probe | Controlled input exists; no Samsung output was captured. |
+| `VK_KHR_pipeline_executable_properties` calls in source | A metadata route was attempted in code. |
+| `llvmpipe` result | The observed output belongs to software Vulkan, not Xclipse. |
+| Register and firmware headers | Source evidence requiring revision/license correlation. |
 
-The project plan identifies this area as necessary for an independent Xclipse driver, but the supplied plan is not itself proof that the area has been implemented or experimentally validated. This chapter must distinguish source-backed facts, direct observations, probable interpretations, hypotheses, and discarded approaches.
+## Required next evidence
 
-## Evidence table
-
-| Question | Evidence required | Current state | Confidence |
-| --- | --- | --- | --- |
-| What is known? | Raw artifact, source path, or reproducible output. | Initial plan only. | Hypothesis until an artifact is attached. |
-| What is executable? | A test that reaches the target layer and validates a result. | Not demonstrated by the plan. | Not established. |
-| What can be reused? | License and provenance review. | Pending archive inventory. | Not established. |
-
-## Method
-
-Start with read-only observations and source inventory. Preserve raw outputs without cosmetic edits. Add an interpretation report beside each raw artifact. If a harness initializes a test but does not submit and validate work on the target GPU, record it as an initializer or probe rather than an execution test.
-
-## Open questions
-
-The chapter remains open until the relevant source paths, device revision, firmware context, safety boundary, and reproducible validation procedure are documented.
+First obtain a real Samsung `VkPhysicalDevice` through the supported Android loader bridge. Then compare controlled shaders, record binary sizes and hashes, and separate any textual representation from compiler diagnostics or non-ISA metadata.
 
 ## References
 
 [1]: https://registry.khronos.org/vulkan/specs/1.3-extensions/html/ "Vulkan API specification"
-[2]: https://source.android.com/docs/core/architecture/vndk/linker-namespace "Android linker namespaces"
+[2]: https://quickshare.samsungcloud.com/cN3RdfqvjU6y "Quick Share archive supplied for Xclipse Open Project analysis"

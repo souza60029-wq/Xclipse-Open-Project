@@ -1,32 +1,25 @@
 # Android Loader
 
-**Status:** planned investigation; no result is claimed until an evidence record is linked.
+**Status:** the failure boundary is confirmed; the production Samsung loading bridge is not yet identified.
 
-## Purpose
+The handset contains `/system/lib64/libvulkan.so` and `/vendor/lib64/hw/vulkan.samsung.so`. In the Termux process, opening the system loader created an instance and exposed only `llvmpipe` with vendor `0x10005`; vendor `0x144d` was not visible. Repeating from a root session with SELinux temporarily permissive produced the same result. Directly opening the vendor ICD path was rejected by the linker namespace and then ended in a segmentation fault.
 
-Document the production loader path, namespace boundaries, ABI, HAL discovery, and why Termux visibility is limited.
+| Component | Observed state | Confidence |
+| --- | --- | --- |
+| System loader | Present at `/system/lib64/libvulkan.so`. | Confirmed by supplied report |
+| Vendor ICD | Present at `/vendor/lib64/hw/vulkan.samsung.so`. | Confirmed by supplied report |
+| Termux loader result | `llvmpipe` only. | Confirmed for that process/context |
+| Root effect | Did not change device visibility. | Confirmed for that experiment |
+| SELinux effect | Temporary `Permissive` did not change visibility; restored to `Enforcing`. | Confirmed for that experiment |
+| Direct ICD | Namespace denied the path. | Confirmed for that approach |
 
-## Current boundary
+The defensible conclusion is a loader/namespace/ICD integration boundary. Root is not equivalent to linker-namespace membership, and the vendor ICD is not automatically a standalone `libvulkan.so`.
 
-The project plan identifies this area as necessary for an independent Xclipse driver, but the supplied plan is not itself proof that the area has been implemented or experimentally validated. This chapter must distinguish source-backed facts, direct observations, probable interpretations, hypotheses, and discarded approaches.
+## Next safe observation
 
-## Evidence table
-
-| Question | Evidence required | Current state | Confidence |
-| --- | --- | --- | --- |
-| What is known? | Raw artifact, source path, or reproducible output. | Initial plan only. | Hypothesis until an artifact is attached. |
-| What is executable? | A test that reaches the target layer and validates a result. | Not demonstrated by the plan. | Not established. |
-| What can be reused? | License and provenance review. | Pending archive inventory. | Not established. |
-
-## Method
-
-Start with read-only observations and source inventory. Preserve raw outputs without cosmetic edits. Add an interpretation report beside each raw artifact. If a harness initializes a test but does not submit and validate work on the target GPU, record it as an initializer or probe rather than an execution test.
-
-## Open questions
-
-The chapter remains open until the relevant source paths, device revision, firmware context, safety boundary, and reproducible validation procedure are documented.
+Identify which production Android process and namespace loads the vendor ICD, inspect dependencies and manifests without modifying `/system` or `/vendor`, and document the supported bridge. Only then should a user-space loader or layer be evaluated.
 
 ## References
 
-[1]: https://registry.khronos.org/vulkan/specs/1.3-extensions/html/ "Vulkan API specification"
+[1]: https://quickshare.samsungcloud.com/cN3RdfqvjU6y "Quick Share archive supplied for Xclipse Open Project analysis"
 [2]: https://source.android.com/docs/core/architecture/vndk/linker-namespace "Android linker namespaces"
