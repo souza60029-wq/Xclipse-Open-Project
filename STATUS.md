@@ -6,7 +6,7 @@
 
 ## Executive status
 
-The project is at **Phase 0: governance and inventory**, with the Quick Share package now hashed, integrity-checked, extracted outside Git, and indexed. The archive SHA-256 is `cd73e2fa24ac083b9babf243b39772065b060abc9cd30fb476acabe74433e67f`; it contains 17 members, including a 405 MB Samsung source release, probe binaries/source, reports, PDFs, and logs. The archive remains external evidence because license and redistribution status are not yet complete.
+The project is at **Phase 1: platform and kernel mapping**, with the original Quick Share package and the new results package hashed, integrity-checked, extracted outside Git, and indexed. The new results package SHA-256 is `59ac6221373572024c0967d642f9ead1f970c6791ff2428cb5c49ae73a5fe7fc`; it contains stage reports, Etapa 4 logs, Etapa 5 compiler analysis, and the vendor ICD. The archives and vendor binaries remain external evidence because license and redistribution status are not yet complete.
 
 The project is not yet at the driver bring-up phase. No statement in this file should be read as proof of a working independent ICD, custom queue submission, compute execution, ISA decoding, compiler lowering, or Mesa integration.
 
@@ -20,17 +20,18 @@ The project is not yet at the driver bring-up phase. No statement in this file s
 | ASIC/queues | GFX 1 × 10.0 rings `0xf`; COMPUTE 1 × 10.0 rings `0x7`; DMA 0. | Confirmed for capture | Safe ring and queue lifecycle remain open. |
 | Memory/VM | 64 KiB GTT BO, CPU touch, VA map/unmap and close worked. | Confirmed for capture | GPU access, residency, cache, and page tables remain open. |
 | Firmware | SGPU `2.23.0`, RTL `0x4ea15`; ME/MEC/PFP/RLC metadata observed. | Confirmed for capture | Map exact blobs/load order and licenses. |
-| Vendor ICD path | `/vendor/lib64/hw/vulkan.samsung.so` (44,423,944 bytes). | Confirmed by supplied report | Identify production loading bridge. |
-| Android loader path | `/system/lib64/libvulkan.so` (240,208 bytes). | Confirmed by supplied report | Compare process namespaces. |
-| Termux Vulkan probe | Only `llvmpipe`, vendor `0x10005`, visible. | Confirmed for this process | Test from a production graphics namespace. |
-| Samsung Vulkan enumeration | Vendor `0x144d` not visible in observed namespace. | Confirmed for this environment | Does not prove ICD absence. |
+| Vendor ICD path | `/vendor/lib64/hw/vulkan.samsung.so` (44,423,944 bytes), mapped in valid SurfaceFlinger snapshot. | Confirmed in production process | Capture detailed Vulkan enumeration from that process. |
+| Android loader path | `/system/lib64/libvulkan.so` mapped in SurfaceFlinger; Termux is a different mount namespace. | Confirmed | Document the supported bridge and ABI. |
+| Termux Vulkan probe | Only `llvmpipe`, vendor `0x10005`, visible. | Confirmed for this process | Do not generalize to production SurfaceFlinger. |
+| Samsung Vulkan enumeration | Production ICD mapping is confirmed; full `vkEnumeratePhysicalDevices` output is not yet captured. | Partially confirmed | Capture vendor/device IDs and extensions in supported process. |
 | Direct ICD loading | Linker namespace blocked `/vendor/lib64/hw`; attempt ended in SIGSEGV. | Confirmed for this approach | Do not repeat without a different bridge. |
 | SGPU probe class | Memory/VM bring-up probe; explicitly submits nothing. | Confirmed from source | Not a compute or rendering test. |
+| Photo Remaster compute path | Dedicated service loads Vulkan Samsung, libdrm SGPU and SGPU OpenCL and holds renderD128. | Confirmed path/correlation | Capture controlled kernel, synchronization and readback. |
 | Vulkan probe class | Pipeline metadata probe; no queue, dispatch, submit, or readback. | Confirmed from source | Not a compute execution test. |
 | Root/SELinux | Root plus temporary `Permissive` did not change loader result; restored to `Enforcing`. | Confirmed for experiment | Root is not namespace membership. |
 | Kernel/UAPI | `sgpu_drm.h`, SGPU driver, s5e9945 DT, IOMMU/DMA-BUF paths inventoried. | Confirmed by source | File-level licensing and runtime correlation pending. |
 | Custom GPU work | No custom submission or independent driver demonstrated. | Confirmed negative status | Do not advance before queue/recovery evidence. |
-| ISA/compiler | No decoded instruction format or compiler backend demonstrated. | Confirmed negative status | Controlled shader correlation remains future work. |
+| ISA/compiler | Static vendor compiler/encoding infrastructure strongly evidenced; no native ISA stream captured. | Confirmed static evidence | Correlate controlled shader, binary and runtime instruction. |
 
 ## Entry criteria for the next phase
 
@@ -54,7 +55,7 @@ Any new claim must link to a report, raw artifact, source path, or reproduction 
 
 ## First 5 dois meios
 
-The first five essential discoveries are operationally specified in `reports/5-dois-meios-essenciais.md`: Android loader and Samsung device enumeration; DRM/BO/VA/IOMMU/cache contract; context/ring/IB/fence/recovery; first compute dispatch with readback; and shader-to-binary-to-ISA correlation. These are priorities to investigate, not five completed tests.
+The first five essential discoveries are updated in `reports/5-dois-meios-essenciais.md`. Item 1 now has a confirmed production ICD/DRM path through SurfaceFlinger; Item 4 has a confirmed Photo Remaster/OpenCL/SGPU path; and Item 5 has strong static compiler/encoding evidence. None of these three advances is a substitute for detailed Vulkan enumeration, a project-controlled submit/readback, or native ISA correlation.
 
 ## References
 

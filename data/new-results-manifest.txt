@@ -1,0 +1,29 @@
+# New results package manifest
+
+ARCHIVE=5doismeiosresultadosobtidos.zip
+SHA256=59ac6221373572024c0967d642f9ead1f970c6791ff2428cb5c49ae73a5fe7fc
+COMPRESSED_SIZE_BYTES=~14000000
+ANALYSIS_DATE=2026-09-05
+PUBLICATION_POLICY=metadata-and-derived-documentation-only
+RAW_ARCHIVE_PUBLISHED=false
+VENDOR_ICD_PUBLISHED=false
+
+# Members and classification
+5 dois meios resultados obtidos/XO940_ETAPA1_DEFINITIVO.txt | report | valid SurfaceFlinger/ICD/DRM snapshot appears later in file; initial PID race retained as limitation
+5 dois meios resultados obtidos/XO940_CHECKPOINT_ETAPA_2_DEFINITIVO.txt | report | DRM mapping checkpoint; card0 SGPU, card1 Exynos DRM, renderD128/renderD129
+5 dois meios resultados obtidos/ETAPA_X_IDENTIFICACAO_SGPU.txt | report | SGPU identity, platform path, firmware and devfreq
+5 dois meios resultados obtidos/ETAPA_3_COMPLETA.txt | log/report | large mixed collection; logs are not one execution test
+5 dois meios resultados obtidos/Etapa_4_SGPU_Xclipse940_LOGS.zip | nested logs | Photo Remaster/OpenCL/Vulkan/DRM path; no project-controlled submit/readback
+5 dois meios resultados obtidos/v4.txt | preparation/inventory | symbol/API inventory; not a submission trace
+5 dois meios resultados obtidos/Etapa 5.txt | static binary analysis report | compiler/encoding evidence with explicit limits
+5 dois meios resultados obtidos/Etapa 5 documentada.pdf | documentation/report | cross-checked against Etapa 5.txt
+5 dois meios resultados obtidos/vulkan.samsung.so | proprietary vendor ELF | retained outside Git; do not redistribute
+
+# Derived facts
+SURFACEFLINGER_VENDOR_ICD_MAPPED=true
+SURFACEFLINGER_DRM_NODE=/dev/dri/renderD128
+PHOTO_REMOTER_SERVICE=com.samsung.android.photoremasterservice:photoremasterservice
+SGPU_PLATFORM=/sys/devices/platform/22200000.sgpu
+SGPU_FIRMWARE=2.23.0
+SGPU_RTL=0x0004ea15
+VULKAN_ICD_BUILD_ID=7b6134ba45f561f28b006e07ef075b4d4c429bcd
