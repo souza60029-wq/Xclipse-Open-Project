@@ -11,3 +11,5 @@ The documentation is layered from platform and kernel foundations to execution, 
 | Uncertainty and results | `27`, `29` |
 
 Every chapter should link to raw artifacts and experiment reports when a statement moves beyond the initial plan.
+
+The repository also publishes the **5 dois meios** plan in `artifacts/PLANO_Xclipse_Open_940.pdf` and `artifacts/PLANO_Xclipse_Open_940_com_arvore.pdf`. The second PDF includes the complete project tree. Planned directories in that tree are organizational contracts, not evidence that implementation already exists.
