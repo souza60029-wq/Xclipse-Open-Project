@@ -8,6 +8,10 @@ Este diretório contém duas versões do plano atualizado do projeto **Xclipse O
 | `RAMIFICACAO_Xclipse_Open_940.pdf` | PDF exclusivo da ramificação técnica. Contém somente a estrutura observada/mapeada do Xclipse: plataforma, kernel, GPU, firmware, DRM, Vulkan, OpenCL, processos Android, compiler e caminhos relacionados. Não é a árvore do repositório. |
 | `ESTUDO_DETALHADO_Xclipse_940_2026-09-06.pdf` | Estudo público detalhado da nova coleta: Device Tree, IOMMU, VM/BO, submissão GFX, scheduler/IB, Android vendor, OpenCL, bloqueios e rotas de investigação. Inclui a ramificação técnica e o mapa de evidências. |
 | `Xclipse-Open-Project-public-documentation-2026-09-06.zip` | Pacote baixável com toda a documentação pública versionada, os mapas de Device Tree/ramificação técnica, relatórios, inventários sanitizados e os três PDFs. Não contém testes reais, traces crus, dumps, bibliotecas vendor, binários ou código proprietário. |
+| `MAPA_Xclipse_940.png` | Mapa visual da infraestrutura Xclipse 940: Device Tree, plataforma, kernel SGPU/DRM, memória, IOMMU, Android e caminhos de integração. |
+| `MAPA_Xclipse_940.mmd` | Fonte Mermaid editável do mapa visual. |
+| `MAPA_TECNICO_COMPLETO_Xclipse_940.md` | Mapa textual completo com identidade, Device Tree, UAPI, BO/VM, IOMMU, firmware, rings, Android e limites de evidência. |
+| `PONTOS_ENTRADA_DRIVER_Xclipse_940.md` | Estudo separado dos pontos de entrada para um cliente DRM/SGPU e uma futura rota de driver/Mesa/Vulkan. |
 
 O plano principal incorpora o estado observado no pacote fornecido, a separação entre probes e testes reais e a abordagem **5 dois meios**, com cinco descobertas essenciais e cinco descobertas úteis de segunda prioridade. O estudo detalhado registra a atualização de 2026-09-06. A ramificação é deliberadamente separada e representa apenas a estrutura técnica do hardware, não o plano do projeto.
 

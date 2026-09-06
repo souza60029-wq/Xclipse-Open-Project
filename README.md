@@ -1,64 +1,108 @@
 # Xclipse Open Project
 
-**Xclipse Open Project** is an evidence-driven effort to document Samsung Xclipse GPU platforms and, only when the evidence supports it, build open analysis tools, compiler components, diagnostic layers, and an experimental Vulkan driver.
+## Objetivo do repositório
 
-The first target is the **Samsung Xclipse 940** found in the **SM-S721B**, while **XO940** is the internal name of this documentation project. The repository is intentionally conservative: it separates direct observations, source-backed facts, reproducible experiments, hypotheses, and failed approaches. A documentation milestone is not presented as a driver milestone.
+O **Xclipse Open Project** existe para transformar observações de um aparelho real Samsung com Xclipse 940 em uma documentação técnica verificável. O projeto organiza a infraestrutura da GPU — Device Tree, plataforma, kernel SGPU/DRM, memória, IOMMU, firmware, filas, rings, Android e bibliotecas vendor — para que desenvolvedores possam estudar a arquitetura e avaliar, com segurança, a viabilidade de ferramentas e de um driver de espaço de usuário independente.
 
-> **Current conclusion:** the project has a real-device laboratory target, a hashed and indexed Samsung source/evidence archive, a confirmed SGPU DRM/memory bring-up path, and an unresolved Android loader/namespace boundary. It does **not** yet demonstrate an independent Vulkan driver, custom command submission, compute dispatch/readback, a decoded ISA, or a compiler backend.
+O nome interno do projeto é **XO940**. O hardware estudado é a **Samsung Xclipse 940** no **SM-S721B**, plataforma **s5e9945/erd9945**. XO940 não é o nome da GPU.
 
-## Evidence-first policy
+O repositório não afirma que RADV, Turnip ou AMDGPU possam ser usados diretamente. A finalidade é fornecer evidência suficiente para decidir o que pode ser reaproveitado, o que precisa ser adaptado e quais contratos ainda precisam ser descobertos.
 
-Every non-trivial claim must point to an artifact, a source path, or a reproducible experiment. Raw outputs are preserved without cosmetic editing. Interpretations live in separate documents. Test names must describe what was actually executed; a probe initializer, a capability query, or a test harness that never submits GPU work is not a rendering or compute test.
+## O que a página principal apresenta
 
-The project uses five evidence labels:
+A página principal não pretende listar aleatoriamente cada log, experimento ou arquivo intermediário. Ela apresenta somente:
 
-| Label | Meaning |
+1. **por que o projeto existe**;
+2. **como os dados são coletados**;
+3. **como os resultados são validados**;
+4. **quais são os mapas técnicos para download**.
+
+Os demais relatórios e inventários permanecem organizados nas pastas correspondentes para consulta técnica, sem transformar cada artefato em uma conclusão.
+
+## Como os dados são coletados
+
+A fonte primária é um **celular Samsung real**, identificado como SM-S721B, com acesso root controlado. A coleta combina:
+
+- identidade do aparelho, build, kernel, SoC, GPU, revisão e firmware;
+- leitura da Device Tree em runtime e comparação com o código-fonte Samsung fornecido;
+- inventário de `/dev/dri`, sysfs, módulos, processos, namespaces e bibliotecas;
+- observação de processos Android suportados, especialmente SurfaceFlinger, RenderThread, Gralloc e serviços que usam a GPU;
+- traces do kernel e do DRM, incluindo memória, VM, scheduler, IB, ring, context, seqno e sincronização;
+- análise estática de fontes, símbolos, strings e metadados ELF, sem tratar presença de arquivo como prova de execução;
+- probes reversíveis, com registro do comando, ambiente, saída bruta e estado de recuperação.
+
+Root permite observar recursos que um aplicativo comum não consegue acessar, mas **root não transforma Termux em membro do namespace vendor**, não libera automaticamente o ICD Samsung e não prova que uma operação de GPU foi executada.
+
+Arquivos brutos, dumps, bibliotecas vendor, firmware, scripts de captura e testes reais não são publicados automaticamente. A documentação pública contém derivados sanitizados e referências de proveniência.
+
+## Política de validação baseada em evidências
+
+Cada afirmação precisa indicar o que foi observado, em qual aparelho/revisão, por qual método e qual limite permanece. A classificação usada pelo projeto é:
+
+| Classe | Significado |
 | --- | --- |
-| **Confirmed** | Observed directly and reproduced, or supported by a clear public source. |
-| **Confirmed by source** | Found in Samsung source, kernel documentation, or a verifiable symbol/path. |
-| **Probable** | Inferred from multiple observations but not directly tested. |
-| **Hypothesis** | A working possibility that still requires an experiment. |
-| **Discarded** | The specific approach was tested and failed; this does not prove every alternative fails. |
+| **Confirmado** | Observado diretamente e reproduzido, ou sustentado por fonte verificável. |
+| **Confirmado por fonte** | Caminho, interface ou comportamento localizado no código-fonte ou documentação. |
+| **Parcial** | Parte do contrato foi observada, mas falta uma operação fim a fim. |
+| **Indício** | Símbolo, string, export ou caminho sem prova de execução controlada. |
+| **Hipótese** | Possibilidade de trabalho que ainda exige experimento. |
+| **Negativo específico** | Uma abordagem determinada falhou; isso não invalida todas as alternativas. |
 
-## What is currently known
+Um arquivo chamado `test`, `probe`, `exec` ou `compute` não é automaticamente um teste bem-sucedido. Para declarar execução real, é preciso demonstrar dispositivo-alvo, recurso visível para a GPU, submissão, sincronização e resultado validado por readback ou apresentação. Inicialização, enumeração, criação de pipeline, export ELF ou existência de ICD não substituem essa prova.
 
-The Samsung Vulkan ICD is reported at `/vendor/lib64/hw/vulkan.samsung.so`, and the system loader is reported at `/system/lib64/libvulkan.so`. The original Vulkan probe, when run from the Termux namespace, exposed only `llvmpipe` with vendor `0x10005`; the Samsung GPU with vendor `0x144d` was not visible in that namespace. The same visibility result was observed in a root session with SELinux temporarily permissive. Directly opening the Samsung ICD from the Termux environment was blocked by the linker namespace and ended in a segmentation fault. The defensible interpretation is an Android loader/namespace/ICD integration problem, not proof that the vendor driver is absent.
+## Downloads técnicos principais
 
-The SGPU path is independently visible through DRM: `/dev/dri/renderD128` is bound to the `sgpu` platform driver, while `/dev/dri/renderD129` belongs to `exynos-drm`. The supplied SGPU probe completed a 64 KiB GTT allocation, CPU map/touch, VA map/unmap, and close; its source explicitly submits no GPU work. The Vulkan probe creates a pipeline candidate but has no queue, dispatch, submit, or readback.
+### 1. Mapa Xclipse 940 — ramificação visual
 
-These observations are recorded as initial project evidence, not as a claim that a custom driver already works.
+Mostra os caminhos principais da infraestrutura Xclipse em forma de mapa: Device Tree, plataforma, kernel, memória, IOMMU, DRM, Android, bibliotecas vendor e possíveis clientes. É o arquivo para entender **por onde as partes se conectam**.
 
-## Repository map
+- [Mapa Xclipse 940 — PNG](artifacts/MAPA_Xclipse_940.png)
+- [Fonte editável Mermaid](artifacts/MAPA_Xclipse_940.mmd)
+- [Ramificação técnica em PDF](artifacts/RAMIFICACAO_Xclipse_Open_940.pdf)
 
-The repository is organized by the dependency order of the work:
+### 2. Mapa técnico completo da Xclipse 940
 
-- `docs/` contains the platform, kernel, memory, MMU, command processor, ISA, Vulkan, Android, and validation specifications.
-- `source-analysis/` contains inventories and cross-references for the Samsung source archive. The archive itself is not committed until licensing and size constraints are understood.
-- `data/` contains small, reproducible metadata and sanitized fixtures. Sensitive or raw device captures remain local by default.
-- `tools/` contains safe probes, parsers, decoders, and reproducibility helpers.
-- `tests/` distinguishes harness initialization, observation, and actual GPU work. A test is only a test of a capability when it executes and validates that capability.
-- `compiler/`, `driver/`, `layers/`, and `android/` are implementation areas that remain experimental until their entry criteria are met.
-- `reports/` stores experiment reports, failures, comparisons, and milestone decisions.
-- `artifacts/` stores the downloadable principal PDF, the detailed public study, and the separate PDF-only technical branch. The principal PDF documents the project; the detailed study covers the 2026-09-06 evidence; the branch contains only the mapped Xclipse/kernel/GPU/DRM/Vulkan/OpenCL structure, not the repository tree.
+Documento textual detalhado com a identidade observada, Device Tree, UAPI, BO/VM, IOMMU, submissão GFX, rings, firmware, Android, OpenCL, Vulkan e limites de evidência.
 
-The latest public review is [`reports/estudo-detalhado-xclipse-940-2026-09-06.md`](reports/estudo-detalhado-xclipse-940-2026-09-06.md), with its evidence map in [`source-analysis/xclipse-2026-09-06-evidence-map.md`](source-analysis/xclipse-2026-09-06-evidence-map.md). Raw tests, capture scripts, traces, binaries and vendor libraries are intentionally excluded.
+- [Mapa técnico completo](artifacts/MAPA_TECNICO_COMPLETO_Xclipse_940.md)
 
-## Investigation sequence
+### 3. Pontos de entrada para driver ou port RADV
 
-The recommended order is: governance and inventory; platform and kernel; safe observability; memory and MMU; queues and command processor; minimal compute; ISA and compiler; Vulkan mapping; diagnostic layers; independent driver; validation and maintenance.
+Arquivo de estudo que separa hooks reais, símbolos apenas observados, endpoints DRM, rotas via `libdrm_sgpu`, compute/OpenCL e uma futura camada Mesa/Vulkan.
 
-This order is deliberate. Vulkan API work cannot substitute for understanding memory allocation, virtual memory, queue submission, synchronization, firmware, reset, and recovery.
+- [Pontos de entrada para driver](artifacts/PONTOS_ENTRADA_DRIVER_Xclipse_940.md)
 
-## Immediate next step
+### 4. Pacote de documentação pública
 
-Complete file-level license/provenance review for the Samsung source and vendor binaries, then map the production Android process and linker namespace that loads the Samsung ICD. Only after that should the project design a minimal queue/submit/readback experiment. Do not copy proprietary code or firmware into new implementation files before a license review.
+- [Release de documentação](https://github.com/souza60029-wq/Xclipse-Open-Project/releases/tag/documentation-2026-09-06)
+- [Pacote ZIP completo](artifacts/Xclipse-Open-Project-public-documentation-2026-09-06.zip)
 
-## Safety and provenance
+## Estado atual resumido
 
-This repository is private at creation time. It does not grant permission to redistribute Samsung code or firmware. See `NOTICE.md`, `LICENSE`, `SECURITY.md`, and `CONTRIBUTING.md` before adding source or device artifacts.
+Já foram observados o dispositivo SGPU, o render node `renderD128`, o caminho de memória/VM, o carregamento vendor em processo Android suportado e atividade de submissão GFX no caminho existente. Ainda não foi demonstrado um cliente independente com IB próprio, fence própria, readback controlado, compute externo ou driver Vulkan independente.
 
-## References
+A sequência de trabalho é deliberadamente conservadora:
 
-[1]: https://quickshare.samsungcloud.com/cN3RdfqvjU6y "Quick Share archive supplied for Xclipse Open Project analysis"
-[2]: https://source.android.com/docs/core/architecture/vndk/linker-namespace "Android linker namespaces"
-[3]: https://registry.khronos.org/vulkan/specs/1.3-extensions/html/ "Vulkan API specification"
+```text
+Device Tree/plataforma
+        ↓
+DRM/UAPI + BO/VM/IOMMU
+        ↓
+context + IB + ring + scheduler
+        ↓
+fence + readback
+        ↓
+compute controlado
+        ↓
+backend Vulkan/Mesa experimental
+```
+
+## Proveniência e segurança
+
+O repositório é privado e não concede permissão para redistribuir código Samsung, firmware ou bibliotecas vendor. O material público é sanitizado e deve ser interpretado junto com os limites registrados nos relatórios.
+
+- [Política completa de validação](docs/validation-and-evidence.md)
+- [Status técnico](STATUS.md)
+- [Índice de artefatos](artifacts/README.md)
+- [Estudo detalhado de resultados](reports/estudo-detalhado-xclipse-940-2026-09-06.md)
+- [Mapa público de evidências](source-analysis/xclipse-2026-09-06-evidence-map.md)

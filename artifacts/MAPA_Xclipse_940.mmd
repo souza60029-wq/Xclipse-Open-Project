@@ -1,0 +1,45 @@
+flowchart TD
+  SOC[SoC Exynos / Android] --> DT[Device Tree: sgpu@22200000]
+  DT --> PLAT[Power G3DCORE, clocks, DVFS, reset, IRQ, thermal, AFM/IFPO]
+  DT --> MMIO[MMIO: gpu, doorbell, debug, pwrctl, sysreg, htu]
+  DT --> MEMRES[Reserved memory, gpu_buffer DMA heap]
+  DT --> IOMMU[SysMMU/IOMMU, streams, IOVA]
+  PLAT --> KERNEL[Kernel SGPU / DRM]
+  MMIO --> KERNEL
+  MEMRES --> KERNEL
+  IOMMU --> KERNEL
+  KERNEL --> UAPI[sgpu_drm.h / DRM UAPI]
+  KERNEL --> BO[BO/GEM/TTM/DMA-BUF]
+  KERNEL --> VM[VM/PTE/PDE/flush]
+  KERNEL --> SCHED[Scheduler / context / priority]
+  KERNEL --> QUEUE[GFX, COMPUTE, SDMA / rings / IB / doorbell]
+  KERNEL --> SYNC[Fences, syncobjs, dependencies, reset]
+  KERNEL --> FW[Firmware SGPU 2.23.0 / RTL 0x4ea15]
+  BO --> VM
+  VM --> SUBMIT[amdgpu_cs_ioctl]
+  SCHED --> SUBMIT
+  SUBMIT --> RUN[amdgpu_sched_run_job]
+  RUN --> IB[amdgpu_ib_schedule]
+  IB --> RING[gfx_0.0.0 / num_ibs=3 observed]
+  RING --> OUT[Completion / fence / readback: incomplete]
+  ANDROID[Android vendor stack] --> SF[SurfaceFlinger / RenderThread / Gralloc]
+  SF --> LOADER[libvulkan.so + linker namespace]
+  LOADER --> ICD[vulkan.samsung.so]
+  SF --> DRM[libdrm_sgpu.so + renderD128]
+  ANDROID --> CL[libOpenCL.so + libSGPUOpenCL.so]
+  DRM --> KERNEL
+  ICD --> KERNEL
+  CL --> KERNEL
+  TERMUX[Termux namespace] --> LLVMP[llvmpipe observed]
+  TERMUX -. blocked direct load .-> ICD
+  UAPI --> CLIENT[Future client DRM/SGPU]
+  CLIENT -. not yet proven .-> SUBMIT
+  CLIENT --> FUTURE[Future Vulkan/Mesa backend]
+  FUTURE -. depends on packet, ISA, compute and readback .-> OUT
+
+  classDef confirmed fill:#d5f5e3,stroke:#1e8449,color:#000
+  classDef partial fill:#fcf3cf,stroke:#b7950b,color:#000
+  classDef hypothesis fill:#f5eef8,stroke:#7d3c98,color:#000
+  class DT,PLAT,MMIO,MEMRES,IOMMU,KERNEL,UAPI,BO,VM,SCHED,QUEUE,SYNC,FW,SUBMIT,RUN,IB,RING,ANDROID,SF,LOADER,ICD,DRM,CL,TERMUX,LLVMP confirmed
+  class OUT,CLIENT partial
+  class FUTURE hypothesis
