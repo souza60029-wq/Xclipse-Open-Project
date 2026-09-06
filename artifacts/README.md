@@ -11,6 +11,10 @@ Este diretório contém duas versões do plano atualizado do projeto **Xclipse O
 
 O plano principal incorpora o estado observado no pacote fornecido, a separação entre probes e testes reais e a abordagem **5 dois meios**, com cinco descobertas essenciais e cinco descobertas úteis de segunda prioridade. O estudo detalhado registra a atualização de 2026-09-06. A ramificação é deliberadamente separada e representa apenas a estrutura técnica do hardware, não o plano do projeto.
 
+## Release para download
+
+Os três arquivos principais também estão reunidos na [release de documentação pública](https://github.com/souza60029-wq/Xclipse-Open-Project/releases/tag/documentation-2026-09-06), na mesma área usada para downloads de versões lançadas.
+
 Os PDFs foram compilados com Typst em modo estrito e passaram pela verificação determinística de assinatura, parseabilidade, texto, fontes e ausência de placeholders.
 
 A ramificação contém caminhos observados no aparelho, caminhos localizados na fonte Samsung, interfaces vendor e relações técnicas inferidas. Um caminho inferido ou localizado não significa que sua implementação esteja aberta, carregada na revisão testada ou validada em runtime.
