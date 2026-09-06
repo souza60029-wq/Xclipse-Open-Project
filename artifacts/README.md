@@ -10,6 +10,7 @@ Este diretório contém duas versões do plano atualizado do projeto **Xclipse O
 | `Xclipse-Open-Project-public-documentation-2026-09-06.zip` | Pacote baixável com toda a documentação pública versionada, os mapas de Device Tree/ramificação técnica, relatórios, inventários sanitizados e os três PDFs. Não contém testes reais, traces crus, dumps, bibliotecas vendor, binários ou código proprietário. |
 | `MAPA_Xclipse_940.png` | Mapa visual da infraestrutura Xclipse 940: Device Tree, plataforma, kernel SGPU/DRM, memória, IOMMU, Android e caminhos de integração. |
 | `MAPA_Xclipse_940.mmd` | Fonte Mermaid editável do mapa visual. |
+| `MAPA_Xclipse_940_COMPLETO.md` | Documento principal unificado: imagem, ramificação, mapa técnico, estado de evidência e pontos de entrada para driver. |
 | `MAPA_TECNICO_COMPLETO_Xclipse_940.md` | Mapa textual completo com identidade, Device Tree, UAPI, BO/VM, IOMMU, firmware, rings, Android e limites de evidência. |
 | `PONTOS_ENTRADA_DRIVER_Xclipse_940.md` | Estudo separado dos pontos de entrada para um cliente DRM/SGPU e uma futura rota de driver/Mesa/Vulkan. |
 
@@ -17,7 +18,7 @@ O plano principal incorpora o estado observado no pacote fornecido, a separaçã
 
 ## Release para download
 
-Os três arquivos principais também estão reunidos na [release de documentação pública](https://github.com/souza60029-wq/Xclipse-Open-Project/releases/tag/documentation-2026-09-06), na mesma área usada para downloads de versões lançadas.
+O mapa completo, os PDFs e o pacote público também estão reunidos na [release de documentação pública](https://github.com/souza60029-wq/Xclipse-Open-Project/releases/tag/documentation-2026-09-06), na mesma área usada para downloads de versões lançadas.
 
 Os PDFs foram compilados com Typst em modo estrito e passaram pela verificação determinística de assinatura, parseabilidade, texto, fontes e ausência de placeholders.
 

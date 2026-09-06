@@ -52,27 +52,22 @@ Um arquivo chamado `test`, `probe`, `exec` ou `compute` não é automaticamente 
 
 ## Downloads técnicos principais
 
-### 1. Mapa Xclipse 940 — ramificação visual
+### 1. Mapa completo Xclipse 940
 
-Mostra os caminhos principais da infraestrutura Xclipse em forma de mapa: Device Tree, plataforma, kernel, memória, IOMMU, DRM, Android, bibliotecas vendor e possíveis clientes. É o arquivo para entender **por onde as partes se conectam**.
+O mapa completo funde a **ramificação visual**, a explicação técnica e os pontos de entrada para um futuro cliente DRM/SGPU ou port de driver. A imagem aparece no início do documento e cada ramo é explicado nas seções seguintes, incluindo Device Tree, kernel, BO/VM, IOMMU, GFX, Android, OpenCL, Vulkan e limites de evidência.
 
-- [Mapa Xclipse 940 — PNG](artifacts/MAPA_Xclipse_940.png)
-- [Fonte editável Mermaid](artifacts/MAPA_Xclipse_940.mmd)
+- [Mapa completo — visual + técnico + pontos de entrada](artifacts/MAPA_Xclipse_940_COMPLETO.md)
+- [Imagem do mapa](artifacts/MAPA_Xclipse_940.png)
+
+### 2. Documentos complementares
+
+Os PDFs permanecem como versões de estudo e a fonte Mermaid continua disponível para edição, mas não são necessários para entender o mapa completo.
+
 - [Ramificação técnica em PDF](artifacts/RAMIFICACAO_Xclipse_Open_940.pdf)
+- [Estudo detalhado em PDF](artifacts/ESTUDO_DETALHADO_Xclipse_940_2026-09-06.pdf)
+- [Fonte editável Mermaid](artifacts/MAPA_Xclipse_940.mmd)
 
-### 2. Mapa técnico completo da Xclipse 940
-
-Documento textual detalhado com a identidade observada, Device Tree, UAPI, BO/VM, IOMMU, submissão GFX, rings, firmware, Android, OpenCL, Vulkan e limites de evidência.
-
-- [Mapa técnico completo](artifacts/MAPA_TECNICO_COMPLETO_Xclipse_940.md)
-
-### 3. Pontos de entrada para driver ou port RADV
-
-Arquivo de estudo que separa hooks reais, símbolos apenas observados, endpoints DRM, rotas via `libdrm_sgpu`, compute/OpenCL e uma futura camada Mesa/Vulkan.
-
-- [Pontos de entrada para driver](artifacts/PONTOS_ENTRADA_DRIVER_Xclipse_940.md)
-
-### 4. Pacote de documentação pública
+### 3. Pacote de documentação pública
 
 - [Release de documentação](https://github.com/souza60029-wq/Xclipse-Open-Project/releases/tag/documentation-2026-09-06)
 - [Pacote ZIP completo](artifacts/Xclipse-Open-Project-public-documentation-2026-09-06.zip)
