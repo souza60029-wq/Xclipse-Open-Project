@@ -1,6 +1,7 @@
 # Project Status
 
-**Status date:** 2026-09-05
+**Status date:** 2026-09-06
+**Internal project name:** XO940
 **Initial target:** Samsung Xclipse 940 / SM-S721B
 **Repository posture:** private, evidence collection and documentation phase
 
@@ -9,6 +10,8 @@
 The project is at the **Phase 0 → Phase 1 boundary: Device Tree and platform mapping**. The original Quick Share package and the new results package are hashed, integrity-checked, extracted outside Git, and indexed. The new results package SHA-256 is `59ac6221373572024c0967d642f9ead1f970c6791ff2428cb5c49ae73a5fe7fc`; it contains stage reports, Etapa 4 logs, Etapa 5 compiler analysis, and the vendor ICD. The archives and vendor binaries remain external evidence because license and redistribution status are not yet complete.
 
 The project is not yet at the driver bring-up phase. No statement in this file should be read as proof of a working independent ICD, custom queue submission, compute execution, ISA decoding, compiler lowering, or Mesa integration.
+
+The new 2026-09-06 collection strengthens the status of platform, VM and GFX scheduling. It contains `amdgpu_cs_ioctl`, `amdgpu_sched_run_job` and `amdgpu_ib_schedule` observations on `gfx_0.0.0`, while the compute IB capture remains negative. The public interpretation is documented in `reports/estudo-detalhado-xclipse-940-2026-09-06.md`.
 
 ## Evidence ledger
 
@@ -57,6 +60,8 @@ Any new claim must link to a report, raw artifact, source path, or reproduction 
 ## Current five priorities
 
 The old five-item ordering was replaced. The current priorities are: (1) complete Device Tree/platform mapping; (2) memory, IOMMU, DMA-BUF and buffer protection; (3) supported Android vendor path; (4) firmware, queues and recovery; and (5) controlled compute/shader capture. Five lower-cost read-only discoveries are listed in the same report to accelerate progress without skipping safety prerequisites.
+
+The technical branch means the hardware map of Device Tree, kernel, GPU, memory, power, IOMMU and Android paths. It is not the repository directory tree. Tests, capture scripts, raw traces, dumps, vendor libraries and binaries remain excluded from public publication.
 
 ## References
 

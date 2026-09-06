@@ -39,7 +39,9 @@ The repository is organized by the dependency order of the work:
 - `tests/` distinguishes harness initialization, observation, and actual GPU work. A test is only a test of a capability when it executes and validates that capability.
 - `compiler/`, `driver/`, `layers/`, and `android/` are implementation areas that remain experimental until their entry criteria are met.
 - `reports/` stores experiment reports, failures, comparisons, and milestone decisions.
-- `artifacts/` stores the downloadable principal PDF and the separate PDF-only ramificação técnica. The principal PDF documents the chip paths and tests; the ramificação contains only the mapped Xclipse/kernel/GPU/DRM/Vulkan/OpenCL structure.
+- `artifacts/` stores the downloadable principal PDF, the detailed public study, and the separate PDF-only technical branch. The principal PDF documents the project; the detailed study covers the 2026-09-06 evidence; the branch contains only the mapped Xclipse/kernel/GPU/DRM/Vulkan/OpenCL structure, not the repository tree.
+
+The latest public review is [`reports/estudo-detalhado-xclipse-940-2026-09-06.md`](reports/estudo-detalhado-xclipse-940-2026-09-06.md), with its evidence map in [`source-analysis/xclipse-2026-09-06-evidence-map.md`](source-analysis/xclipse-2026-09-06-evidence-map.md). Raw tests, capture scripts, traces, binaries and vendor libraries are intentionally excluded.
 
 ## Investigation sequence
 

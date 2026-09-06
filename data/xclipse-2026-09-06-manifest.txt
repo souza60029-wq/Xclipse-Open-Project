@@ -1,0 +1,40 @@
+# Manifesto público sanitizado — xclipse.zip
+
+SOURCE_ARCHIVE=xclipse.zip
+SOURCE_SHA256=registrado localmente; o arquivo bruto não é publicado
+SOURCE_DATE=2026-09-06
+TARGET=Samsung SM-S721B / Xclipse 940
+KERNEL=6.1.157-android14-11 aarch64
+
+## Conteúdo classificado
+
+- R1: Device Tree, plataforma, energia, IRQ, DVFS, IOMMU e G3D — **síntese publicada**.
+- R2: inventário runtime e nós DRM — **síntese publicada**.
+- R3: inventários ELF, símbolos, strings, namespaces e cadeia Android — **síntese publicada**.
+- R4: UAPI, Kconfig, Makefile e símbolos — **síntese publicada**.
+- R5: inventário ELF do ICD e bibliotecas — **síntese publicada**.
+- P2: VM, BO, PTE, IOVA e memória — **síntese publicada**.
+- P3: processos, OpenCL, Vulkan, HAL e namespaces — **síntese publicada**.
+- P4: submissão, scheduler, IB, fence e ring — **síntese publicada; traces crus não publicados**.
+- P5: compute e tracepoints — **síntese publicada; testes e scripts não publicados**.
+
+## Exclusões intencionais
+
+Não são publicados ZIPs internos, scripts de captura, executáveis, bibliotecas `.so`, dumps, traces crus, probes ou arquivos classificados como teste. O repositório contém somente documentação derivada, mapas, inventários sanitizados e PDFs de estudo.
+
+## Regra de interpretação
+
+Um roteiro, inicializador, presença de símbolo ou captura vazia não é tratado como teste bem-sucedido. Resultados de execução só são promovidos quando a saída contém a operação observada e seu contexto.
+
+## Evidências centrais
+
+- `R1_device_tree.txt`, `R1_sgpu_properties.txt`, `R1_power_iommu.txt`, `R1_g3d_links.txt`.
+- `R2_Runtime_Inventory_MASTER.txt`.
+- `R3_MASTER.txt`, `R4_UAPI_KCONFIG_SYMBOLS.txt`, `R5_ICD_ELF_INVENTORY.txt`.
+- `P2_10_RESUMO.txt`, `P2_11_PID_VM_CORRELATION.txt`.
+- `P4_5_SGPU_LIVE_JOB_SUBMISSION.txt`, `P4_6_SGPU_JOB_COMPLETION_FENCE_TRACE.txt`, `P4_12_SGPU_FENCE_SIGNAL_JOB_RETIRE_RING_RPTR_CORRELATION.txt`.
+- `P5_01_COMPUTE_PATH.txt`, `P5_04_COMPUTE_IB_CAPTURE.txt`, `P5_05_TRACEPOINT_DISCOVERY.txt`.
+
+## Status
+
+O pacote fornece evidência forte de plataforma, VM e submissão GFX. Ele ainda não fornece um dispatch compute independente com saída controlada.
