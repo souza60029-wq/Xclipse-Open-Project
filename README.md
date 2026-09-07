@@ -65,6 +65,7 @@ Os PDFs permanecem como versões de estudo e a fonte Mermaid continua disponíve
 
 - [Ramificação técnica em PDF](artifacts/RAMIFICACAO_Xclipse_Open_940.pdf)
 - [Estudo detalhado em PDF](artifacts/ESTUDO_DETALHADO_Xclipse_940_2026-09-06.pdf)
+- [Novas prioridades: CS, IB, rings, fences e execução GPU](artifacts/PRIORIDADES_CS_IB_GPU_EXECUTION_Xclipse_940.pdf)
 - [Fonte editável Mermaid](artifacts/MAPA_Xclipse_940.mmd)
 
 ### 3. Pacote de documentação pública
