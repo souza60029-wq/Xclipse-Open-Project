@@ -52,31 +52,15 @@ Um arquivo chamado `test`, `probe`, `exec` ou `compute` não é automaticamente 
 
 ## Downloads técnicos principais
 
-### 1. Mapa completo Xclipse 940
+A release pública contém somente três entregáveis: a documentação completa em PDF, o PDF visual com mapa, ramificação e mapa de falhas, e um ZIP com esses dois PDFs e os PNGs visuais. As prioridades internas, fontes de teste, código-fonte e logs crus não são ativos de download.
 
-O mapa completo funde a **ramificação visual**, a explicação técnica e os pontos de entrada para um futuro cliente DRM/SGPU ou port de driver. A imagem aparece no início do documento e cada ramo é explicado nas seções seguintes, incluindo Device Tree, kernel, BO/VM, IOMMU, GFX, Android, OpenCL, Vulkan e limites de evidência.
-
-- [Mapa completo — visual + técnico + pontos de entrada](artifacts/MAPA_Xclipse_940_COMPLETO.md)
-- [Imagem do mapa](artifacts/MAPA_Xclipse_940.png)
-
-### 2. Documentos complementares
-
-Os PDFs permanecem como versões de estudo e a fonte Mermaid continua disponível para edição, mas não são necessários para entender o mapa completo.
-
-- [Ramificação técnica em PDF](artifacts/RAMIFICACAO_Xclipse_Open_940.pdf)
-- [Estudo detalhado em PDF](artifacts/ESTUDO_DETALHADO_Xclipse_940_2026-09-06.pdf)
-- [Novas prioridades: CS, IB, rings, fences e execução GPU](artifacts/PRIORIDADES_CS_IB_GPU_EXECUTION_Xclipse_940.pdf)
-- [Análise dos novos xclipselogs — cliente próprio e CS aceito](reports/xclipselogs-2026-09-07-analysis.md)
-- [Fonte editável Mermaid](artifacts/MAPA_Xclipse_940.mmd)
-
-### 3. Pacote de documentação pública
-
-- [Release de documentação](https://github.com/souza60029-wq/Xclipse-Open-Project/releases/tag/documentation-2026-09-06)
-- [Pacote ZIP completo](artifacts/Xclipse-Open-Project-public-documentation-2026-09-07.zip)
+- [Documentação completa da Xclipse 940](public/DOCUMENTACAO_Xclipse_940_COMPLETA.pdf)
+- [Mapa, ramificação e falhas](public/MAPA_E_RAMIFICACAO_Xclipse_940.pdf)
+- [Release pública com os três entregáveis](https://github.com/souza60029-wq/Xclipse-Open-Project/releases/tag/documentation-2026-09-06)
 
 ## Estado atual resumido
 
-Já foram observados o dispositivo SGPU, o render node `renderD128`, o caminho de memória/VM, o carregamento vendor em processo Android suportado e atividade de submissão GFX no caminho existente. Ainda não foi demonstrado um cliente independente com IB próprio, fence própria, readback controlado, compute externo ou driver Vulkan independente.
+Já foram observados o dispositivo SGPU, o render node `renderD128`, o caminho de memória/VM, o carregamento vendor em processo Android suportado e atividade de submissão GFX no caminho existente. Um cliente independente já abriu o render node, criou BO/VA/BO_LIST/contexto e obteve aceitação de um CS específico; execução GPU, fence própria, readback controlado, compute externo e driver Vulkan independente ainda não foram demonstrados.
 
 A sequência de trabalho é deliberadamente conservadora:
 

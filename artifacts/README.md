@@ -1,28 +1,13 @@
-# Plano técnico em PDF
+# Artefatos públicos do XO940
 
-Este diretório contém duas versões do plano atualizado do projeto **Xclipse Open Project — XO940**.
+A distribuição pública foi consolidada para reduzir duplicação e evitar que documentos de trabalho sejam confundidos com resultados finais. A release contém somente três ativos: dois PDFs de estudo e um ZIP que reúne os PDFs e as imagens dos mapas.
 
-| Arquivo | Conteúdo |
+| Entregável | Conteúdo |
 | --- | --- |
-| `PLANO_Xclipse_Open_940.pdf` | Plano técnico principal, sem a ramificação. Contém a documentação dos caminhos do chip, estado observado, testes, critérios e a abordagem 5 dois meios. |
-| `RAMIFICACAO_Xclipse_Open_940.pdf` | PDF exclusivo da ramificação técnica. Contém somente a estrutura observada/mapeada do Xclipse: plataforma, kernel, GPU, firmware, DRM, Vulkan, OpenCL, processos Android, compiler e caminhos relacionados. Não é a árvore do repositório. |
-| `ESTUDO_DETALHADO_Xclipse_940_2026-09-06.pdf` | Estudo público detalhado da nova coleta: Device Tree, IOMMU, VM/BO, submissão GFX, scheduler/IB, Android vendor, OpenCL, bloqueios e rotas de investigação. Inclui a ramificação técnica e o mapa de evidências. |
-| `PRIORIDADES_CS_IB_GPU_EXECUTION_Xclipse_940.pdf` | Novas prioridades dirigidas a command submission, `AMDGPU_CHUNK_ID_IB`, VA/size/alignment, context, `BO_LIST`, rings, `HW_IP_INFO`, fences, recovery, `dmesg` e execução GPU. |
-| `reports/xclipselogs-2026-09-07-analysis.md` | Análise sanitizada dos novos experimentos de render node, GEM, VA, BO_LIST, contexto e CS próprio. |
-| `PRIORIDADES_CS_IB_GPU_EXECUTION_Xclipse_940.md` | Fonte Markdown do relatório de prioridades; contém a matriz item a item e a cadeia userspace → CS → KMD → IB/ring → GPU → fence. |
-| `Xclipse-Open-Project-public-documentation-2026-09-07.zip` | Pacote baixável com toda a documentação pública versionada, os mapas de Device Tree/ramificação técnica, relatórios, inventários sanitizados e os três PDFs. Não contém testes reais, traces crus, dumps, bibliotecas vendor, binários ou código proprietário. |
-| `MAPA_Xclipse_940.png` | Mapa visual da infraestrutura Xclipse 940: Device Tree, plataforma, kernel SGPU/DRM, memória, IOMMU, Android e caminhos de integração. |
-| `MAPA_Xclipse_940.mmd` | Fonte Mermaid editável do mapa visual. |
-| `MAPA_Xclipse_940_COMPLETO.md` | Documento principal unificado: imagem, ramificação, mapa técnico, estado de evidência e pontos de entrada para driver. |
-| `MAPA_TECNICO_COMPLETO_Xclipse_940.md` | Mapa textual completo com identidade, Device Tree, UAPI, BO/VM, IOMMU, firmware, rings, Android e limites de evidência. |
-| `PONTOS_ENTRADA_DRIVER_Xclipse_940.md` | Estudo separado dos pontos de entrada para um cliente DRM/SGPU e uma futura rota de driver/Mesa/Vulkan. |
+| `DOCUMENTACAO_Xclipse_940_COMPLETA.pdf` | Documentação técnica consolidada: plataforma, Device Tree, SGPU/DRM, GEM/BO/VA/IOMMU, CS/IB, scheduler, fences, Android, OpenCL, Vulkan, compiler/ISA e resultados técnicos dos experimentos de cliente próprio. |
+| `MAPA_E_RAMIFICACAO_Xclipse_940.pdf` | Mapa visual da infraestrutura, ramificação técnica, legenda cromática e mapa visual de possíveis falhas/brechas de portabilidade. |
+| `Xclipse-Open-Project-public-final.zip` | Pacote com os dois PDFs e os dois PNGs visuais. |
 
-O plano principal incorpora o estado observado no pacote fornecido, a separação entre probes e testes reais e a abordagem **5 dois meios**, com cinco descobertas essenciais e cinco descobertas úteis de segunda prioridade. O estudo detalhado registra a atualização de 2026-09-06. A ramificação é deliberadamente separada e representa apenas a estrutura técnica do hardware, não o plano do projeto.
+As prioridades internas não são ativos públicos. Fontes C, código-fonte, executáveis de teste, bibliotecas vendor, firmware, logs crus, dumps de memória e `dmesg` completo também não são ativos de download.
 
-## Release para download
-
-O mapa completo, os PDFs e o pacote público também estão reunidos na [release de documentação pública](https://github.com/souza60029-wq/Xclipse-Open-Project/releases/tag/documentation-2026-09-06), na mesma área usada para downloads de versões lançadas.
-
-Os PDFs foram compilados com Typst em modo estrito e passaram pela verificação determinística de assinatura, parseabilidade, texto, fontes e ausência de placeholders.
-
-A ramificação contém caminhos observados no aparelho, caminhos localizados na fonte Samsung, interfaces vendor e relações técnicas inferidas. Um caminho inferido ou localizado não significa que sua implementação esteja aberta, carregada na revisão testada ou validada em runtime.
+Os PDFs usam linguagem técnica e distinguem explicitamente fato observado, confirmação por fonte, resultado parcial, indício, hipótese e falha específica. A aceitação de um ioctl de CS não é descrita como execução GPU sem fence e readback independentes.
