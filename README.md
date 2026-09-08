@@ -72,7 +72,7 @@ Os PDFs permanecem como versões de estudo e a fonte Mermaid continua disponíve
 ### 3. Pacote de documentação pública
 
 - [Release de documentação](https://github.com/souza60029-wq/Xclipse-Open-Project/releases/tag/documentation-2026-09-06)
-- [Pacote ZIP completo](artifacts/Xclipse-Open-Project-public-documentation-2026-09-06.zip)
+- [Pacote ZIP completo](artifacts/Xclipse-Open-Project-public-documentation-2026-09-07.zip)
 
 ## Estado atual resumido
 

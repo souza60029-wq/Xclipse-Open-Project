@@ -10,7 +10,7 @@ Este diretório contém duas versões do plano atualizado do projeto **Xclipse O
 | `PRIORIDADES_CS_IB_GPU_EXECUTION_Xclipse_940.pdf` | Novas prioridades dirigidas a command submission, `AMDGPU_CHUNK_ID_IB`, VA/size/alignment, context, `BO_LIST`, rings, `HW_IP_INFO`, fences, recovery, `dmesg` e execução GPU. |
 | `reports/xclipselogs-2026-09-07-analysis.md` | Análise sanitizada dos novos experimentos de render node, GEM, VA, BO_LIST, contexto e CS próprio. |
 | `PRIORIDADES_CS_IB_GPU_EXECUTION_Xclipse_940.md` | Fonte Markdown do relatório de prioridades; contém a matriz item a item e a cadeia userspace → CS → KMD → IB/ring → GPU → fence. |
-| `Xclipse-Open-Project-public-documentation-2026-09-06.zip` | Pacote baixável com toda a documentação pública versionada, os mapas de Device Tree/ramificação técnica, relatórios, inventários sanitizados e os três PDFs. Não contém testes reais, traces crus, dumps, bibliotecas vendor, binários ou código proprietário. |
+| `Xclipse-Open-Project-public-documentation-2026-09-07.zip` | Pacote baixável com toda a documentação pública versionada, os mapas de Device Tree/ramificação técnica, relatórios, inventários sanitizados e os três PDFs. Não contém testes reais, traces crus, dumps, bibliotecas vendor, binários ou código proprietário. |
 | `MAPA_Xclipse_940.png` | Mapa visual da infraestrutura Xclipse 940: Device Tree, plataforma, kernel SGPU/DRM, memória, IOMMU, Android e caminhos de integração. |
 | `MAPA_Xclipse_940.mmd` | Fonte Mermaid editável do mapa visual. |
 | `MAPA_Xclipse_940_COMPLETO.md` | Documento principal unificado: imagem, ramificação, mapa técnico, estado de evidência e pontos de entrada para driver. |
