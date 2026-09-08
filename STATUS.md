@@ -11,7 +11,7 @@ The project is at the **Phase 0 → Phase 1 boundary: Device Tree and platform m
 
 The project is not yet at the driver bring-up phase. No statement in this file should be read as proof of a working independent ICD, custom queue submission, compute execution, ISA decoding, compiler lowering, or Mesa integration.
 
-The new 2026-09-06 collection strengthens the status of platform, VM and GFX scheduling. It contains `amdgpu_cs_ioctl`, `amdgpu_sched_run_job` and `amdgpu_ib_schedule` observations on `gfx_0.0.0`, while the compute IB capture remains negative. The public interpretation is documented in `reports/estudo-detalhado-xclipse-940-2026-09-06.md`.
+The 2026-09-06 collection strengthened platform, VM and vendor GFX scheduling. The 2026-09-07 xclipselogs additionally show a client-owned `DRM_IOCTL_AMDGPU_CS` accepted by the KMD for one specific IB/chunk input; execution, fence and readback remain unproven. The public interpretation is documented in `reports/estudo-detalhado-xclipse-940-2026-09-06.md`.
 
 ## Evidence ledger
 
@@ -34,7 +34,7 @@ The new 2026-09-06 collection strengthens the status of platform, VM and GFX sch
 | Vulkan probe class | Pipeline metadata probe; no queue, dispatch, submit, or readback. | Confirmed from source | Not a compute execution test. |
 | Root/SELinux | Root plus temporary `Permissive` did not change loader result; restored to `Enforcing`. | Confirmed for experiment | Root is not namespace membership. |
 | Kernel/UAPI | `sgpu_drm.h`, SGPU driver, s5e9945 DT, IOMMU/DMA-BUF paths inventoried. | Confirmed by source | File-level licensing and runtime correlation pending. |
-| Custom GPU work | No custom submission or independent driver demonstrated. | Confirmed negative status | Do not advance before queue/recovery evidence. |
+| Custom GPU work | One client-owned CS ioctl was accepted; independent GPU execution remains unproven. | Partial positive / no execution proof | Correlate fence, kernel log, GPU effect and readback. |
 | ISA/compiler | Static vendor compiler/encoding infrastructure strongly evidenced; no native ISA stream captured. | Confirmed static evidence | Correlate controlled shader, binary and runtime instruction. |
 
 ## Entry criteria for the next phase
@@ -66,3 +66,9 @@ The technical branch means the hardware map of Device Tree, kernel, GPU, memory,
 ## References
 
 [1]: https://quickshare.samsungcloud.com/cN3RdfqvjU6y "Quick Share archive supplied for Xclipse Open Project analysis"
+
+## Addendum 2026-09-07 — xclipselogs
+
+A nova rodada `xclipselogs.zip` acrescentou evidência de um cliente DRM próprio em `/dev/dri/renderD128`. O cliente confirmou abertura do render node, criação de GEM/BO, VA map/unmap, criação de BO_LIST e criação de contexto. Em `A1.5_REAL_CS_20260907_161914`, um `DRM_IOCTL_AMDGPU_CS` foi aceito (`ioctl_ret=0`, `CS_IOCTL=ACCEPTED`) para um chunk IB (`chunk_id=0x1`) com VA `0x4000000000` e `ib_bytes=4`.
+
+Esse resultado confirma **aceitação de uma entrada de command submission pelo KMD**, mas não confirma execução GPU, fence própria, GPU write ou readback. Variantes próximas foram rejeitadas com `EINVAL` ou `EFAULT`/`Bad address`. O relatório sanitizado está em [`reports/xclipselogs-2026-09-07-analysis.md`](reports/xclipselogs-2026-09-07-analysis.md). Fontes C, executáveis, logs crus e `dmesg` permanecem fora do repositório.

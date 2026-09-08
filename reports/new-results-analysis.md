@@ -45,3 +45,9 @@ O pacote não fornece um trace comprovando a cadeia completa `BO antes → submi
 ## Política de publicação
 
 O binário `vulkan.samsung.so`, bibliotecas vendor e logs crus permanecem fora do Git. O repositório publica apenas conclusões, metadados, caminhos, hashes e documentação de proveniência. Qualquer código Samsung continua sujeito a revisão de licença e não deve ser redistribuído por estar presente no pacote de trabalho.
+
+## Addendum 2026-09-07 — xclipselogs
+
+A nova rodada `xclipselogs.zip` acrescentou evidência de um cliente DRM próprio em `/dev/dri/renderD128`. O cliente confirmou abertura do render node, criação de GEM/BO, VA map/unmap, criação de BO_LIST e criação de contexto. Em `A1.5_REAL_CS_20260907_161914`, um `DRM_IOCTL_AMDGPU_CS` foi aceito (`ioctl_ret=0`, `CS_IOCTL=ACCEPTED`) para um chunk IB (`chunk_id=0x1`) com VA `0x4000000000` e `ib_bytes=4`.
+
+Esse resultado confirma **aceitação de uma entrada de command submission pelo KMD**, mas não confirma execução GPU, fence própria, GPU write ou readback. Variantes próximas foram rejeitadas com `EINVAL` ou `EFAULT`/`Bad address`. O relatório sanitizado está em [`reports/xclipselogs-2026-09-07-analysis.md`](reports/xclipselogs-2026-09-07-analysis.md). Fontes C, executáveis, logs crus e `dmesg` permanecem fora do repositório.

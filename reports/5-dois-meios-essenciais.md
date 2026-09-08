@@ -101,3 +101,9 @@ Um nome contendo `test`, `probe`, `trace`, `compute` ou `submit` não classifica
 A Xclipse 940 não deve ser tratada como uma simples GPU de PC transplantada para um celular. O caminho observado combina elementos familiares do ecossistema AMD/AMDGPU — BO, VM, scheduler, IB, rings e nomenclatura de traces — com integração Samsung específica de Device Tree, power-domain, IOMMU, firmware, Android, namespaces e bibliotecas vendor. Isso torna uma arquitetura de driver independente plausível como investigação, mas impede copiar diretamente um driver existente sem validar cada contrato.
 
 Os artefatos crus, testes, scripts de captura, bibliotecas e binários permanecem fora do GitHub público. Este documento publica apenas objetivos, critérios e interpretação técnica.
+
+## Addendum 2026-09-07 — xclipselogs
+
+A nova rodada `xclipselogs.zip` acrescentou evidência de um cliente DRM próprio em `/dev/dri/renderD128`. O cliente confirmou abertura do render node, criação de GEM/BO, VA map/unmap, criação de BO_LIST e criação de contexto. Em `A1.5_REAL_CS_20260907_161914`, um `DRM_IOCTL_AMDGPU_CS` foi aceito (`ioctl_ret=0`, `CS_IOCTL=ACCEPTED`) para um chunk IB (`chunk_id=0x1`) com VA `0x4000000000` e `ib_bytes=4`.
+
+Esse resultado confirma **aceitação de uma entrada de command submission pelo KMD**, mas não confirma execução GPU, fence própria, GPU write ou readback. Variantes próximas foram rejeitadas com `EINVAL` ou `EFAULT`/`Bad address`. O relatório sanitizado está em [`reports/xclipselogs-2026-09-07-analysis.md`](reports/xclipselogs-2026-09-07-analysis.md). Fontes C, executáveis, logs crus e `dmesg` permanecem fora do repositório.

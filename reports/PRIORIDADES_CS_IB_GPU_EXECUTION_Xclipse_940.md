@@ -10,7 +10,7 @@
 
 ## Resumo executivo
 
-A investigação já confirmou atividade real de command submission gráfica no caminho vendor da Xclipse 940. Os traces P4.5, P4.6 e P4.12 registram `amdgpu_cs_ioctl`, execução pelo scheduler, `amdgpu_ib_schedule`, `sched_job`, `context`, `seqno`, `gfx_0.0.0` e `num_ibs=3`. Essa evidência é significativamente mais forte do que a simples presença de bibliotecas, símbolos ou inicializadores.
+A investigação já confirmou atividade real de command submission gráfica no caminho vendor e, na rodada de 2026-09-07, obteve uma aceitação de CS por um cliente próprio. Os traces P4.5, P4.6 e P4.12 registram `amdgpu_cs_ioctl`, execução pelo scheduler, `amdgpu_ib_schedule`, `sched_job`, `context`, `seqno`, `gfx_0.0.0` e `num_ibs=3`. Essa evidência é significativamente mais forte do que a simples presença de bibliotecas, símbolos ou inicializadores.
 
 Entretanto, a cadeia completa que interessa ao desenvolvimento independente ainda não foi fechada. Continuam faltando, em uma captura correlacionada e controlada, o conteúdo bruto do CS/chunks, a identificação explícita de `AMDGPU_CHUNK_ID_IB`, os campos de VA/tamanho/alinhamento do IB, a `BO_LIST` do mesmo CS, a consulta `HW_IP_INFO`, a correlação completa entre out-fence/syncobj e conclusão, além de uma campanha sistemática de faults, hangs, resets, recovery e `dmesg` pareado.
 
@@ -56,7 +56,7 @@ eventos relacionados a fence / retire / gpu_work_period
 
 P4.5 relaciona `sgpu_pio_map_queue`, `amdgpu_vm_bo_cs`, `amdgpu_vm_flush` e o envio do job. P4.6 relaciona a atividade de VM com scheduler, IB e dependências SGPU. P4.12 contém uma janela com 13 chamadas de `amdgpu_cs_ioctl`, 13 execuções de scheduler e 13 chamadas de `amdgpu_ib_schedule`, todas associadas ao timeline/ring `gfx_0.0.0` e a `num_ibs=3`.
 
-Essa é uma confirmação de atividade de CS/KMD/GFX no caminho observado. Ela não equivale à prova de um cliente próprio nem à prova de que o conteúdo dos IBs foi interpretado com sucesso e produziu um resultado conhecido.
+Essa é uma confirmação de atividade de CS/KMD/GFX no caminho observado. Os novos logs também confirmam que um cliente próprio conseguiu uma aceitação específica do ioctl de CS. Isso ainda não prova que o conteúdo do IB foi interpretado com sucesso nem que produziu um resultado conhecido.
 
 ## 3. Dez novas prioridades
 
@@ -148,3 +148,9 @@ O estado atual pode ser resumido assim:
 [1] [2] [3] [4]
 
 > Este documento registra o estado da documentação existente. Ele não afirma que uma captura futura já foi realizada nem que um driver independente está funcional.
+
+## Addendum 2026-09-07 — xclipselogs
+
+A nova rodada `xclipselogs.zip` acrescentou evidência de um cliente DRM próprio em `/dev/dri/renderD128`. O cliente confirmou abertura do render node, criação de GEM/BO, VA map/unmap, criação de BO_LIST e criação de contexto. Em `A1.5_REAL_CS_20260907_161914`, um `DRM_IOCTL_AMDGPU_CS` foi aceito (`ioctl_ret=0`, `CS_IOCTL=ACCEPTED`) para um chunk IB (`chunk_id=0x1`) com VA `0x4000000000` e `ib_bytes=4`.
+
+Esse resultado confirma **aceitação de uma entrada de command submission pelo KMD**, mas não confirma execução GPU, fence própria, GPU write ou readback. Variantes próximas foram rejeitadas com `EINVAL` ou `EFAULT`/`Bad address`. O relatório sanitizado está em [`reports/xclipselogs-2026-09-07-analysis.md`](reports/xclipselogs-2026-09-07-analysis.md). Fontes C, executáveis, logs crus e `dmesg` permanecem fora do repositório.

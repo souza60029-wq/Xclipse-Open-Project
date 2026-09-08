@@ -11,7 +11,7 @@ O pacote novo acrescenta evidência substancial sobre o caminho real da Xclipse 
 
 Os traces P4.5, P4.6 e P4.12 são a evidência mais importante desta rodada. Eles mostram chamadas `amdgpu_cs_ioctl`, execução pelo scheduler em `gfx_0.0.0` e `amdgpu_ib_schedule`, incluindo `num_ibs=3`. P4.5 também mostra o vínculo temporal entre `sgpu_pio_map_queue`, `amdgpu_vm_bo_cs`, `amdgpu_vm_flush` e o envio do job. Isso confirma atividade de submissão GFX no caminho observado.
 
-A evidência ainda não demonstra que um novo driver independente consegue criar e executar um workload controlado. P5.04 não capturou um IB compute nem eventos de dispatch. A presença de exports OpenCL, de `libSGPUOpenCL.so` e de símbolos de compilador prova uma superfície instalada e um backend proprietário existente, mas não prova que qualquer programa externo possa usar essa superfície fora dos namespaces e permissões originais.
+A evidência histórica não demonstrava um workload controlado; os logs de 2026-09-07 agora mostram que um cliente próprio obteve aceitação de um CS específico, mas ainda não demonstram execução GPU, fence própria ou readback. P5.04 não capturou um IB compute nem eventos de dispatch. A presença de exports OpenCL, de `libSGPUOpenCL.so` e de símbolos de compilador prova uma superfície instalada e um backend proprietário existente, mas não prova que qualquer programa externo possa usar essa superfície fora dos namespaces e permissões originais.
 
 A rota tecnicamente mais promissora é incremental. Primeiro, deve-se reproduzir o contrato de plataforma e memória com base no Device Tree e na UAPI SGPU. Depois, deve-se correlacionar submissão, VM, fences e conclusão em uma aplicação controlada. Somente após isso faz sentido estudar a tradução de comandos, ISA e uma camada Vulkan.
 
@@ -120,3 +120,8 @@ Os identificadores abaixo apontam para os artefatos recebidos na análise local.
 
 Manus AI
 
+## Addendum 2026-09-07 — xclipselogs
+
+A nova rodada `xclipselogs.zip` acrescentou evidência de um cliente DRM próprio em `/dev/dri/renderD128`. O cliente confirmou abertura do render node, criação de GEM/BO, VA map/unmap, criação de BO_LIST e criação de contexto. Em `A1.5_REAL_CS_20260907_161914`, um `DRM_IOCTL_AMDGPU_CS` foi aceito (`ioctl_ret=0`, `CS_IOCTL=ACCEPTED`) para um chunk IB (`chunk_id=0x1`) com VA `0x4000000000` e `ib_bytes=4`.
+
+Esse resultado confirma **aceitação de uma entrada de command submission pelo KMD**, mas não confirma execução GPU, fence própria, GPU write ou readback. Variantes próximas foram rejeitadas com `EINVAL` ou `EFAULT`/`Bad address`. O relatório sanitizado está em [`reports/xclipselogs-2026-09-07-analysis.md`](reports/xclipselogs-2026-09-07-analysis.md). Fontes C, executáveis, logs crus e `dmesg` permanecem fora do repositório.
