@@ -30,3 +30,8 @@ The observed path is: `/sys/firmware/devicetree/base/sgpu@22200000` → platform
 
 [1]: https://quickshare.samsungcloud.com/cN3RdfqvjU6y "Quick Share archive supplied for Xclipse Open Project analysis"
 [2]: https://docs.kernel.org/devicetree/usage-model.html "Linux DeviceTree usage model"
+
+## Quasar: correlação inicial com os nós DRM
+
+O probe direto `X940-001c` observou `card0`/`renderD128` reportando `amdgpu` e `card1`/`renderD129` reportando `exynos-drmdpu`. Essa é uma identificação da camada DRM retornada pelo ioctl. A correlação física ainda deve seguir por major/minor, sysfs, driver, platform device e `sgpu@22200000`.
+

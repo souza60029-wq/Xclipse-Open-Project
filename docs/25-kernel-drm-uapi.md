@@ -27,3 +27,8 @@ An API name such as `sgpu_cs_submit` is evidence of an available interface, not 
 A nova rodada `xclipselogs.zip` acrescentou evidência de um cliente DRM próprio em `/dev/dri/renderD128`. O cliente confirmou abertura do render node, criação de GEM/BO, VA map/unmap, criação de BO_LIST e criação de contexto. Em `A1.5_REAL_CS_20260907_161914`, um `DRM_IOCTL_AMDGPU_CS` foi aceito (`ioctl_ret=0`, `CS_IOCTL=ACCEPTED`) para um chunk IB (`chunk_id=0x1`) com VA `0x4000000000` e `ib_bytes=4`.
 
 Esse resultado confirma **aceitação de uma entrada de command submission pelo KMD**, mas não confirma execução GPU, fence própria, GPU write ou readback. Variantes próximas foram rejeitadas com `EINVAL` ou `EFAULT`/`Bad address`. Este resultado está incorporado à documentação técnica consolidada. Fontes C, executáveis, logs crus e `dmesg` permanecem fora do repositório.
+
+## Quasar: probe direto de DRM
+
+O experimento `X940-001c` chama `DRM_IOCTL_VERSION` diretamente, sem depender de `libdrm`, e preserva fonte, binário, ambiente, stdout, stderr e hashes. O resultado `name=[amdgpu]` em `renderD128` deve ser tratado como identificação da camada DRM reportada, não como prova de compatibilidade com AMDGPU upstream ou RADV.
+

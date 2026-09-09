@@ -1,13 +1,13 @@
 # Project Status
 
-**Status date:** 2026-09-06
+**Status date:** 2026-09-08
 **Internal project name:** XO940
 **Initial target:** Samsung Xclipse 940 / SM-S721B
-**Repository posture:** private, evidence collection and documentation phase
+**Repository posture:** private XOP documentation branch plus separate Quasar reproducibility branch
 
 ## Executive status
 
-The project is at the **Phase 0 → Phase 1 boundary: Device Tree and platform mapping**. The original Quick Share package and the new results package are hashed, integrity-checked, extracted outside Git, and indexed. The new results package SHA-256 is `59ac6221373572024c0967d642f9ead1f970c6791ff2428cb5c49ae73a5fe7fc`; it contains stage reports, Etapa 4 logs, Etapa 5 compiler analysis, and the vendor ICD. The archives and vendor binaries remain external evidence because license and redistribution status are not yet complete.
+The project is at the **Phase 0 → Phase 1 boundary: Device Tree, platform mapping and reproducibility infrastructure**. The original Quick Share package and the new results package are hashed, integrity-checked, extracted outside Git, and indexed. The new results package SHA-256 is `59ac6221373572024c0967d642f9ead1f970c6791ff2428cb5c49ae73a5fe7fc`; it contains stage reports, Etapa 4 logs, Etapa 5 compiler analysis, and the vendor ICD. The archives and vendor binaries remain external evidence because license and redistribution status are not yet complete.
 
 The project is not yet at the driver bring-up phase. No statement in this file should be read as proof of a working independent ICD, custom queue submission, compute execution, ISA decoding, compiler lowering, or Mesa integration.
 
@@ -72,3 +72,14 @@ The technical branch means the hardware map of Device Tree, kernel, GPU, memory,
 A nova rodada `xclipselogs.zip` acrescentou evidência de um cliente DRM próprio em `/dev/dri/renderD128`. O cliente confirmou abertura do render node, criação de GEM/BO, VA map/unmap, criação de BO_LIST e criação de contexto. Em `A1.5_REAL_CS_20260907_161914`, um `DRM_IOCTL_AMDGPU_CS` foi aceito (`ioctl_ret=0`, `CS_IOCTL=ACCEPTED`) para um chunk IB (`chunk_id=0x1`) com VA `0x4000000000` e `ib_bytes=4`.
 
 Esse resultado confirma **aceitação de uma entrada de command submission pelo KMD**, mas não confirma execução GPU, fence própria, GPU write ou readback. Variantes próximas foram rejeitadas com `EINVAL` ou `EFAULT`/`Bad address`. Este resultado está incorporado à documentação técnica consolidada. Fontes C, executáveis, logs crus e `dmesg` permanecem fora do repositório.
+
+
+## Quasar addendum — 2026-09-08
+
+The separate `quasar` branch preserves the received workspace for reproducibility across Xclipse devices. It includes source files, scripts, raw experiment logs, environment captures, hashes, probes and experiment archives. The branch does not change the public release assets.
+
+Experiment `X940-001c` directly called `DRM_IOCTL_VERSION` on four DRM nodes. On the reference SM-S721B device, `/dev/dri/card0` and `/dev/dri/renderD128` reported `name=[amdgpu]`, while `/dev/dri/card1` and `/dev/dri/renderD129` reported `name=[exynos-drmdpu]`. This identifies the reported DRM layer. It does not establish physical AMD hardware, AMDGPU upstream ABI compatibility or RADV compatibility.
+
+Experiment `X940-001b` also established a reproducibility constraint: shared Android storage may be `noexec`. Compilation and execution must occur in an executable workspace, while logs and artifacts can be archived in shared storage.
+
+The Quasar results strengthen the device-node and reproduction map. They do not replace the existing evidence policy and do not prove an independent Vulkan driver.

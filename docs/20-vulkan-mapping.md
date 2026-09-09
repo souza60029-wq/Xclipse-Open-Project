@@ -29,3 +29,8 @@ Once the Android loader path is understood, the first executable Vulkan mileston
 A nova rodada `xclipselogs.zip` acrescentou evidência de um cliente DRM próprio em `/dev/dri/renderD128`. O cliente confirmou abertura do render node, criação de GEM/BO, VA map/unmap, criação de BO_LIST e criação de contexto. Em `A1.5_REAL_CS_20260907_161914`, um `DRM_IOCTL_AMDGPU_CS` foi aceito (`ioctl_ret=0`, `CS_IOCTL=ACCEPTED`) para um chunk IB (`chunk_id=0x1`) com VA `0x4000000000` e `ib_bytes=4`.
 
 Esse resultado confirma **aceitação de uma entrada de command submission pelo KMD**, mas não confirma execução GPU, fence própria, GPU write ou readback. Variantes próximas foram rejeitadas com `EINVAL` ou `EFAULT`/`Bad address`. Este resultado está incorporado à documentação técnica consolidada. Fontes C, executáveis, logs crus e `dmesg` permanecem fora do repositório.
+
+## Quasar: limite da identificação DRM
+
+O nome `amdgpu` observado por `DRM_IOCTL_VERSION` em `renderD128` é uma pista de compatibilidade estrutural, não uma confirmação de ABI AMDGPU upstream, ISA AMD ou RADV. O mapeamento Vulkan deve continuar separado da identificação do driver DRM.
+

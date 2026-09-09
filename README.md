@@ -60,7 +60,7 @@ A release pública contém somente três entregáveis: a documentação completa
 
 ## Estado atual resumido
 
-Já foram observados o dispositivo SGPU, o render node `renderD128`, o caminho de memória/VM, o carregamento vendor em processo Android suportado e atividade de submissão GFX no caminho existente. Um cliente independente já abriu o render node, criou BO/VA/BO_LIST/contexto e obteve aceitação de um CS específico; execução GPU, fence própria, readback controlado, compute externo e driver Vulkan independente ainda não foram demonstrados.
+Já foram observados o dispositivo SGPU, o render node `renderD128`, o caminho de memória/VM, o carregamento vendor em processo Android suportado e atividade de submissão GFX no caminho existente. O pacote Quasar acrescenta um probe DRM direto que identificou `card0`/`renderD128` como `amdgpu` e `card1`/`renderD129` como `exynos-drmdpu`; esse nome DRM ainda não prova compatibilidade AMDGPU ou RADV. O cliente independente do XO940 obteve aceitação de um CS específico, mas execução GPU própria, fence e readback continuam sem prova no conjunto XO940 público.
 
 A sequência de trabalho é deliberadamente conservadora:
 
@@ -77,6 +77,14 @@ compute controlado
         ↓
 backend Vulkan/Mesa experimental
 ```
+
+## Quasar e reprodução entre aparelhos Xclipse
+
+A branch [`quasar`](https://github.com/souza60029-wq/Xclipse-Open-Project/tree/quasar) preserva o workspace bruto recebido para reprodução: fontes, scripts, ambientes, hashes, logs, experimentos e probes DRM. O guia [`quasar/REPRODUCING.md`](quasar/REPRODUCING.md) orienta a execução em uma área com permissão de execução e o arquivamento posterior em armazenamento compartilhado.
+
+O experimento `X940-001c` observou diretamente `DRM_IOCTL_VERSION` em quatro nós: `card0` e `renderD128` reportaram `amdgpu`, enquanto `card1` e `renderD129` reportaram `exynos-drmdpu`. A interpretação correta é uma identificação da camada DRM reportada no aparelho, não uma prova de GPU AMD física, ISA AMD ou compatibilidade direta com RADV.
+
+O Quasar também documentou que o armazenamento compartilhado Android pode usar `noexec`; portanto, probes devem ser compilados e executados em uma área de trabalho executável. Esse resultado é operacional e evita classificar `Permission denied` como falha do KMD.
 
 ## Proveniência e segurança
 

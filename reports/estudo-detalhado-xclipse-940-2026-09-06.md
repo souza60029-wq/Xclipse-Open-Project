@@ -125,3 +125,8 @@ Manus AI
 A nova rodada `xclipselogs.zip` acrescentou evidência de um cliente DRM próprio em `/dev/dri/renderD128`. O cliente confirmou abertura do render node, criação de GEM/BO, VA map/unmap, criação de BO_LIST e criação de contexto. Em `A1.5_REAL_CS_20260907_161914`, um `DRM_IOCTL_AMDGPU_CS` foi aceito (`ioctl_ret=0`, `CS_IOCTL=ACCEPTED`) para um chunk IB (`chunk_id=0x1`) com VA `0x4000000000` e `ib_bytes=4`.
 
 Esse resultado confirma **aceitação de uma entrada de command submission pelo KMD**, mas não confirma execução GPU, fence própria, GPU write ou readback. Variantes próximas foram rejeitadas com `EINVAL` ou `EFAULT`/`Bad address`. Este resultado está incorporado à documentação técnica consolidada. Fontes C, executáveis, logs crus e `dmesg` permanecem fora do repositório.
+
+## Addendum 2026-09-08 — Quasar
+
+O pacote Quasar acrescentou um probe DRM direto em C. No SM-S721B, `card0` e `renderD128` reportaram `amdgpu`, enquanto `card1` e `renderD129` reportaram `exynos-drmdpu`. Esse resultado é útil para a topologia DRM, mas não prova GPU AMD física, compatibilidade AMDGPU upstream ou compatibilidade RADV. O pacote também demonstrou que o armazenamento compartilhado Android pode ser `noexec`, estabelecendo uma regra de reprodução: executar em workspace privado e arquivar em `Download/Quasar`.
+

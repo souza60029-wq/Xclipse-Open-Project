@@ -50,3 +50,16 @@ Os P e scripts são material de laboratório. O GitHub recebe a classificação 
 A nova rodada `xclipselogs.zip` acrescentou evidência de um cliente DRM próprio em `/dev/dri/renderD128`. O cliente confirmou abertura do render node, criação de GEM/BO, VA map/unmap, criação de BO_LIST e criação de contexto. Em `A1.5_REAL_CS_20260907_161914`, um `DRM_IOCTL_AMDGPU_CS` foi aceito (`ioctl_ret=0`, `CS_IOCTL=ACCEPTED`) para um chunk IB (`chunk_id=0x1`) com VA `0x4000000000` e `ib_bytes=4`.
 
 Esse resultado confirma **aceitação de uma entrada de command submission pelo KMD**, mas não confirma execução GPU, fence própria, GPU write ou readback. Variantes próximas foram rejeitadas com `EINVAL` ou `EFAULT`/`Bad address`. Este resultado está incorporado à documentação técnica consolidada. Fontes C, executáveis, logs crus e `dmesg` permanecem fora do repositório.
+
+## Quasar addendum — probe DRM direto
+
+O pacote Quasar acrescenta o experimento `X940-001c`, um probe C que chama `DRM_IOCTL_VERSION` diretamente e preserva fonte, binário, ambiente, stdout, stderr e hashes. No SM-S721B analisado, os resultados foram:
+
+| Nó | Resultado `DRM_IOCTL_VERSION` | Interpretação permitida |
+| --- | --- | --- |
+| `/dev/dri/card0` | `name=[amdgpu]`, `226:0` | camada DRM reportada; não provar GPU AMD física |
+| `/dev/dri/renderD128` | `name=[amdgpu]`, `226:128` | render node da camada reportada; não provar RADV compatível |
+| `/dev/dri/card1` | `name=[exynos-drmdpu]`, `226:1` | DRM de display Samsung |
+| `/dev/dri/renderD129` | `name=[exynos-drmdpu]`, `226:129` | nó associado à camada de display reportada |
+
+O vínculo físico recomendado continua sendo `node → major/minor → sysfs → driver → platform device → sgpu@22200000`. O experimento `X940-001b` também documenta que `Download/Quasar` pode ser `noexec`; esse resultado é uma restrição operacional de reprodução, não uma falha de GPU.

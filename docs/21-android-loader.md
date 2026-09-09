@@ -26,3 +26,8 @@ Capture a supported process while it enumerates Vulkan devices and records vendo
 [1]: ../reports/new-results-analysis.md "Analysis of the new results package"
 [2]: https://source.android.com/docs/core/architecture/vndk/linker-namespace "Android linker namespaces"
 [3]: ../reports/5-dois-meios-essenciais.md "Five essential discoveries"
+
+## Quasar: condição de reprodução no Android
+
+O workspace Quasar registrou que o armazenamento compartilhado pode ser montado com `noexec`. Probes devem ser compilados e executados em uma área de trabalho executável e somente depois arquivados em `Download/Quasar`.
+
