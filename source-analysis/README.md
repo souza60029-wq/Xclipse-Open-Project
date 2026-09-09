@@ -22,3 +22,7 @@ The private status of this repository does not create a license. Until the licen
 - `../reports/source-archive-initial-analysis.md` summarizing counts and high-value findings.
 - `variant-device-trees.md` comparing the additional S7210/S721J/S721Q/S721U Device Tree packages from the outer `SM-S721B.zip` bundle.
 - `../data/sm-s721b-bundle-manifest.txt` recording the outer and nested archive hashes.
+
+## Quasar cross-reference
+
+The [`quasar` branch](https://github.com/souza60029-wq/Xclipse-Open-Project/tree/quasar) contains the direct DRM probe, raw experiment capsules, reproduction guide and implementation roadmap. The `X940-001c` result identifies the DRM-reported layer on four nodes; it must be correlated with sysfs and the SGPU Device Tree before being interpreted as a physical GPU mapping.
