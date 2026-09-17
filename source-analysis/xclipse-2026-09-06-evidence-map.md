@@ -51,15 +51,15 @@ A nova rodada `xclipselogs.zip` acrescentou evidência de um cliente DRM própri
 
 Esse resultado confirma **aceitação de uma entrada de command submission pelo KMD**, mas não confirma execução GPU, fence própria, GPU write ou readback. Variantes próximas foram rejeitadas com `EINVAL` ou `EFAULT`/`Bad address`. Este resultado está incorporado à documentação técnica consolidada. Fontes C, executáveis, logs crus e `dmesg` permanecem fora do repositório.
 
-## Quasar addendum — probe DRM direto
+## Reproducibility addendum — probe DRM direto
 
-O pacote Quasar acrescenta o experimento `X940-001c`, um probe C que chama `DRM_IOCTL_VERSION` diretamente e preserva fonte, binário, ambiente, stdout, stderr e hashes. No SM-S721B analisado, os resultados foram:
+O pacote coleta de reprodução acrescenta o experimento `X940-001c`, um probe C que chama `DRM_IOCTL_VERSION` diretamente e preserva fonte, binário, ambiente, stdout, stderr e hashes. No SM-S721B analisado, os resultados foram:
 
 | Nó | Resultado `DRM_IOCTL_VERSION` | Interpretação permitida |
 | --- | --- | --- |
 | `/dev/dri/card0` | `name=[amdgpu]`, `226:0` | camada DRM reportada; não provar GPU AMD física |
-| `/dev/dri/renderD128` | `name=[amdgpu]`, `226:128` | render node da camada reportada; não provar RADV compatível |
+| `/dev/dri/renderD128` | `name=[amdgpu]`, `226:128` | render node da camada reportada; não provar implementação Vulkan de referência compatível |
 | `/dev/dri/card1` | `name=[exynos-drmdpu]`, `226:1` | DRM de display Samsung |
 | `/dev/dri/renderD129` | `name=[exynos-drmdpu]`, `226:129` | nó associado à camada de display reportada |
 
-O vínculo físico recomendado continua sendo `node → major/minor → sysfs → driver → platform device → sgpu@22200000`. O experimento `X940-001b` também documenta que `Download/Quasar` pode ser `noexec`; esse resultado é uma restrição operacional de reprodução, não uma falha de GPU.
+O vínculo físico recomendado continua sendo `node → major/minor → sysfs → driver → platform device → sgpu@22200000`. O experimento `X940-001b` também documenta que `armazenamento compartilhado` pode ser `noexec`; esse resultado é uma restrição operacional de reprodução, não uma falha de GPU.

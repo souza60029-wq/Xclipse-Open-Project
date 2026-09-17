@@ -4,7 +4,7 @@
 
 ## Objetivo
 
-Avaliar onde um driver de espaço de usuário inspirado em Mesa/RADV poderia se conectar ao sistema existente, sem assumir compatibilidade direta com RADV, Turnip ou AMDGPU upstream.
+Avaliar onde um driver de espaço de usuário inspirado em Mesa/implementação Vulkan de referência poderia se conectar ao sistema existente, sem assumir compatibilidade direta com implementação Vulkan de referência, driver Vulkan móvel de referência ou AMDGPU upstream.
 
 ## Hierarquia de rotas
 
@@ -40,9 +40,9 @@ A presença de `libOpenCL.so` e `libSGPUOpenCL.so` fornece uma rota para investi
 
 Somente depois de fechar memória e submit. A camada poderia implementar inicialmente um subset pequeno, como device discovery, buffer, compute e sincronização. O backend deve traduzir para o contrato SGPU observado, não para uma suposta ABI AMDGPU universal.
 
-**RADV:** pode servir como referência de organização de driver Vulkan, gerenciamento de recursos, NIR/LLVM e sincronização, mas não é um plug-in automático para Xclipse.
+**implementação Vulkan de referência:** pode servir como referência de organização de driver Vulkan, gerenciamento de recursos, NIR/LLVM e sincronização, mas não é um plug-in automático para Xclipse.
 
-**Turnip:** pode servir como referência de estratégia para uma GPU móvel com kernel/firmware vendor, mas a comparação arquitetural não substitui conhecer os packets, ISA e ABI Xclipse.
+**driver Vulkan móvel de referência:** pode servir como referência de estratégia para uma GPU móvel com kernel/firmware vendor, mas a comparação arquitetural não substitui conhecer os packets, ISA e ABI Xclipse.
 
 ## Hooks reais versus falsos hooks
 
@@ -84,7 +84,7 @@ xclipse-lab/
     └── submission-evidence.md
 ```
 
-## Gates antes de usar RADV/Mesa
+## Gates antes de usar implementação Vulkan de referência/Mesa
 
 1. Abrir `renderD128` e identificar o dispositivo sem depender do ICD vendor.
 2. Criar e destruir BO de modo repetível.
@@ -100,7 +100,7 @@ O maior risco é confundir a semelhança de nomenclatura AMDGPU com compatibilid
 
 ## Decisão provisória
 
-A recomendação é **não começar por um fork direto de RADV ou Turnip**. Começar por um cliente DRM/SGPU mínimo e instrumentado. Se o cliente conseguir BO → VM → submit → fence → readback, então o material coletado permitirá decidir qual parte de Mesa é reutilizável e qual backend Xclipse precisa ser escrito.
+A recomendação é **não começar por um fork direto de implementações Vulkan de referência**. Começar por um cliente DRM/SGPU mínimo e instrumentado. Se o cliente conseguir BO → VM → submit → fence → readback, então o material coletado permitirá decidir qual parte de Mesa é reutilizável e qual backend Xclipse precisa ser escrito.
 
 ## Evidência que falta para mudar a decisão
 

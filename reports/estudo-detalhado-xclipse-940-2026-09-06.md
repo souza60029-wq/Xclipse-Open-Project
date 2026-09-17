@@ -1,8 +1,8 @@
 # Estudo detalhado da Xclipse 940 — evidências de runtime, Device Tree e rotas de desenvolvimento
 
-**Projeto interno:** XO940  
-**Hardware analisado:** Samsung Xclipse 940 no dispositivo SM-S721B  
-**Data da revisão:** 2026-09-06  
+**Projeto interno:** XO940
+**Hardware analisado:** Samsung Xclipse 940 no dispositivo SM-S721B
+**Data da revisão:** 2026-09-06
 **Autor:** Manus AI
 
 ## Conclusão executiva
@@ -126,7 +126,7 @@ A nova rodada `xclipselogs.zip` acrescentou evidência de um cliente DRM própri
 
 Esse resultado confirma **aceitação de uma entrada de command submission pelo KMD**, mas não confirma execução GPU, fence própria, GPU write ou readback. Variantes próximas foram rejeitadas com `EINVAL` ou `EFAULT`/`Bad address`. Este resultado está incorporado à documentação técnica consolidada. Fontes C, executáveis, logs crus e `dmesg` permanecem fora do repositório.
 
-## Addendum 2026-09-08 — Quasar
+## Addendum 2026-09-08 — coleta de reprodução
 
-O pacote Quasar acrescentou um probe DRM direto em C. No SM-S721B, `card0` e `renderD128` reportaram `amdgpu`, enquanto `card1` e `renderD129` reportaram `exynos-drmdpu`. Esse resultado é útil para a topologia DRM, mas não prova GPU AMD física, compatibilidade AMDGPU upstream ou compatibilidade RADV. O pacote também demonstrou que o armazenamento compartilhado Android pode ser `noexec`, estabelecendo uma regra de reprodução: executar em workspace privado e arquivar em `Download/Quasar`.
+O pacote coleta de reprodução acrescentou um probe DRM direto em C. No SM-S721B, `card0` e `renderD128` reportaram `amdgpu`, enquanto `card1` e `renderD129` reportaram `exynos-drmdpu`. Esse resultado é útil para a topologia DRM, mas não prova GPU AMD física, compatibilidade AMDGPU upstream ou compatibilidade implementação Vulkan de referência. O pacote também demonstrou que o armazenamento compartilhado Android pode ser `noexec`, estabelecendo uma regra de reprodução: executar em workspace privado e arquivar em `armazenamento compartilhado`.
 

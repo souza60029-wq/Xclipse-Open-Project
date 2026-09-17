@@ -6,7 +6,7 @@
 
 ## O que estamos tentando construir
 
-O objetivo de longo prazo é descobrir se a Xclipse 940 pode receber um **driver de espaço de usuário independente**, com uma arquitetura comparável à de um driver Mesa/Vulkan ou a uma camada customizada que converse com o kernel SGPU existente. Isso não significa assumir que a Xclipse é uma AMDGPU de PC, nem que o caminho RADV possa ser copiado. A árvore Device Tree, a UAPI SGPU, os firmware, a VM, os rings e a ABI Android precisam ser tratados como contratos próprios.
+O objetivo de longo prazo é descobrir se a Xclipse 940 pode receber um **driver de espaço de usuário independente**, com uma arquitetura comparável à de um driver Mesa/Vulkan ou a uma camada customizada que converse com o kernel SGPU existente. Isso não significa assumir que a Xclipse é uma AMDGPU de PC, nem que o caminho implementação Vulkan de referência possa ser copiado. A árvore Device Tree, a UAPI SGPU, os firmware, a VM, os rings e a ABI Android precisam ser tratados como contratos próprios.
 
 A evidência atual mostra um caminho vendor real de submissão GFX, mas ainda não mostra que um cliente novo consiga controlar esse caminho e validar sua saída. Portanto, o projeto deve avançar da plataforma para o kernel, do kernel para memória/submissão, e só depois para Vulkan, shader e compiler.
 

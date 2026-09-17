@@ -29,7 +29,7 @@ The source release includes an `s5e9945-sgpu_evt0.dtsi` file with `chip_revision
 
 ## What this does not prove
 
-The hardware summary does not prove shader ISA compatibility with AMDGPU, RADV, or Turnip. The AMDGPU-like family and identifiers appear in the kernel/UAPI layer, but user-space compiler and driver compatibility remain open questions.
+The hardware summary does not prove shader ISA compatibility with AMDGPU, implementação Vulkan de referência, or driver Vulkan móvel de referência. The AMDGPU-like family and identifiers appear in the kernel/UAPI layer, but user-space compiler and driver compatibility remain open questions.
 
 ## References
 

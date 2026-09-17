@@ -1,0 +1,31 @@
+flowchart LR
+  classDef platform fill:#1565c0,color:#fff,stroke:#0d47a1,stroke-width:2px
+  classDef kernel fill:#6a1b9a,color:#fff,stroke:#4a148c,stroke-width:2px
+  classDef memory fill:#00897b,color:#fff,stroke:#00695c,stroke-width:2px
+  classDef execution fill:#ef6c00,color:#fff,stroke:#e65100,stroke-width:2px
+  classDef android fill:#546e7a,color:#fff,stroke:#263238,stroke-width:2px
+  classDef evidence fill:#37474f,color:#fff,stroke:#263238,stroke-width:2px
+  classDef risk fill:#c62828,color:#fff,stroke:#8e0000,stroke-width:3px
+
+  DT["Device Tree / plataforma\nsgpu@22200000\nG3DCORE / IRQ / clocks / power"]:::platform
+  DRM["DRM/SGPU UAPI\nrenderD128 / card0\ncontext / CS / IB"]:::kernel
+  MEM["Memória e endereçamento\nGEM/BO / VA / VM\nPTE/PDE / IOMMU / DMA-BUF"]:::memory
+  SCHED["Execução e sincronização\nscheduler / rings / fences\nGPU work / retire / readback"]:::execution
+  ANDROID["Android suportado\nSurfaceFlinger / RenderThread\nloader / namespaces / SELinux"]:::android
+  MAP["Ramificação técnica\nmapa de infraestrutura\nmatriz de variantes"]:::evidence
+  REPRO["Reprodução\nprobe / ambiente / hashes\nresultado bruto + classificação"]:::evidence
+  ICD["ICD layers / ponte de loader\nrota de investigação"]:::risk
+  ROOT["Root / desbloqueio / permissões\nfronteira de segurança"]:::risk
+  CUSTOM["Componentes customizados\nuserspace / integração experimental"]:::risk
+  ISA["ISA / compiler / packets\ncontrato ainda incompleto"]:::risk
+
+  DT --> DRM --> MEM --> SCHED
+  ANDROID --> DRM
+  MAP --> DT
+  REPRO --> DRM
+  SCHED --> MAP
+  DRM -. investigação .-> ICD
+  ANDROID -. investigação .-> ICD
+  DRM -. investigação .-> ROOT
+  ROOT -. investigação .-> CUSTOM
+  SCHED -. investigação .-> ISA

@@ -14,5 +14,5 @@ ROOT_CONTEXT=u:r:ksu:s0
 SELINUX_AFTER_COLLECTION=Enforcing
 
 # Provenance
-# Source: supplied logs/logs para tentativa radv_xclipse.zip and XCLIPSE940_PROBE_FINAL.zip
+# Source: supplied logs/logs para tentativa implementação Vulkan de referência_xclipse.zip and XCLIPSE940_PROBE_FINAL.zip
 # This file intentionally excludes device serials, credentials, memory contents, and private identifiers.

@@ -1,13 +1,17 @@
 # Artefatos públicos do XO940
 
-A distribuição pública foi consolidada para reduzir duplicação e evitar que documentos de trabalho sejam confundidos com resultados finais. A release contém somente três ativos: dois PDFs de estudo e um ZIP que reúne os PDFs e as imagens dos mapas.
+A distribuição pública contém documentação técnica consolidada e mapas de arquitetura da Samsung Xclipse 940. O conteúdo foi derivado de coletas reais e revisado para remover dados pessoais, logs brutos, bibliotecas vendor, firmware e arquivos de ambiente.
 
 | Entregável | Conteúdo |
 | --- | --- |
-| `DOCUMENTACAO_Xclipse_940_COMPLETA.pdf` | Documentação técnica consolidada: plataforma, Device Tree, SGPU/DRM, GEM/BO/VA/IOMMU, CS/IB, scheduler, fences, Android, OpenCL, Vulkan, compiler/ISA e resultados técnicos dos experimentos de cliente próprio. |
-| `MAPA_E_RAMIFICACAO_Xclipse_940.pdf` | Mapa visual da infraestrutura, ramificação técnica, legenda cromática e mapa visual de possíveis falhas/brechas de portabilidade. |
-| `Xclipse-Open-Project-public-final.zip` | Pacote com os dois PDFs e os dois PNGs visuais. |
+| `DOCUMENTACAO_Xclipse_940_COMPLETA.pdf` | Plataforma, Device Tree, SGPU/DRM, GEM/BO/VA/IOMMU, CS/IB, scheduler, fences, Android, OpenCL, Vulkan, variantes e política de reprodução. |
+| `MAPA_E_RAMIFICACAO_Xclipse_940.pdf` | Mapa de arquitetura, ramificação técnica, caminho operacional e legenda cromática. O vermelho identifica caminhos de investigação e possíveis falhas de integração. |
+| `Xclipse-Open-Project-public-final.zip` | Os dois PDFs e os mapas PNG visuais. |
 
-As prioridades internas não são ativos públicos. Fontes C, código-fonte, executáveis de teste, bibliotecas vendor, firmware, logs crus, dumps de memória e `dmesg` completo também não são ativos de download.
+## Classificação
 
-Os PDFs usam linguagem técnica e distinguem explicitamente fato observado, confirmação por fonte, resultado parcial, indício, hipótese e falha específica. A aceitação de um ioctl de CS não é descrita como execução GPU sem fence e readback independentes.
+Os documentos diferenciam observação confirmada, confirmação por fonte, resultado parcial, indício, hipótese e resultado negativo específico. Um inicializador, uma enumeração ou um ioctl aceito não é apresentado como execução GPU sem sincronização e readback.
+
+## Limites
+
+Fontes Samsung são tratadas como referência de proveniência. O repositório não redistribui automaticamente código-fonte, firmware, bibliotecas vendor, executáveis, dumps, credenciais, identificadores ou logs brutos. XLIA e experimentos de NPU permanecem separados da documentação da GPU Xclipse.

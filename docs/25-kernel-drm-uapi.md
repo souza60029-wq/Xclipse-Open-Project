@@ -28,7 +28,7 @@ A nova rodada `xclipselogs.zip` acrescentou evidência de um cliente DRM própri
 
 Esse resultado confirma **aceitação de uma entrada de command submission pelo KMD**, mas não confirma execução GPU, fence própria, GPU write ou readback. Variantes próximas foram rejeitadas com `EINVAL` ou `EFAULT`/`Bad address`. Este resultado está incorporado à documentação técnica consolidada. Fontes C, executáveis, logs crus e `dmesg` permanecem fora do repositório.
 
-## Quasar: probe direto de DRM
+## coleta de reprodução: probe direto de DRM
 
-O experimento `X940-001c` chama `DRM_IOCTL_VERSION` diretamente, sem depender de `libdrm`, e preserva fonte, binário, ambiente, stdout, stderr e hashes. O resultado `name=[amdgpu]` em `renderD128` deve ser tratado como identificação da camada DRM reportada, não como prova de compatibilidade com AMDGPU upstream ou RADV.
+O experimento `X940-001c` chama `DRM_IOCTL_VERSION` diretamente, sem depender de `libdrm`, e preserva fonte, binário, ambiente, stdout, stderr e hashes. O resultado `name=[amdgpu]` em `renderD128` deve ser tratado como identificação da camada DRM reportada, não como prova de compatibilidade com AMDGPU upstream ou implementação Vulkan de referência.
 

@@ -34,7 +34,7 @@ A nova rodada `xclipselogs.zip` acrescentou evidência de um cliente DRM própri
 
 Esse resultado confirma **aceitação de uma entrada de command submission pelo KMD**, mas não confirma execução GPU, fence própria, GPU write ou readback. Variantes próximas foram rejeitadas com `EINVAL` ou `EFAULT`/`Bad address`. Este resultado está incorporado à documentação técnica consolidada. Fontes C, executáveis, logs crus e `dmesg` permanecem fora do repositório.
 
-## Quasar: nova evidência de reprodução
+## coleta de reprodução: nova evidência de reprodução
 
-A branch `quasar` preserva experimentos completos e resultados negativos. `X940-001b` demonstrou que `Permission denied` pode ser causado por `noexec` no armazenamento compartilhado. `X940-001c` demonstrou a tabela de quatro nós DRM por ioctl direto. Esses resultados melhoram a reprodução, mas não constituem prova de execução GPU.
+A documentação de reprodução registra experimentos completos e resultados negativos. `X940-001b` demonstrou que `Permission denied` pode ser causado por `noexec` no armazenamento compartilhado. `X940-001c` demonstrou a tabela de quatro nós DRM por ioctl direto. Esses resultados melhoram a reprodução, mas não constituem prova de execução GPU.
 

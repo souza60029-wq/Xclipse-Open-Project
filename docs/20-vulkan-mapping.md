@@ -30,7 +30,7 @@ A nova rodada `xclipselogs.zip` acrescentou evidência de um cliente DRM própri
 
 Esse resultado confirma **aceitação de uma entrada de command submission pelo KMD**, mas não confirma execução GPU, fence própria, GPU write ou readback. Variantes próximas foram rejeitadas com `EINVAL` ou `EFAULT`/`Bad address`. Este resultado está incorporado à documentação técnica consolidada. Fontes C, executáveis, logs crus e `dmesg` permanecem fora do repositório.
 
-## Quasar: limite da identificação DRM
+## coleta de reprodução: limite da identificação DRM
 
-O nome `amdgpu` observado por `DRM_IOCTL_VERSION` em `renderD128` é uma pista de compatibilidade estrutural, não uma confirmação de ABI AMDGPU upstream, ISA AMD ou RADV. O mapeamento Vulkan deve continuar separado da identificação do driver DRM.
+O nome `amdgpu` observado por `DRM_IOCTL_VERSION` em `renderD128` é uma pista de compatibilidade estrutural, não uma confirmação de ABI AMDGPU upstream, ISA AMD ou implementação Vulkan de referência. O mapeamento Vulkan deve continuar separado da identificação do driver DRM.
 

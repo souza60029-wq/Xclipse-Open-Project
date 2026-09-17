@@ -4,7 +4,7 @@
 cd73e2fa24ac083b9babf243b39772065b060abc9cd30fb476acabe74433e67f  [archive] Tudo sobre a xclipse.zip
 
 # The nested continuity package included its own inventory at:
-# pacote_caminho_RADV/INVENTARIO_SHA256.txt
+# pacote_caminho_implementação Vulkan de referência/INVENTARIO_SHA256.txt
 # That file is preserved outside Git with the original evidence set.
 
 # Selected extracted text/binary artifacts will be added here only after any future

@@ -6,16 +6,16 @@ The supplied Quick Share archive is `Tudo sobre a xclipse.zip`. It has SHA-256 `
 | --- | ---: | --- |
 | `Backup_completo_de_continuidade_—_projeto_Xclipse_.md` | 11,816 B | Continuity record and interpretation of previous experiments. |
 | `Relatório_técnico_—_caminho_do_ICD_Vulkan_Xclipse_.md` | 4,846 B | Loader/ICD report. |
-| `SAVE_retomada_caminho_RADV.pdf` | 111,955 B | Continuity save. |
+| `SAVE_retomada_caminho_implementação Vulkan de referência.pdf` | 111,955 B | Continuity save. |
 | `SM-S721B.zip` | 414,414,944 B | Device/source package; contains the Samsung source release and regional Device Tree archives. |
 | `XCLIPSE940_PROBE_FINAL.zip` | 12,031,897 B | SGPU/Vulkan probes, outputs, and reference binaries. |
 | `XCLIPSE940_problemas_etapa3_em_diante.pdf` | 73,129 B | Failure and diagnosis report. |
 | `backup_completo_continuidade.pdf` | 118,886 B | PDF form of the continuity report. |
-| `caminho_RADV.zip` | 158,279 B | Reports, probe source, evidence transcript, metadata, and hashes. |
+| `caminho_implementação Vulkan de referência.zip` | 158,279 B | Reports, probe source, evidence transcript, metadata, and hashes. |
 | `exec_props.txt` | 183 B | Termux Vulkan result: llvmpipe only. |
 | `exec_props_root.txt` | 183 B | Root-session Vulkan result: llvmpipe only. |
 | `libdrm_sgpu.so` | 134,568 B | Vendor DRM wrapper copied for offline reference. |
-| `logs para tentativa radv_xclipse.zip` | 365,738 B | Device, DRM, SGPU, Vulkan, ABI, and architecture logs. |
+| `logs para tentativa implementação Vulkan de referência_xclipse.zip` | 365,738 B | Device, DRM, SGPU, Vulkan, ABI, and architecture logs. |
 | `probe_SM-S721B.txt` | 1,274 B | Raw SGPU probe output. |
 | `relatorio_tecnico_icd_vulkan.pdf` | 67,841 B | PDF form of the ICD report. |
 | `sgpu_raw_probe` | 10,896 B | AArch64 probe binary. |

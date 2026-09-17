@@ -1,8 +1,8 @@
 # Mapa técnico completo da Samsung Xclipse 940
 
-**Projeto interno:** XO940  
-**Alvo:** Xclipse 940 no Samsung SM-S721B / plataforma s5e9945 / r12s  
-**Base:** Device Tree, fonte Samsung inventariada, logs de runtime, traces P2/P3/P4/P5 e inventários ELF fornecidos pelo usuário  
+**Projeto interno:** XO940
+**Alvo:** Xclipse 940 no Samsung SM-S721B / plataforma s5e9945 / r12s
+**Base:** Device Tree, fonte Samsung inventariada, logs de runtime, traces P2/P3/P4/P5 e inventários ELF fornecidos pelo usuário
 **Status:** mapa de estudo; não é especificação completa nem prova de driver independente
 
 ## 1. Visão geral
@@ -170,7 +170,7 @@ Namespace, SELinux, permissões de `/dev/dri`, manifest/HAL e dependências vend
 
 ### Falhas de arquitetura
 
-A Xclipse usa conceitos AMDGPU-derived, mas a integração Samsung é própria. Copiar RADV/Turnip sem um backend de hardware compatível seria incorreto; o caminho provável exige reutilizar ou adaptar o kernel/DRM e implementar uma camada Xclipse específica.
+A Xclipse usa conceitos AMDGPU-derived, mas a integração Samsung é própria. Copiar implementações Vulkan de referência sem um backend de hardware compatível seria incorreto; o caminho provável exige reutilizar ou adaptar o kernel/DRM e implementar uma camada Xclipse específica.
 
 ## 11. Estado para uma futura porta de driver
 
@@ -192,7 +192,7 @@ A Xclipse usa conceitos AMDGPU-derived, mas a integração Samsung é própria. 
 
 ## 12. Conclusão
 
-O material já é suficiente para iniciar uma especificação técnica muito mais completa do kernel/DRM e para preparar um cliente de laboratório de baixo risco. Ainda não é suficiente para afirmar que um port direto de RADV ou Turnip funcionará.
+O material já é suficiente para iniciar uma especificação técnica muito mais completa do kernel/DRM e para preparar um cliente de laboratório de baixo risco. Ainda não é suficiente para afirmar que um port direto de implementações Vulkan de referência funcionará.
 
 A rota mais defensável é: fechar Device Tree e UAPI; implementar um cliente DRM/BO/VM read-only ou de mapeamento reversível; isolar um job GFX real; provar fence e readback; estudar compute; somente então decidir entre uma camada Vulkan própria, adaptação de backend Mesa ou outra arquitetura.
 
@@ -210,7 +210,7 @@ A nova rodada `xclipselogs.zip` acrescentou evidência de um cliente DRM própri
 
 Esse resultado confirma **aceitação de uma entrada de command submission pelo KMD**, mas não confirma execução GPU, fence própria, GPU write ou readback. Variantes próximas foram rejeitadas com `EINVAL` ou `EFAULT`/`Bad address`. Este resultado está incorporado à documentação técnica consolidada. Fontes C, executáveis, logs crus e `dmesg` permanecem fora do repositório.
 
-## Addendum Quasar — identificação da camada DRM
+## Addendum de reprodução — identificação da camada DRM
 
-O Quasar adiciona um probe direto com a tabela `card0/renderD128 → amdgpu` e `card1/renderD129 → exynos-drmdpu`. O mapa deve representar isso como identificação de nós e camada reportada. A cadeia física até `sgpu@22200000` ainda precisa de correlação por sysfs e platform device.
+O coleta de reprodução adiciona um probe direto com a tabela `card0/renderD128 → amdgpu` e `card1/renderD129 → exynos-drmdpu`. O mapa deve representar isso como identificação de nós e camada reportada. A cadeia física até `sgpu@22200000` ainda precisa de correlação por sysfs e platform device.
 

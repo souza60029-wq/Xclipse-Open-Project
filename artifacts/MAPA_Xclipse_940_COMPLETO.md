@@ -1,7 +1,7 @@
 # Mapa completo da Xclipse 940
 
-**Projeto interno:** XO940  
-**Hardware:** Samsung Xclipse 940 no SM-S721B / s5e9945 / erd9945  
+**Projeto interno:** XO940
+**Hardware:** Samsung Xclipse 940 no SM-S721B / s5e9945 / erd9945
 **Status:** documento de estudo baseado em evidências; não é prova de driver independente
 
 ![Mapa visual da infraestrutura Xclipse 940](MAPA_Xclipse_940.png)
@@ -12,7 +12,7 @@
 
 O mapa descreve a infraestrutura necessária para estudar a Xclipse 940 de baixo para cima: Device Tree e plataforma, kernel SGPU/DRM, memória e IOMMU, firmware, scheduler, rings, Android, bibliotecas vendor e possíveis clientes independentes.
 
-A finalidade não é declarar compatibilidade automática com RADV, Turnip ou AMDGPU. A finalidade é localizar os contratos que precisariam ser compreendidos antes de qualquer port de driver.
+A finalidade não é declarar compatibilidade automática com implementação Vulkan de referência, driver Vulkan móvel de referência ou AMDGPU. A finalidade é localizar os contratos que precisariam ser compreendidos antes de qualquer port de driver.
 
 ## 2. Visão estrutural
 
@@ -90,7 +90,7 @@ kernel/drivers/iommu/samsung/
 kernel/drivers/dma-buf/heaps/samsung/
 ```
 
-A nomenclatura e vários subsistemas são AMDGPU-derived, mas isso não prova compatibilidade binária ou semântica completa com AMDGPU upstream/RADV. A implementação precisa ser confrontada com a UAPI, a imagem do aparelho e os traces.
+A nomenclatura e vários subsistemas são AMDGPU-derived, mas isso não prova compatibilidade binária ou semântica completa com AMDGPU upstream/implementação Vulkan de referência. A implementação precisa ser confrontada com a UAPI, a imagem do aparelho e os traces.
 
 ## 6. Memória, IOMMU e VM
 
@@ -188,7 +188,7 @@ O capture P5.04 não demonstrou CS, scheduler, IB compute, dispatch ou readback 
 8. Backend Vulkan/Mesa experimental
 ```
 
-A recomendação é não começar por um fork direto de RADV ou Turnip. RADV pode fornecer organização de driver Vulkan, gerenciamento de recursos, NIR/LLVM e sincronização como referência. Turnip pode fornecer referências de estratégia para GPU móvel com kernel/firmware vendor. Nenhum dos dois fornece automaticamente packets, ISA, ABI ou backend compatível com Xclipse.
+A recomendação é não começar por um fork direto de implementações Vulkan de referência. implementação Vulkan de referência pode fornecer organização de driver Vulkan, gerenciamento de recursos, NIR/LLVM e sincronização como referência. driver Vulkan móvel de referência pode fornecer referências de estratégia para GPU móvel com kernel/firmware vendor. Nenhum dos dois fornece automaticamente packets, ISA, ABI ou backend compatível com Xclipse.
 
 ## 12. Hooks reais versus falsos hooks
 
@@ -229,7 +229,7 @@ Vulkan/Mesa independente              HIPÓTESE DE IMPLEMENTAÇÃO
 
 ## 14. Conclusão
 
-O material já é suficiente para iniciar uma especificação técnica de DRM/SGPU e um cliente de laboratório de baixo risco. Ainda não é suficiente para afirmar que um port direto de RADV ou Turnip funcionará.
+O material já é suficiente para iniciar uma especificação técnica de DRM/SGPU e um cliente de laboratório de baixo risco. Ainda não é suficiente para afirmar que um port direto de implementações Vulkan de referência funcionará.
 
 A pergunta decisiva é se conseguimos provar:
 
@@ -264,7 +264,7 @@ A nova rodada `xclipselogs.zip` acrescentou evidência de um cliente DRM própri
 
 Esse resultado confirma **aceitação de uma entrada de command submission pelo KMD**, mas não confirma execução GPU, fence própria, GPU write ou readback. Variantes próximas foram rejeitadas com `EINVAL` ou `EFAULT`/`Bad address`. Este resultado está incorporado à documentação técnica consolidada. Fontes C, executáveis, logs crus e `dmesg` permanecem fora do repositório.
 
-## Addendum Quasar — reprodução
+## Addendum de reprodução — reprodução
 
-A branch `quasar` contém os experimentos brutos e o guia para repetir o probe DRM em outros aparelhos Xclipse. A regra operacional é compilar/executar em área `exec` e arquivar os resultados em armazenamento compartilhado.
+A coleta de reprodução contém os procedimentos e resultados sanitizados para repetir o probe DRM em outros aparelhos Xclipse. A regra operacional é compilar/executar em área `exec` e arquivar os resultados em armazenamento compartilhado.
 

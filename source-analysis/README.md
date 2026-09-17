@@ -1,28 +1,26 @@
-# Samsung Source Analysis
+# Análise de fontes Samsung
 
-The Quick Share archive is an evidence package, not automatically an open-source dependency. The first operation is inventory, not compilation.
+Os arquivos de fonte Samsung são tratados como pacotes de evidência e referência, não como dependência automaticamente redistribuível. A primeira operação é inventário, não compilação.
 
-## Required inventory
+## Inventário obrigatório
 
-Record the archive SHA-256, file count, compressed and uncompressed sizes, top-level directories, duplicate files, generated files, copyright notices, SPDX identifiers, license texts, and paths related to GPU/DRM, UAPI, Device Tree, firmware, IOMMU, memory management, queues, scheduling, reset, power, Vulkan HAL, manifests, linker namespaces, SELinux, and HWC.
+Registrar SHA-256, contagem de arquivos, tamanhos comprimido e descomprimido, diretórios, duplicatas, arquivos gerados, avisos de copyright, identificadores SPDX, licenças e caminhos relacionados a GPU/DRM, UAPI, Device Tree, firmware, IOMMU, memória, filas, scheduling, reset, energia, Vulkan HAL, manifests, namespaces, SELinux e HWC.
 
-For each relevant file, record its path, type, license/provenance, relevant symbols, relation to SM-S721B/Xclipse 940 (XO940 is the project name), and whether it is a public interface, reference implementation, generated artifact, or proprietary implementation detail.
+Para cada arquivo relevante, registrar caminho, tipo, proveniência, símbolos, relação com SM-S721B/Xclipse 940 e classificação como interface pública, implementação de referência, artefato gerado ou detalhe proprietário.
 
-## Legal boundary
+## Limite de publicação
 
-The private status of this repository does not create a license. Until the license inventory is complete, Samsung source and firmware must remain reference material. New project code must not copy implementation text, proprietary headers, or generated binaries without a verified redistribution basis.
+A privacidade do repositório não cria uma licença. Até que o inventário de licença esteja completo, código Samsung, firmware, bibliotecas vendor e binários permanecem como referência local. A documentação pública usa somente caminhos, hashes, inventários e descrições sanitizadas.
 
-## Expected outputs
+## Saídas esperadas
 
-- `inventory.csv` with one row per archive member.
-- `license-inventory.md` with evidence and unresolved notices.
-- `kernel-paths.md` for DRM, UAPI, VM, scheduler, reset, and firmware paths.
-- `vulkan-integration.md` for HAL, loader, manifest, namespace, SELinux, and HWC paths.
-- `source-cross-reference.csv` mapping project questions to source files and evidence labels.
-- `../reports/source-archive-initial-analysis.md` summarizing counts and high-value findings.
-- `variant-device-trees.md` comparing the additional S7210/S721J/S721Q/S721U Device Tree packages from the outer `SM-S721B.zip` bundle.
-- `../data/sm-s721b-bundle-manifest.txt` recording the outer and nested archive hashes.
+- inventário por membro de arquivo;
+- inventário de licenças e avisos não resolvidos;
+- caminhos de kernel para DRM, UAPI, VM, scheduler, reset e firmware;
+- caminhos de integração Android para HAL, loader, manifest, namespace, SELinux e HWC;
+- matriz de comparação das variantes S7210, S721J, S721Q, S721U e S721B;
+- mapa de evidências com uma afirmação por resultado.
 
-## Quasar cross-reference
+## Resultado de referência
 
-The [`quasar` branch](https://github.com/souza60029-wq/Xclipse-Open-Project/tree/quasar) contains the direct DRM probe, raw experiment capsules, reproduction guide and implementation roadmap. The `X940-001c` result identifies the DRM-reported layer on four nodes; it must be correlated with sysfs and the SGPU Device Tree before being interpreted as a physical GPU mapping.
+O probe `X940-001c` identificou a camada reportada pelo DRM em quatro nós. Esse resultado precisa ser correlacionado com sysfs e com a Device Tree SGPU antes de ser interpretado como mapeamento físico completo.
