@@ -1,11 +1,11 @@
 # Source archive manifest
 
 Archive name: Tudo sobre a xclipse.zip
-Archive path (local evidence): /home/ubuntu/Downloads/Tudo sobre a xclipse.zip
+Archive path (local evidence): arquivo-fonte Samsung fornecido para análise local
 SHA-256: cd73e2fa24ac083b9babf243b39772065b060abc9cd30fb476acabe74433e67f
 Compressed size: 439173415 bytes
 Archive members: 17 (16 files)
-Extracted for analysis at: /home/ubuntu/xclipse-evidence/source-archive
+Extracted for analysis at: área local de análise de fontes
 
 This manifest records provenance. The source archive is not committed to Git.
 No license grant is inferred from possession of the archive or from this private repository.
