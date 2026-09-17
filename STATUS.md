@@ -26,6 +26,13 @@ The raw archives remain outside Git. Public files contain sanitized technical de
 | Shader/ISA | Compiler and encoding indications exist in sources and metadata. | Static indication | Correlate controlled inputs with native output. |
 | Variant matrix | S721B, S721U, S7210, S721Q and S721J source-package references are present. | Confirmed by package inventory | Compare GPU-specific properties and revisions. |
 | XLIA | Separate Android, Vulkan, power, thermal, memory and session collections exist. | Separate project evidence | Keep outside the Xclipse GPU corpus. |
+| NPU/NNAPI | ENN accepted and executed selected elementwise, fully connected and quantized graphs; several attention and multi-output forms were rejected. | Confirmed per workload with checksum or explicit compiler status | Build a sanitized NNAPI reproduction matrix and isolate thermal telemetry. |
+
+## NPU branch
+
+The new collection adds a separate Exynos NPU/NNAPI branch. It includes ENN device selection, model compilation status, operation support queries, checksum validation, CPU baselines and sustained timing. It is documented as a separate accelerator path and is not treated as GPU execution.
+
+The strongest current NPU evidence is a quantized four-layer `FULLY_CONNECTED` graph with equal output checksum and an observed ENN timing advantage over the NNAPI CPU reference. Other workloads, including floating-point matrix multiplication, softmax and attention, show either CPU advantage or compilation limits.
 
 ## Current technical state
 

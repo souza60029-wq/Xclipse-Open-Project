@@ -101,6 +101,34 @@ O pacote também contém coletas do projeto XLIA e experimentos de subsistemas E
 
 Logs brutos de telefonia, bateria, identificadores, caminhos de instalação e estado de usuário permanecem fora do Git. Somente resultados técnicos derivados e sanitizados podem ser reutilizados em uma documentação específica.
 
+## 12. NPU Exynos e NNAPI
+
+O pacote mais recente contém um conjunto separado de experimentos de aceleração neural. O ramo utiliza NNAPI e o dispositivo `enn`; ele não utiliza o render node DRM da GPU Xclipse e não deve ser confundido com execução SGPU.
+
+Os resultados sanitizados confirmam execução de operações simples e de alguns grafos quantizados com saída correlacionada por checksum. Uma cadeia INT8 de quatro camadas `FULLY_CONNECTED` registrou 1,1148 ms por execução no ENN e 6,2407 ms na referência de CPU, com checksum igual e razão aproximada de 5,60×. Uma soma elementar produziu `[11, 22, 33, 44]` conforme esperado.
+
+O desempenho não foi uniformemente superior. Em `FULLY_CONNECTED` de ponto flutuante, o ENN registrou 1,2092 ms, enquanto a referência CPU registrou 0,1332 ms. Em softmax de 1024 elementos, ambas as saídas somaram 1,0000, mas o ENN registrou 1,0264 ms contra 0,0104 ms da CPU. Esses números são resultados dos workloads específicos e não representam uma característica geral da NPU.
+
+Os testes também encontraram limites de compilação em `BATCH_MATMUL`, atenção fundida, grafos com múltiplas saídas e certas ordens de declaração de operandos. Em uma comparação estrutural, entradas declaradas antes de operandos compartilhados compilaram, enquanto a ordem inversa falhou em casos equivalentes. Isso é uma dependência observada do runtime/compiler NNAPI e precisa de reprodução independente antes de ser generalizada.
+
+O pipeline de decodificação apresentou uma configuração com grafos Q/K/V separados e grafos híbridos aceitos, além de uma tentativa multi-saída rejeitada. O teste sustentado de 90 segundos registrou tempos por janela e frequências de CPU durante as fases CPU e NPU. Como a telemetria térmica completa não estava disponível, essa coleta não prova throttling; ela fornece um baseline para uma captura futura.
+
+A cadeia própria da NPU é:
+
+```text
+Aplicação ou teste NNAPI
+        ↓
+NNAPI reference / dispositivo ENN
+        ↓
+modelFinish + createForDevices + compilationFinish
+        ↓
+grafo aceito e executado
+        ↓
+checksum / saída numérica / tempo
+        ↓
+comparação com CPU e análise térmica
+```
+
 ## 12. Ramificação técnica
 
 A estrutura completa está no documento separado de [mapa e ramificação técnica](MAPA_E_RAMIFICACAO_Xclipse_940.md). A representação é:
