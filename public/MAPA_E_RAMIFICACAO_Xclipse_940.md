@@ -138,6 +138,8 @@ O teste sustentado de 90 segundos registrou variação de tempo por janela e fre
 
 ## Caminhos de investigação em vermelho
 
+O ramo NPU detalhado possui um mapa vetorial próprio em [`MAPA_NPU_EXYNOS_2400_DETALHADO.pdf`](MAPA_NPU_EXYNOS_2400_DETALHADO.pdf) e uma documentação completa em [`31-npu-exynos-2400-evidence-map.md`](../docs/31-npu-exynos-2400-evidence-map.md). Esses arquivos expandem os nós resumidos desta página sem misturar a NPU com a execução da GPU Xclipse.
+
 Os caminhos vermelhos são pontos que podem determinar a viabilidade de integração de componentes de userspace ou de carregamento alternativo. Eles incluem a relação entre ICD layers e o loader Android, as fronteiras de root e desbloqueio, permissões de `/dev/dri`, namespaces, SELinux, formato de packets, ISA, compiler e sincronização.
 
 O mapa não afirma que qualquer caminho vermelho esteja desbloqueado. A rota NNAPI/ENN acima deixou de ser hipótese e passou a ser um caminho rootless confirmado para o grafo reproduzido. A interface vendor direta e o endpoint `/dev/vertex10` continuam sem rota rootless demonstrada. O objetivo dos caminhos restantes é localizar o contrato ou a falha sem confundir presença de componentes com acesso funcional.

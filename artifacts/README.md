@@ -8,6 +8,8 @@ A distribuição pública contém documentação técnica consolidada e mapas de
 | `MAPA_E_RAMIFICACAO_Xclipse_940.pdf` | Mapa de arquitetura, ramificação técnica, ramo NPU/NNAPI, caminhos operacionais, legenda cromática e investigação de falhas. |
 | `Xclipse-Open-Project-public-final.zip` | Os dois PDFs e os mapas PNG visuais, incluindo o mapa principal e o mapa de falhas. |
 | `NPU-ENN-rootless-2026-09-18.zip` | Pacote sanitizado com o relatório público da execução NNAPI/ENN sem root, o documento técnico e os hashes de proveniência. |
+| `NPU-EXYNOS-2400-EVIDENCIAS-COMPLETO.pdf` | Documento detalhado com o inventário dos itens 01–18, arquitetura, serviços, VINTF, SELinux, endpoints, Device Tree, operações, benchmarks, bloqueios e plano de validação. |
+| `MAPA_NPU_EXYNOS_2400_DETALHADO.pdf` | Mapa vetorial ampliável com a estrada NNAPI confirmada, HAL, kernel, segurança, endpoint direto, operações e investigação aberta. |
 
 ## Classificação
 

@@ -49,5 +49,6 @@ Código Samsung, firmware, bibliotecas vendor, dumps, logs crus e arquivos de am
 - [Mapa público de evidências](source-analysis/xclipse-2026-09-06-evidence-map.md)
 - [Mapa técnico da Device Tree](source-analysis/device-tree-technical-map.md)
 - [NPU/ENN rootless](docs/30-npu-enn-rootless.md)
+- [Mapa detalhado de evidências NPU Exynos 2400](docs/31-npu-exynos-2400-evidence-map.md)
 - [Relatório NPU/ENN de 18/09/2026](reports/npu-enn-rootless-2026-09-18.md)
 - [Release pública](https://github.com/souza60029-wq/Xclipse-Open-Project/releases/tag/documentation-2026-09-06)

@@ -21,6 +21,7 @@ A documentação pública usa a política de evidências para distinguir inicial
 - [`artifacts/MAPA_Xclipse_940_COMPLETO.md`](../artifacts/MAPA_Xclipse_940_COMPLETO.md): mapa textual consolidado.
 - [`public/MAPA_E_RAMIFICACAO_Xclipse_940.md`](../public/MAPA_E_RAMIFICACAO_Xclipse_940.md): ramificação técnica e legenda visual.
 - [`30-npu-enn-rootless.md`](30-npu-enn-rootless.md): prova de execução NNAPI/ENN sem root e limites do caminho vendor.
+- [`31-npu-exynos-2400-evidence-map.md`](31-npu-exynos-2400-evidence-map.md): mapa detalhado de serviços, VINTF, SELinux, endpoints, Device Tree, operações, benchmarks, bloqueios e próximos testes.
 - [`reports/npu-enn-rootless-2026-09-18.md`](../reports/npu-enn-rootless-2026-09-18.md): resumo da atualização de 18/09/2026.
 
 ## Proveniência

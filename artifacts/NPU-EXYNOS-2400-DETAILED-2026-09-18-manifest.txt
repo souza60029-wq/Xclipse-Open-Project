@@ -1,0 +1,31 @@
+NPU EXYNOS 2400 DETAILED PACKAGE
+Date: 2026-09-18
+Project: Xclipse Open Project
+Scope: Exynos NPU / Android NNAPI / Samsung ENN platform evidence only.
+
+Included documents:
+- 31-npu-exynos-2400-evidence-map.md
+- NPU-EXYNOS-2400-EVIDENCIAS-COMPLETO.pdf
+- MAPA_NPU_EXYNOS_2400_DETALHADO.dot
+- MAPA_NPU_EXYNOS_2400_DETALHADO.pdf
+- MAPA_NPU_EXYNOS_2400_DETALHADO.png
+- NPU-ENN-rootless-2026-09-18.md
+
+Coverage:
+- Binder services and NNAPI device discovery
+- AIDL/VINTF/HAL inventory
+- ENN libraries and installed neural components
+- SELinux contexts and UID comparison
+- /dev/vertex10, major/minor and sysfs topology
+- exynos-npu platform and Device Tree attributes
+- rootless execution proof
+- operation support and benchmark matrix
+- vendor service failure and ioctl investigation
+- confirmed paths, blocks, open questions and validation plan
+
+Scope boundary:
+This package documents the platform evidence collected by XOP. It does not document, implement or bundle any separate consumer application, application backend, decoder or proprietary Samsung binary.
+
+Source package SHA-256: 873a0f8d3ff4d8e9a4168aafab0349f5becfa539cfc9b03d8a7033e3acb08af9
+
+Raw logs, collection commands, compiled binaries, vendor libraries, firmware, proprietary models, dumps and personal device data are excluded.

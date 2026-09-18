@@ -1,0 +1,88 @@
+digraph NPU_EXYNOS_2400 {
+  graph [rankdir=LR, bgcolor="white", pad=0.35, nodesep=0.28, ranksep=1.0, splines=polyline, fontname="DejaVu Sans", fontsize=18, label="Mapa detalhado de evidências — NPU Exynos 2400", labelloc=t, labeljust=c];
+  node [shape=box, style="rounded,filled", fontname="DejaVu Sans", fontsize=11, margin="0.12,0.08", color="#334155", penwidth=1.2];
+  edge [color="#64748b", penwidth=1.2, arrowsize=0.7];
+
+  root [label="NPU Exynos 2400\nXOP — mapa de evidências", fillcolor="#0f172a", fontcolor="white", color="#0f172a", penwidth=2, fontsize=16];
+
+  subgraph cluster_legend { label="Legenda"; color="#cbd5e1"; style="rounded";
+    confirmed [label="Verde: confirmado", fillcolor="#dcfce7", color="#16a34a"];
+    partial [label="Amarelo: parcial/inconclusivo", fillcolor="#fef9c3", color="#ca8a04"];
+    blocked [label="Vermelho: bloqueado/negativo específico", fillcolor="#fee2e2", color="#dc2626"];
+    openq [label="Cinza: investigação aberta", fillcolor="#e2e8f0", color="#475569"];
+  }
+
+  subgraph cluster_public { label="Estrada pública — confirmada"; color="#16a34a"; style="rounded";
+    nnapi [label="Android NNAPI\nIDevice/enn", fillcolor="#dcfce7", color="#16a34a"];
+    enum [label="2 dispositivos\nenn tipo 4\nnnapi-reference tipo 2", fillcolor="#dcfce7", color="#16a34a"];
+    support [label="getSupportedOperations\nSOFTMAX = SIM", fillcolor="#dcfce7", color="#16a34a"];
+    compile [label="ModelFinish 0\nCompilationCreate 0\nCompilationFinish 0", fillcolor="#dcfce7", color="#16a34a"];
+    execute [label="Execution_compute 0\nreadback correto\ndiferença máxima 0,000000", fillcolor="#dcfce7", color="#16a34a"];
+    nnapi -> enum -> support -> compile -> execute;
+  }
+
+  subgraph cluster_hal { label="HAL / VINTF / software instalado"; color="#2563eb"; style="rounded";
+    vintf [label="VINTF\nIDevice/enn\ncompatibility matrices", fillcolor="#dbeafe", color="#2563eb"];
+    service [label="android.hardware.neuralnetworks-service-enn\ninit: running", fillcolor="#dbeafe", color="#2563eb"];
+    libs [label="libenn_wrapper\nlibenn_engine\nlibenn_model\nlibenn_user_lib", fillcolor="#dbeafe", color="#2563eb"];
+    compiler [label="libnpu_compiler\nNCP / compiler symbols\nCMDQ generator strings", fillcolor="#dbeafe", color="#2563eb"];
+    models [label="Modelos NNC\ncâmera / portrait data\nKnoxNeuralNetworkRuntime", fillcolor="#dbeafe", color="#2563eb"];
+    vintf -> service -> libs -> compiler;
+    service -> models;
+  }
+
+  subgraph cluster_security { label="Segurança e acesso"; color="#7c3aed"; style="rounded";
+    halctx [label="HAL context\nhal_neuralnetworks_service_enn_default", fillcolor="#ede9fe", color="#7c3aed"];
+    vendorctx [label="Vendor AIDL\nhal_enn_default_exec", fillcolor="#ede9fe", color="#7c3aed"];
+    appuid [label="UID comum\n10415\nuntrusted_app_27", fillcolor="#fef9c3", color="#ca8a04"];
+    rootuid [label="Root de comparação\nUID 0\nksu context", fillcolor="#fef9c3", color="#ca8a04"];
+    halctx -> appuid;
+    vendorctx -> rootuid;
+  }
+
+  subgraph cluster_kernel { label="Kernel / plataforma / endpoint"; color="#0891b2"; style="rounded";
+    dt [label="Device Tree\n/npu_exynos\ncompatible samsung,exynos-npu", fillcolor="#cffafe", color="#0891b2"];
+    driver [label="driver exynos-npu\nplatform device\nIOMMU group 7", fillcolor="#cffafe", color="#0891b2"];
+    sysfs [label="sysfs\nDVFS / governors / QoS\nAFM / wakeup / errors", fillcolor="#cffafe", color="#0891b2"];
+    vertex [label="/dev/vertex10\nmajor:minor 82:10\nvendor_npu_device", fillcolor="#fee2e2", color="#dc2626"];
+    dt -> driver -> sysfs;
+    driver -> vertex;
+  }
+
+  subgraph cluster_direct { label="Estrada vendor direta — bloqueada ou incompleta"; color="#dc2626"; style="rounded";
+    vaidl [label="IEnnInterfaceAidl/default\ncheckService = nulo", fillcolor="#fee2e2", color="#dc2626"];
+    open [label="UID comum\nopen vertex10 = EACCES", fillcolor="#fee2e2", color="#dc2626"];
+    ioctl [label="Root + permissive\nopen/mmap funcionam\nioctl = EINVAL/EFAULT", fillcolor="#fef9c3", color="#ca8a04"];
+    headers [label="Sem headers públicos\nABI ioctl não identificada", fillcolor="#e2e8f0", color="#475569"];
+    vaidl -> open -> ioctl -> headers;
+  }
+
+  subgraph cluster_ops { label="Operações e desempenho"; color="#ea580c"; style="rounded";
+    fcint8 [label="FULLY_CONNECTED INT8\nchecksum igual\nENN ~1,1148 ms\nCPU ~6,2407 ms", fillcolor="#dcfce7", color="#16a34a"];
+    fcfp [label="FULLY_CONNECTED FP\nENN ~1,2092 ms\nCPU ~0,1332 ms", fillcolor="#fef9c3", color="#ca8a04"];
+    softbig [label="SOFTMAX 1024\nENN ~1,0264 ms\nCPU ~0,0104 ms", fillcolor="#fef9c3", color="#ca8a04"];
+    batch [label="BATCH_MATMUL\nsuporte = NÃO\ncompilationFinish = 4", fillcolor="#fee2e2", color="#dc2626"];
+    bench [label="Benchmark corrigido\nENN finish = 4\nCPU 10,356 ms/exec", fillcolor="#fef9c3", color="#ca8a04"];
+    fcint8 -> fcfp -> softbig -> batch -> bench;
+  }
+
+  subgraph cluster_open { label="Próximos testes — investigação aberta"; color="#475569"; style="rounded";
+    burst [label="NNAPI Burst\nreduzir overhead", fillcolor="#e2e8f0", color="#475569"];
+    memory [label="Memória compartilhada\nlifetime / reuse", fillcolor="#e2e8f0", color="#475569"];
+    shapes [label="Matriz de tipos e formas\nINT8 / FP16 / FP32", fillcolor="#e2e8f0", color="#475569"];
+    thermal [label="Tempo + frequência\nthermal / DVFS / AFM", fillcolor="#e2e8f0", color="#475569"];
+    vendorstate [label="Estado de registro\ndo serviço vendor", fillcolor="#e2e8f0", color="#475569"];
+    burst -> memory -> shapes -> thermal -> vendorstate;
+  }
+
+  root -> nnapi [color="#16a34a", penwidth=2];
+  root -> vintf [color="#2563eb", penwidth=2];
+  root -> dt [color="#0891b2", penwidth=2];
+  root -> vaidl [color="#dc2626", penwidth=2];
+  root -> fcint8 [color="#ea580c", penwidth=2];
+  root -> burst [color="#475569", penwidth=2];
+  libs -> nnapi [style=dashed, color="#2563eb"];
+  nnapi -> fcint8 [style=dashed, color="#16a34a"];
+  nnapi -> vaidl [style=dashed, color="#dc2626"];
+  vertex -> ioctl [style=dashed, color="#dc2626"];
+}
