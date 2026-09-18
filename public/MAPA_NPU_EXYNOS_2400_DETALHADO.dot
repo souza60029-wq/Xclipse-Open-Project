@@ -66,12 +66,12 @@ digraph NPU_EXYNOS_2400 {
     fcint8 -> fcfp -> softbig -> batch -> bench;
   }
 
-  subgraph cluster_open { label="Próximos testes — investigação aberta"; color="#475569"; style="rounded";
-    burst [label="NNAPI Burst\nreduzir overhead", fillcolor="#e2e8f0", color="#475569"];
-    memory [label="Memória compartilhada\nlifetime / reuse", fillcolor="#e2e8f0", color="#475569"];
-    shapes [label="Matriz de tipos e formas\nINT8 / FP16 / FP32", fillcolor="#e2e8f0", color="#475569"];
-    thermal [label="Tempo + frequência\nthermal / DVFS / AFM", fillcolor="#e2e8f0", color="#475569"];
-    vendorstate [label="Estado de registro\ndo serviço vendor", fillcolor="#e2e8f0", color="#475569"];
+  subgraph cluster_open { label="Lacunas arquiteturais observadas"; color="#475569"; style="rounded";
+    burst [label="Sessão NNAPI\nBurst / overhead", fillcolor="#e2e8f0", color="#475569"];
+    memory [label="Memória NPU\nIOMMU / DMA / reuse", fillcolor="#e2e8f0", color="#475569"];
+    shapes [label="Contrato de grafo\ntipos / formas / operadores", fillcolor="#e2e8f0", color="#475569"];
+    thermal [label="Controle de energia\nDVFS / AFM / QoS", fillcolor="#e2e8f0", color="#475569"];
+    vendorstate [label="Fronteira vendor\nregistro / namespace / ABI", fillcolor="#e2e8f0", color="#475569"];
     burst -> memory -> shapes -> thermal -> vendorstate;
   }
 

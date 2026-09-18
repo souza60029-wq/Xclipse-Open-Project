@@ -275,7 +275,7 @@ O Device Tree inclui referências a:
 - `samsung,imgloader-s2mpu-support`;
 - `vertex_name`.
 
-Esses nomes revelam a riqueza da interface interna do driver. Eles não são uma API pública. O próximo passo seguro é correlacionar propriedades com comportamento observável por NNAPI, sem escrever em registradores ou atributos de produção.
+Esses nomes revelam a riqueza da interface interna do driver. Eles não são uma API pública. A documentação os correlaciona com o comportamento observável por NNAPI sem tratar registradores ou atributos de produção como interface de aplicativo.
 
 ## 9. Execução NNAPI/ENN confirmada sem root
 
@@ -425,20 +425,49 @@ A coleta não prova que:
 - a presença de modelos `.nnc` permita reutilização por terceiros;
 - a escrita em sysfs ou o uso de root transforme a interface interna em API estável.
 
-## 15. Próximo plano de validação
+## 15. Arquitetura consolidada observada
 
-O próximo conjunto deve ser formado por experimentos pequenos, independentes e repetíveis:
+### 15.1. Camadas de software
 
-1. Repetir o teste `SOFTMAX` com múltiplos tamanhos e medir cold start, warm start e execução sustentada.
-2. Medir o mesmo grafo com e sem `Burst`, mantendo o mesmo buffer e o mesmo número de execuções.
-3. Registrar memória, temperatura, frequência e tempo por janela sem escrever em sysfs.
-4. Testar operações isoladas que podem compor um grafo maior, sempre consultando `getSupportedOperationsForDevices` antes da compilação.
-5. Construir uma matriz de tipos `FLOAT32`, `FLOAT16`, `INT8` e formas compatíveis.
-6. Separar tempo de criação, compilação, primeira execução e execuções aquecidas.
-7. Repetir `BATCH_MATMUL` com formas mínimas e registrar quais dimensões ou tipos alteram o resultado.
-8. Manter `vertex10` como investigação privilegiada e não como dependência de aplicativo.
-9. Repetir o probe vendor com binário local executável, registrando estado do serviço e contexto SELinux.
-10. Publicar apenas derivados sanitizados, preservando logs crus fora do repositório.
+A arquitetura observada começa na aplicação ou cliente NNAPI. O cliente não conversa diretamente com registradores, firmware ou `vertex10`. Ele constrói um modelo NNAPI, consulta suporte, solicita compilação para `IDevice/enn` e entrega buffers de operandos ao runtime. O HAL `android.hardware.neuralnetworks-service-enn` atua como fronteira entre a interface Android e o software Samsung ENN.
+
+Dentro da pilha ENN aparecem camadas distintas. `libenn_wrapper` e `libenn_wrapper_system` fazem a ponte de integração. `libenn_model` mantém a representação do grafo. `libenn_engine` e `libenn_engine_lib` participam da preparação e execução. `libenn_user_lib` e `libenn_user.samsung_slsi` conectam o runtime ao driver vendor. Os drivers separados de CPU, GPU e unified indicam que o runtime possui mais de um caminho de execução, portanto o nome `enn` sozinho não revela qual subcomponente executou cada operação.
+
+### 15.2. Modelo, compilador e formato interno
+
+As strings das bibliotecas mostram `NCP_BINARY`, `NCP Version`, `NCPBuffer`, `NPUCompiler`, `NPUCommon`, backends `NPUCrane`, `NPUDove`, `NPUEagle` e `NPURoot`, além de geradores `runNcpGenerator`, `runCMDQGenerator` e `runISAGenerator`. Isso indica uma cadeia de transformação que parte de um grafo e chega a uma representação NCP/CMDQ específica do acelerador.
+
+Essa evidência é estática. Ela demonstra a presença de conceitos de compilação, command queue e geração de ISA no software instalado, mas não revela a codificação completa dos comandos nem autoriza a montagem de uma fila privada.
+
+### 15.3. Hardware lógico e blocos internos
+
+O Device Tree nomeia blocos `gnpu0`, `gnpu1`, `snpu0`, `snpu1`, `dnc`, `dsp` e `npumem`. As propriedades `samsung,npucmd-*` incluem ativação e desativação de clocks, DSP, NPU, DNC, STM e caminhos de acesso a registradores. Os nomes `sfrgnpu0`, `sfrgnpu1`, `sfrsnpu0`, `sfrsnpu1`, `sfrdnc`, `sfrdsp0` e `sfrnpumem` aparecem nas tabelas de controle observadas.
+
+O mapa também registra `NPU0` e `NPU1` em nomes de nó, frequência, scheduler e DVFS. Isso indica uma arquitetura com mais de um domínio lógico de processamento, mas não permite concluir que ambos possam ser selecionados individualmente pela API pública.
+
+### 15.4. Memória, IOMMU e DMA
+
+O nó `npu_exynos` possui referências a `iommus`, `samsung,iommu-group`, `sysmmu,best-fit`, `dma-window`, `dma-coherent`, `samsung,npumem-address`, `samsung,npumem-names` e `samsung,npurmem-address`. A topologia observada liga o dispositivo a um grupo IOMMU e a dois fornecedores SysMMU em sysfs.
+
+Esses elementos mostram que operandos e buffers passam por uma política de endereçamento e tradução própria. O mapa não contém uma prova de que um buffer alocado arbitrariamente por um aplicativo possa ser convertido em memória NPU pelo endpoint direto. A rota pública NNAPI esconde essa operação dentro do HAL e do runtime.
+
+### 15.5. Frequência, QoS, AFM e energia
+
+O sysfs expõe `qos_freq`, governors de NPU, frequências de `npufreq`, `intfreq` e `miffreq`, tabelas DVFS, limites de atividade, número mínimo de cores, afinidade de interrupção e propriedades AFM como `afm_irp`, `afm_mode`, `afm_onoff`, `afm_restore_msec`, `afm_tdc_threshold` e `afm_tdt`.
+
+Também aparecem nós de throughput para NPU0, NPU1 e NPU agregado. A presença dessa infraestrutura explica por que tempo de execução, frequência e temperatura precisam ser interpretados como parte do estado do sistema. Ela não é uma autorização para escrever em sysfs ou forçar frequências.
+
+### 15.6. Firmware, wakeup e recuperação
+
+O sistema mantém propriedades de `wakeup` para o dispositivo `npu_exynos`, incluindo contadores de atividade, mudanças, eventos, expirações e tempo ativo. O sysfs também expõe `npu_err_in_dmesg`, `log_level`, `suspend_resume_test` e `version`.
+
+Esses nós representam a integração do acelerador com suspensão, recuperação e diagnóstico do kernel. O mapa confirma a existência dos mecanismos de controle e observabilidade; não confirma o protocolo de recuperação nem a semântica de cada comando.
+
+### 15.7. Fronteira entre API pública e ABI interna
+
+A API pública é identificável por `IDevice/enn`, operações NNAPI, compilação e execução. A ABI interna aparece nos binários vendor, no endpoint `vertex10`, nos símbolos NCP/CMDQ e nas propriedades Device Tree. Entre as duas existe uma fronteira deliberada de HAL, namespaces, SELinux, permissões de dispositivo e formatos proprietários.
+
+O fato de o caminho NNAPI funcionar sem root e o caminho `vertex10` falhar para UID comum é uma evidência dessa separação. O XOP deve documentar essa fronteira, não tratá-la como uma simples ausência de comando.
 
 ## 16. Proveniência e classificação
 
