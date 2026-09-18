@@ -103,13 +103,21 @@ Logs brutos de telefonia, bateria, identificadores, caminhos de instalação e e
 
 ## 12. NPU Exynos e NNAPI
 
-O pacote mais recente contém um conjunto separado de experimentos de aceleração neural. O ramo utiliza NNAPI e o dispositivo `enn`; ele não utiliza o render node DRM da GPU Xclipse e não deve ser confundido com execução SGPU.
+O pacote mais recente contém um conjunto separado de experimentos de aceleração neural. O ramo utiliza NNAPI e o dispositivo `enn`; ele não utiliza o render node DRM da GPU Xclipse e não deve ser confundido com execução SGPU. A nova coleta também testou o caminho com UID comum, sem root.
 
 Os resultados sanitizados confirmam execução de operações simples e de alguns grafos quantizados com saída correlacionada por checksum. Uma cadeia INT8 de quatro camadas `FULLY_CONNECTED` registrou 1,1148 ms por execução no ENN e 6,2407 ms na referência de CPU, com checksum igual e razão aproximada de 5,60×. Uma soma elementar produziu `[11, 22, 33, 44]` conforme esperado.
 
 O desempenho não foi uniformemente superior. Em `FULLY_CONNECTED` de ponto flutuante, o ENN registrou 1,2092 ms, enquanto a referência CPU registrou 0,1332 ms. Em softmax de 1024 elementos, ambas as saídas somaram 1,0000, mas o ENN registrou 1,0264 ms contra 0,0104 ms da CPU. Esses números são resultados dos workloads específicos e não representam uma característica geral da NPU.
 
 Os testes também encontraram limites de compilação em `BATCH_MATMUL`, atenção fundida, grafos com múltiplas saídas e certas ordens de declaração de operandos. Em uma comparação estrutural, entradas declaradas antes de operandos compartilhados compilaram, enquanto a ordem inversa falhou em casos equivalentes. Isso é uma dependência observada do runtime/compiler NNAPI e precisa de reprodução independente antes de ser generalizada.
+
+### 12.1. Execução NNAPI/ENN sem root
+
+A coleta de 18/09 confirmou que um processo sem root consegue obter o serviço público `android.hardware.neuralnetworks.IDevice/enn`. O teste encontrou os dispositivos `enn` e `nnapi-reference`, finalizou um modelo, compilou-o no ENN e executou `SOFTMAX`. A saída `[0.032059, 0.087144, 0.236883, 0.643914]` coincidiu com o valor esperado, com diferença máxima `0.000000`.
+
+Essa prova estabelece uma rota rootless para a cadeia `aplicativo → NNAPI → HAL ENN → NPU`, limitada aos grafos reproduzidos. Ela não demonstra que a interface proprietária `vendor.samsung_slsi.hardware.enn_aidl.IEnnInterfaceAidl/default` possa ser usada por um aplicativo. Essa interface retornou nulo nos probes realizados. O acesso direto a `/dev/vertex10` também não é rootless: o UID comum recebeu `Permission denied`, e os probes privilegiados testados não produziram um ioctl funcional.
+
+O novo teste muda a classificação de `SOFTMAX`: ele é funcional no grafo pequeno reproduzido, mas continua lento no benchmark anterior de 1024 elementos. `BATCH_MATMUL` permanece não suportado pelo dispositivo `enn` no formato testado. A documentação detalhada está em [NPU/ENN rootless](../docs/30-npu-enn-rootless.md).
 
 O pipeline de decodificação apresentou uma configuração com grafos Q/K/V separados e grafos híbridos aceitos, além de uma tentativa multi-saída rejeitada. O teste sustentado de 90 segundos registrou tempos por janela e frequências de CPU durante as fases CPU e NPU. Como a telemetria térmica completa não estava disponível, essa coleta não prova throttling; ela fornece um baseline para uma captura futura.
 
@@ -153,7 +161,7 @@ Cada experimento deve ter controle negativo, guard regions quando aplicável, li
 
 ## 14. Proveniência e publicação
 
-O pacote recebido em 2026-09-17 possui SHA-256 `bd81f26cee79176805c983e639f3d341c48f01cf52680362c2de394818b4aec1`. Os arquivos brutos permanecem fora do repositório. A release pública contém documentação técnica, mapas, imagens e hashes selecionados; não contém logs crus, dumps, blobs, bibliotecas vendor, firmware, credenciais ou dados pessoais.
+O pacote recebido em 2026-09-17 possui SHA-256 `bd81f26cee79176805c983e639f3d341c48f01cf52680362c2de394818b4aec1`. A atualização NPU de 2026-09-18 possui SHA-256 `873a0f8d3ff4d8e9a4168aaf0349f5becfa539cfc9b03d8a7033e3acb08af9`. Os arquivos brutos permanecem fora do repositório. A release pública contém documentação técnica, mapas, imagens, relatório rootless e hashes selecionados; não contém logs crus, dumps, blobs, bibliotecas vendor, firmware, credenciais ou dados pessoais.
 
 ## Referências
 

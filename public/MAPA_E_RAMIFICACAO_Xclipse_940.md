@@ -52,6 +52,7 @@ SoC Exynos / Android
 │   ├── compilação de modelos e seleção de operações
 │   ├── execução, checksum e comparação com CPU
 │   ├── limites de multi-saída, BATCH_MATMUL e ordem de operandos
+│   ├── serviço público `IDevice/enn` acessível sem root
 │   └── energia, frequência e teste sustentado
 └── Reprodução e investigação
     ├── probes DRM e inventários runtime
@@ -103,6 +104,22 @@ comparação com CPU e análise térmica
 
 A NPU possui API, runtime, compilador, limitações de grafo e critérios de readback próprios. A presença de NNAPI ou ENN não demonstra relação de execução com o render node da GPU.
 
+### Cadeia rootless comprovada
+
+```text
+UID comum de aplicativo
+        ↓
+android.hardware.neuralnetworks.IDevice/enn
+        ↓
+modelFinish + compilação ENN
+        ↓
+Execution_compute sem root
+        ↓
+SOFTMAX correto: diferença máxima 0,000000
+```
+
+Essa cadeia foi executada por um processo sem root. Ela comprova a rota pública NNAPI/ENN para o grafo reproduzido. Não comprova a utilização direta da interface vendor `IEnnInterfaceAidl` nem do endpoint `/dev/vertex10`.
+
 ## NPU/NNAPI: evidências sanitizadas
 
 | Operação | Resultado observado | Classificação |
@@ -111,6 +128,7 @@ A NPU possui API, runtime, compilador, limitações de grafo e critérios de rea
 | `FULLY_CONNECTED` 1024×1024, ponto flutuante | ENN: 1,2092 ms; referência CPU: 0,1332 ms. | Execução observada; a referência CPU foi mais rápida. |
 | Soma elementar | Resultado `[11, 22, 33, 44]` conforme esperado; 0,9218 ms por execução em 200 execuções. | Execução funcional mínima observada. |
 | Softmax de 1024 elementos | Soma da saída 1,0000; ENN: 1,0264 ms; referência CPU: 0,0104 ms. | Resultado numérico observado; desempenho inferior à referência. |
+| Softmax pequeno sem root | `IDevice/enn` encontrado; compilação e `Execution_compute` concluídos; saída `[0,032059, 0,087144, 0,236883, 0,643914]`; diferença máxima 0,000000. | Execução rootless confirmada para o grafo reproduzido. |
 | Cadeia quantizada de quatro camadas | ENN: 1,1148 ms por execução; referência CPU: 6,2407 ms; checksum igual. | Execução e readback numérico correlacionados. |
 | Atenção e `BATCH_MATMUL` | Algumas formas não foram aceitas na compilação ou não foram reportadas como suportadas. | Limitação específica do grafo, não falha geral da NPU. |
 | Ordem dos operandos | Entradas declaradas antes de operandos compartilhados compilaram; a ordem inversa falhou em casos equivalentes. | Dependência estrutural observada no compilador/runtime NNAPI. |
@@ -122,7 +140,7 @@ O teste sustentado de 90 segundos registrou variação de tempo por janela e fre
 
 Os caminhos vermelhos são pontos que podem determinar a viabilidade de integração de componentes de userspace ou de carregamento alternativo. Eles incluem a relação entre ICD layers e o loader Android, as fronteiras de root e desbloqueio, permissões de `/dev/dri`, namespaces, SELinux, formato de packets, ISA, compiler e sincronização.
 
-O mapa não afirma que qualquer caminho vermelho esteja desbloqueado. O objetivo é indicar onde uma investigação reproduzível deve localizar o contrato ou a falha.
+O mapa não afirma que qualquer caminho vermelho esteja desbloqueado. A rota NNAPI/ENN acima deixou de ser hipótese e passou a ser um caminho rootless confirmado para o grafo reproduzido. A interface vendor direta e o endpoint `/dev/vertex10` continuam sem rota rootless demonstrada. O objetivo dos caminhos restantes é localizar o contrato ou a falha sem confundir presença de componentes com acesso funcional.
 
 ## Proveniência e reprodução
 

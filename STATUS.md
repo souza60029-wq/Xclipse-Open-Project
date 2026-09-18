@@ -1,13 +1,13 @@
 # Project Status
 
-**Status date:** 2026-09-17
+**Status date:** 2026-09-18
 **Internal project name:** XO940
 **Initial target:** Samsung Xclipse 940 / SM-S721B
 **Repository posture:** private technical documentation and reproducibility research
 
 ## Executive status
 
-The project is in the **platform mapping and reproducibility phase**. The current evidence covers Device Tree, SGPU/DRM, memory, VM, IOMMU, scheduler, IB, fences, Android namespaces and vendor process paths. The latest package adds a larger Xclipse log collection, additional Samsung source-package references, Device Tree variants and a separate XLIA collection.
+The project is in the **platform mapping and reproducibility phase**, with a separately validated rootless NNAPI/ENN branch. The current evidence covers Device Tree, SGPU/DRM, memory, VM, IOMMU, scheduler, IB, fences, Android namespaces, vendor process paths and a public NNAPI `IDevice/enn` execution path.
 
 The raw archives remain outside Git. Public files contain sanitized technical derivatives, maps, classifications and provenance. XLIA, Exynos NPU and unrelated Android subsystem material are kept separate from the Xclipse GPU documentation.
 
@@ -26,13 +26,15 @@ The raw archives remain outside Git. Public files contain sanitized technical de
 | Shader/ISA | Compiler and encoding indications exist in sources and metadata. | Static indication | Correlate controlled inputs with native output. |
 | Variant matrix | S721B, S721U, S7210, S721Q and S721J source-package references are present. | Confirmed by package inventory | Compare GPU-specific properties and revisions. |
 | XLIA | Separate Android, Vulkan, power, thermal, memory and session collections exist. | Separate project evidence | Keep outside the Xclipse GPU corpus. |
-| NPU/NNAPI | ENN accepted and executed selected elementwise, fully connected and quantized graphs; several attention and multi-output forms were rejected. | Confirmed per workload with checksum or explicit compiler status | Build a sanitized NNAPI reproduction matrix and isolate thermal telemetry. |
+| NPU/NNAPI | A no-root process discovered `android.hardware.neuralnetworks.IDevice/enn`, compiled a graph and executed `SOFTMAX` with exact output match. INT8 `FULLY_CONNECTED` remains validated; `BATCH_MATMUL` remains rejected. | Confirmed execution for the reproduced graphs | Build the ENB rootless backend and measure XLIA-shaped subgraphs. |
+| ENN vendor AIDL | `vendor.samsung_slsi.hardware.enn_aidl.IEnnInterfaceAidl/default` was not found by the comparison probe, even with root. | Negative result for the probe | Determine registration/namespace conditions without assuming direct vendor access. |
+| NPU endpoint | `/dev/vertex10` maps to `exynos-npu` and `/npu_exynos`; common UID receives permission denied and root probes returned invalid-argument/bad-address for tested ioctls. | Confirmed endpoint; direct API not reproduced | Do not use direct vertex access in the rootless app path. |
 
 ## NPU branch
 
-The new collection adds a separate Exynos NPU/NNAPI branch. It includes ENN device selection, model compilation status, operation support queries, checksum validation, CPU baselines and sustained timing. It is documented as a separate accelerator path and is not treated as GPU execution.
+The new collection adds a separately validated Exynos NPU/NNAPI branch. It includes ENN device selection, public Binder discovery, no-root model compilation, operation support queries, checksum validation, CPU baselines, sustained timing and endpoint permissions. It is documented as a separate accelerator path and is not treated as GPU execution.
 
-The strongest current NPU evidence is a quantized four-layer `FULLY_CONNECTED` graph with equal output checksum and an observed ENN timing advantage over the NNAPI CPU reference. Other workloads, including floating-point matrix multiplication, softmax and attention, show either CPU advantage or compilation limits.
+The strongest current NPU evidence is the no-root `SOFTMAX` execution: the process found `IDevice/enn`, compiled the graph, executed it and received a maximum numerical difference of `0.000000`. The quantized four-layer `FULLY_CONNECTED` graph remains the strongest performance result, with equal output checksum and an ENN timing advantage over the NNAPI CPU reference. `SOFTMAX` is now classified as functionally supported for the reproduced graph but slow in the older 1024-element benchmark. `BATCH_MATMUL` and the direct vendor/vertex routes remain blocked for the tested forms.
 
 ## Current technical state
 
@@ -60,7 +62,7 @@ The chain is a map of dependencies, not a claim that every stage has been indepe
 
 ## Latest collection boundaries
 
-The package received on 2026-09-17 has SHA-256 `bd81f26cee79176805c983e639f3d341c48f01cf52680362c2de394818b4aec1`. It contains Xclipse logs, Samsung source-package archives, historical implementation material, XLIA collections and Exynos NPU experiments. The public documentation uses only sanitized technical findings from the Xclipse set.
+The NPU package received on 2026-09-18 has SHA-256 `873a0f8d3ff4d8e9a4168aafab0349f5becfa539cfc9b03d8a7033e3acb08af9`. It contains the earlier NPU benchmarks plus ENB collection items for services, interfaces, permissions, endpoints, root comparison, NNAPI HAL execution and Device Tree/sysfs. The public documentation uses only sanitized technical findings.
 
 The Samsung source-package archive is treated as a reference package. Its presence does not by itself grant redistribution rights for source, firmware, generated files or vendor libraries. The raw package remains external evidence.
 
@@ -73,6 +75,9 @@ The Samsung source-package archive is treated as a reference package. Its presen
 5. Which Android namespaces and loader interfaces are reproducible across devices?
 6. Which shader, packet and compiler fields are stable under controlled inputs?
 7. Which Xclipse properties are shared by S721B, S721U, S7210, S721Q and S721J?
+8. Which XLIA-shaped subgraphs are accepted by `IDevice/enn` through a normal app UID?
+9. Can Burst, persistent memory and QKV concatenation reduce NNAPI overhead without changing numerical output?
+10. Under which system state, if any, is the vendor ENN AIDL service registered for an ordinary client?
 
 ## Publication rule
 
@@ -82,5 +87,6 @@ The release is updated from sanitized technical documentation and maps. Raw logs
 
 [1]: https://github.com/souza60029-wq/Xclipse-Open-Project/releases/tag/documentation-2026-09-06 "Public Xclipse documentation release"
 [2]: ../docs/validation-and-evidence.md "Validation and evidence protocol"
+[3]: ../docs/30-npu-enn-rootless.md "NPU/ENN rootless evidence"
 
-[1] [2]
+[1] [2] [3]

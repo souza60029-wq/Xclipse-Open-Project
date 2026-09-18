@@ -15,12 +15,14 @@ The project advances by evidence, not by directory count. Each phase has an entr
 | 8. Diagnostic layers | Add tracing and validation where the real ICD is visible. | Layer loaded without modifying the ICD. |
 | 9. Independent driver | Implement the smallest useful open driver surface. | One real Vulkan feature on the target hardware. |
 | 10. Validation and maintenance | Regression-test revisions and document limitations. | Versioned test suite, bug records, and maintained specifications. |
+| NPU-A. Rootless NNAPI/ENN | Reproduce the public `IDevice/enn` path from an ordinary app UID and partition supported subgraphs. | No-root compile, execution and numerical readback for the reproduced graph. |
+| NPU-B. XLIA subgraphs | Measure `FULLY_CONNECTED`, `SOFTMAX`, QKV, FFN, Burst and persistent-memory variants against the full decode. | Backend decision based on tokens/s, latency, memory, thermal and failure data. |
 
 ## Current operating split
 
 The five current priorities are defined in `reports/5-dois-meios-essenciais.md`. The first five quick discoveries are deliberately read-only or source-backed: Device Tree comparison, runtime inventory, library/ABI inventory, source-symbol indexing, and confidence-labeled ICD analysis.
 
-The project is currently between Phase 0 and Phase 1. The archive and device identity are established; the next exit artifact is the complete Device Tree/platform map. A compute test must not jump ahead of the platform, memory, vendor-path, and recovery prerequisites.
+The project is currently between Phase 0 and Phase 1 for the GPU branch. The NPU branch has independently reached the NPU-A entry criterion: a normal UID found `IDevice/enn` and executed a small graph without root. The next NPU exit artifact is an XLIA-shaped reproduction matrix, not direct access to `/dev/vertex10` or the vendor AIDL service.
 
 ## References
 

@@ -7,10 +7,11 @@ A distribuição pública contém documentação técnica consolidada e mapas de
 | `DOCUMENTACAO_Xclipse_940_COMPLETA.pdf` | Plataforma, Device Tree, SGPU/DRM, GEM/BO/VA/IOMMU, CS/IB, scheduler, fences, Android, bibliotecas, variantes, NPU/NNAPI e política de reprodução. |
 | `MAPA_E_RAMIFICACAO_Xclipse_940.pdf` | Mapa de arquitetura, ramificação técnica, ramo NPU/NNAPI, caminhos operacionais, legenda cromática e investigação de falhas. |
 | `Xclipse-Open-Project-public-final.zip` | Os dois PDFs e os mapas PNG visuais, incluindo o mapa principal e o mapa de falhas. |
+| `NPU-ENN-rootless-2026-09-18.zip` | Pacote sanitizado com o relatório público da execução NNAPI/ENN sem root, o documento técnico e os hashes de proveniência. |
 
 ## Classificação
 
-Os documentos diferenciam observação confirmada, confirmação por fonte, resultado parcial, indício, hipótese e resultado negativo específico. Um inicializador, uma enumeração ou um ioctl aceito não é apresentado como execução GPU ou NPU sem sincronização, checksum ou readback.
+Os documentos diferenciam observação confirmada, confirmação por fonte, resultado parcial, indício, hipótese e resultado negativo específico. A nova evidência rootless inclui compilação, execução e readback numérico correto no `IDevice/enn`; um inicializador, uma enumeração ou um ioctl aceito continua não sendo apresentado como execução GPU ou NPU sem validação.
 
 ## Limites
 

@@ -1,0 +1,23 @@
+NPU/ENN ROOTLESS PUBLIC PACKAGE
+Date: 2026-09-18
+Source package SHA-256: 873a0f8d3ff4d8e9a4168aafab0349f5becfa539cfc9b03d8a7033e3acb08af9
+
+Included:
+- docs/30-npu-enn-rootless.md
+- reports/npu-enn-rootless-2026-09-18.md
+- public/DOCUMENTACAO_Xclipse_940_COMPLETA.md
+- public/MAPA_E_RAMIFICACAO_Xclipse_940.md
+- STATUS.md
+- README.md
+
+Not included:
+- raw logs
+- shell collection scripts
+- compiled binaries
+- firmware
+- vendor libraries
+- proprietary model files
+- personal device data
+
+Evidence headline:
+A no-root process discovered android.hardware.neuralnetworks.IDevice/enn, compiled and executed a small SOFTMAX graph, and received the expected output with maximum difference 0.000000. This proves the public NNAPI/ENN path for the reproduced graph; it does not prove direct access to the vendor ENN AIDL service or /dev/vertex10.
