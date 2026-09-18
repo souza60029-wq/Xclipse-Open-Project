@@ -2,17 +2,15 @@
 
 ## Objetivo
 
-O Xclipse Open Project é uma base técnica para documentação, coleta reproduzível e mapeamento de GPUs Samsung Xclipse e dos aceleradores relacionados no SoC Exynos. O repositório organiza observações de hardware real, Device Tree, plataforma, kernel SGPU/DRM, memória, IOMMU, firmware, filas, sincronização, Android, bibliotecas de sistema e a separação entre GPU e NPU.
+O Xclipse Open Project é uma base técnica para documentação, coleta e mapeamento de GPUs Samsung Xclipse e dos aceleradores relacionados no SoC Exynos. O repositório organiza observações de hardware real, Device Tree, plataforma, kernel SGPU/DRM, memória, IOMMU, firmware, filas, sincronização, Android, bibliotecas de sistema e a separação entre GPU e NPU.
 
-O nome interno do projeto é **XO940**. O hardware de referência é a **Samsung Xclipse 940** no **SM-S721B**, plataforma **s5e9945/erd9945**. XO940 identifica o projeto e não a GPU.
+O nome interno do projeto é **XO940**. O hardware de referência é a **Samsung Xclipse 940** no **SM-S721B**, plataforma **s5e9945/erd9945**.
 
 ## Método de coleta
 
 A fonte primária é um aparelho Samsung real, com coleta controlada e documentação da proveniência. O procedimento combina identidade do aparelho, build, kernel, SoC, GPU, revisão, firmware, Device Tree em runtime, comparação com fontes públicas, inventário de `/dev/dri`, sysfs, processos, namespaces, bibliotecas, traces do kernel e DRM, análise ELF e probes reversíveis.
 
 A coleta também possui um ramo separado para NPU/NNAPI. Esse ramo registra seleção do dispositivo `enn`, compilação de grafos, execução, checksum, baseline de CPU e comportamento sustentado. Ele não é misturado à execução da GPU Xclipse.
-
-Root amplia a observabilidade, mas não remove automaticamente namespaces, permissões, SELinux ou restrições do Android. Cada coleta deve registrar comando, ambiente, saída bruta, timestamp, resultado, recuperação e SHA-256.
 
 ## Política de evidências
 
