@@ -19,10 +19,10 @@ A documentação pública usa a política de evidências para distinguir inicial
 - [`source-analysis/device-tree-technical-map.md`](../source-analysis/device-tree-technical-map.md): mapa da Device Tree e da plataforma.
 - [`source-analysis/xclipse-2026-09-06-evidence-map.md`](../source-analysis/xclipse-2026-09-06-evidence-map.md): mapa público de evidências.
 - [`artifacts/MAPA_Xclipse_940_COMPLETO.md`](../artifacts/MAPA_Xclipse_940_COMPLETO.md): mapa textual consolidado.
-- [`public/MAPA_E_RAMIFICACAO_Xclipse_940.md`](../public/MAPA_E_RAMIFICACAO_Xclipse_940.md): ramificação técnica e legenda visual.
+- [`public/DOCUMENTACAO_Xclipse_940_COMPLETA.pdf`](../public/DOCUMENTACAO_Xclipse_940_COMPLETA.pdf): documentação única e completa com toda a arquitetura e todas as evidências técnicas consolidadas.
 - [`30-npu-enn-rootless.md`](30-npu-enn-rootless.md): prova de execução NNAPI/ENN sem root e limites do caminho vendor.
 - [`31-npu-exynos-2400-evidence-map.md`](31-npu-exynos-2400-evidence-map.md): mapa detalhado de serviços, VINTF, SELinux, endpoints, Device Tree, operações, benchmarks, bloqueios e arquitetura observada.
-- [`ARQUITETURA_XO940_COMPLETA.md`](ARQUITETURA_XO940_COMPLETA.md): documento-mestre detalhado de toda a arquitetura do projeto — GPU, plataforma, DRM, memória, VM, submissão, firmware, sincronização, Android, Vulkan, OpenCL, segurança, variantes e ramo NPU separado.
+- [`ARQUITETURA_XO940_COMPLETA.md`](ARQUITETURA_XO940_COMPLETA.md): fonte de trabalho detalhada da arquitetura do projeto; o PDF da Documentação Completa é a entrega consolidada.
 - [`reports/npu-enn-rootless-2026-09-18.md`](../reports/npu-enn-rootless-2026-09-18.md): resumo da atualização de 18/09/2026.
 
 ## Proveniência

@@ -24,18 +24,9 @@ A coleta de 18/09 acrescentou a principal evidência do ramo NPU/NNAPI: um proce
 
 A identificação retornada pelo ioctl é uma propriedade da camada DRM observada. A correlação física completa continua sendo `nó → major/minor → sysfs → driver → platform device → sgpu@22200000`. A execução independente com buffer de saída, a semântica integral dos packets, a ISA e a cadeia completa de apresentação continuam em investigação.
 
-## Ramificação técnica
+## Documentação completa
 
-```text
-SoC Exynos / Android
-├── GPU Xclipse / SGPU / DRM
-│   └── renderD128 / GEM / VM / CS / IB / fences
-├── NPU Exynos / NNAPI / ENN
-│   └── grafos / compilação / checksum / baseline CPU
-└── Reprodução e variantes
-```
-
-A **ramificação técnica** representa a estrutura física e lógica do SoC. O **mapa técnico** apresenta as relações entre camadas. O **mapa de investigação** marca em vermelho as áreas abertas, possíveis falhas de integração e fronteiras que precisam de testes adicionais.
+Toda a arquitetura descoberta — incluindo Device Tree, GPU/SGPU, DRM, memória, VM/IOMMU, command submission, scheduler, firmware, Android, Vulkan, OpenCL, segurança, variantes e NPU/NNAPI/ENN — está consolidada em um único documento: [`DOCUMENTACAO_Xclipse_940_COMPLETA.pdf`](public/DOCUMENTACAO_Xclipse_940_COMPLETA.pdf).
 
 ## Segurança e proveniência
 
