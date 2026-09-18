@@ -1,0 +1,81 @@
+digraph XO940_ARCH {
+  graph [rankdir=LR, bgcolor="white", pad=0.35, nodesep=0.25, ranksep=0.9, splines=polyline, fontname="DejaVu Sans", fontsize=18, label="Arquitetura completa — Samsung Xclipse 940 / XO940", labelloc=t];
+  node [shape=box, style="rounded,filled", fontname="DejaVu Sans", fontsize=10, margin="0.12,0.08", color="#334155", penwidth=1.1];
+  edge [color="#64748b", penwidth=1.1, arrowsize=0.65];
+
+  root [label="XO940\nXclipse 940 / SM-S721B", fillcolor="#0f172a", fontcolor="white", color="#0f172a", fontsize=16, penwidth=2];
+
+  subgraph cluster_platform { label="Plataforma / Device Tree"; color="#2563eb"; style="rounded";
+    dt [label="sgpu@22200000\ncompatible samsung-sgpu", fillcolor="#dbeafe", color="#2563eb"];
+    power [label="G3DCORE\npower-domain / clocks\nreset / IFPO / thermal", fillcolor="#dbeafe", color="#2563eb"];
+    resources [label="reg-names\ngpu / doorbell / debug\npwrctl / sysreg / htu", fillcolor="#dbeafe", color="#2563eb"];
+    irq [label="IRQ / AFM\nreserved memory\nBTS / DMA heap", fillcolor="#dbeafe", color="#2563eb"];
+    variants [label="SM-S721B/U/0/Q/J\nrevisões / firmware", fillcolor="#e2e8f0", color="#475569"];
+    dt -> power -> resources -> irq;
+    dt -> variants;
+  }
+
+  subgraph cluster_kernel { label="Kernel SGPU / DRM / UAPI"; color="#0891b2"; style="rounded";
+    drm [label="DRM nodes\ncard0 / renderD128\ncard1 / renderD129", fillcolor="#cffafe", color="#0891b2"];
+    uapi [label="sgpu_drm.h\nDRM ioctls / structs\nAMDGPU-derived", fillcolor="#cffafe", color="#0891b2"];
+    mem [label="GEM / BO / TTM\nDMA-BUF / heaps", fillcolor="#cffafe", color="#0891b2"];
+    vm [label="VM / PTE / PDE\nIOMMU / SysMMU\nVA map / flush", fillcolor="#cffafe", color="#0891b2"];
+    cs [label="context / BO_LIST\nCS / chunks / IB", fillcolor="#cffafe", color="#0891b2"];
+    sched [label="scheduler\njob / dependency\npriority", fillcolor="#cffafe", color="#0891b2"];
+    rings [label="GFX / COMPUTE / SDMA\nrings / doorbell", fillcolor="#cffafe", color="#0891b2"];
+    drm -> uapi -> mem -> vm -> cs -> sched -> rings;
+  }
+
+  subgraph cluster_exec { label="Execução / conclusão"; color="#16a34a"; style="rounded";
+    gfx [label="GFX IP 10.0\nring mask 0xf\ngfx_0.0.0", fillcolor="#dcfce7", color="#16a34a"];
+    compute [label="COMPUTE IP 10.0\nmask 0x7\nexecução externa não provada", fillcolor="#fef9c3", color="#ca8a04"];
+    fw [label="firmware 2.23.0\nucode / reset / recovery", fillcolor="#dcfce7", color="#16a34a"];
+    sync [label="fences / syncobjs\nretire / readback", fillcolor="#fef9c3", color="#ca8a04"];
+    shader [label="shader / ISA\ncompiler / registers\nindício estático", fillcolor="#e2e8f0", color="#475569"];
+    gfx -> fw -> sync;
+    compute -> fw;
+    shader -> gfx;
+  }
+
+  subgraph cluster_android { label="Android / usuários / loader"; color="#7c3aed"; style="rounded";
+    sf [label="SurfaceFlinger\nRenderThread / Gralloc\ncâmera", fillcolor="#ede9fe", color="#7c3aed"];
+    vulkan [label="libvulkan.so\nvulkan.samsung.so\nICD vendor", fillcolor="#ede9fe", color="#7c3aed"];
+    opencl [label="libOpenCL.so\nlibSGPUOpenCL.so\nexports presentes", fillcolor="#fef9c3", color="#ca8a04"];
+    namespaces [label="linker namespaces\nmanifest / HAL\nSELinux / perms", fillcolor="#fee2e2", color="#dc2626"];
+    termux [label="Termux\nllvmpipe observado\nICD direto bloqueado", fillcolor="#fee2e2", color="#dc2626"];
+    sf -> vulkan -> namespaces;
+    sf -> opencl;
+    termux -> namespaces;
+  }
+
+  subgraph cluster_npu { label="Ramo separado: NPU / NNAPI / ENN"; color="#ea580c"; style="rounded";
+    nnapi [label="NNAPI\nIDevice/enn\nrootless confirmado", fillcolor="#ffedd5", color="#ea580c"];
+    hal [label="neuralnetworks-service-enn\nVINTF / AIDL", fillcolor="#ffedd5", color="#ea580c"];
+    enn [label="libenn / compiler\nNCP / CMDQ / NNC", fillcolor="#ffedd5", color="#ea580c"];
+    npu [label="npu_exynos\nIOMMU / DVFS / AFM\nvertex10", fillcolor="#ffedd5", color="#ea580c"];
+    npu_direct [label="vendor AIDL nulo\nvertex10 EACCES\nioctl EINVAL/EFAULT", fillcolor="#fee2e2", color="#dc2626"];
+    nnapi -> hal -> enn -> npu;
+    npu -> npu_direct;
+  }
+
+  subgraph cluster_legend { label="Legenda"; color="#cbd5e1"; style="rounded";
+    c [label="Verde: confirmado", fillcolor="#dcfce7", color="#16a34a"];
+    p [label="Azul: plataforma/fonte", fillcolor="#dbeafe", color="#2563eb"];
+    y [label="Amarelo: parcial", fillcolor="#fef9c3", color="#ca8a04"];
+    r [label="Vermelho: bloqueio específico", fillcolor="#fee2e2", color="#dc2626"];
+    g [label="Cinza: indício/hipótese", fillcolor="#e2e8f0", color="#475569"];
+  }
+
+  root -> dt [color="#2563eb", penwidth=2];
+  root -> drm [color="#0891b2", penwidth=2];
+  root -> sf [color="#7c3aed", penwidth=2];
+  root -> nnapi [color="#ea580c", penwidth=2];
+  dt -> drm [color="#2563eb"];
+  power -> rings [style=dashed, color="#2563eb"];
+  mem -> vm [color="#0891b2"];
+  vm -> cs [color="#0891b2"];
+  rings -> gfx [color="#16a34a"];
+  rings -> compute [color="#ca8a04"];
+  sync -> sf [style=dashed, color="#7c3aed"];
+  namespaces -> drm [style=dashed, color="#dc2626"];
+}

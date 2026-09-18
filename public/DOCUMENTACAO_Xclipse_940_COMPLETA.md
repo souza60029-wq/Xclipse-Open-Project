@@ -153,11 +153,11 @@ SoC Exynos / Android
     └── reprodução / variantes / investigação de integração
 ```
 
-## 13. Estado e próximos experimentos
+## 13. Arquitetura completa
 
-O próximo ciclo deve correlacionar cada nó DRM ao platform device, fechar o contrato BO/VM/IOMMU, isolar um job com buffer conhecido, correlacionar fence e retire, comparar Device Trees e mapear a fronteira entre loader, namespaces e ICD layers.
+O documento-mestre [ARQUITETURA_XO940_COMPLETA.md](../docs/ARQUITETURA_XO940_COMPLETA.md) detalha a arquitetura inteira do projeto: plataforma e Device Tree, power/clock/thermal/reset, DRM/UAPI, GEM/BO/TTM/DMA-BUF, VM/PTE/PDE/IOMMU, contexto, BO_LIST, CS, chunks, scheduler, rings, IB, doorbell, GFX/COMPUTE/SDMA, firmware/recovery, fences/syncobjs, shader/ISA, texturas, rendering, Vulkan, OpenCL, Android loader, namespaces, SELinux, variantes e a separação do ramo NPU/NNAPI/ENN.
 
-Cada experimento deve ter controle negativo, guard regions quando aplicável, limpeza explícita e resultado classificado. Falhas de permissão, `noexec`, namespace ou ausência de tracepoint devem ser registradas como limites da coleta, não como falhas genéricas da GPU.
+O mapa arquitetural vetorial correspondente está em [MAPA_XO940_ARQUITETURA_COMPLETA.pdf](MAPA_XO940_ARQUITETURA_COMPLETA.pdf). As relações são classificadas como confirmadas, confirmadas por fonte, parciais, indícios, negativas específicas ou hipóteses; um submit aceito ou uma biblioteca presente não é tratado como execução concluída sem sincronização e resultado validado.
 
 ## 14. Proveniência e publicação
 
