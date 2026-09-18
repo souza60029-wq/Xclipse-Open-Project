@@ -95,9 +95,9 @@ O pacote recebido contém referências a conjuntos SM-S721B, SM-S721U, SM-S7210,
 
 Os pacotes de fonte são referência de proveniência. Código, firmware, bibliotecas vendor e arquivos gerados não entram na release sem inventário de licença e autorização de redistribuição.
 
-## 11. XLIA e outros conjuntos
+## 11. Limites de escopo e outros conjuntos
 
-O pacote também contém coletas do projeto XLIA e experimentos de subsistemas Exynos/NPU. Esses materiais incluem energia, térmica, bateria, RAM, processos, NNAPI e sessões Android. Eles não são misturados ao corpus da GPU Xclipse porque possuem objetivos, APIs e riscos de privacidade diferentes.
+O trabalho de plataforma pode ser acompanhado por coletas de outros aplicativos e subsistemas Exynos. Esses materiais podem incluir energia, térmica, bateria, RAM, processos, NNAPI e sessões Android. Eles não são misturados ao corpus da GPU Xclipse porque possuem objetivos, APIs e riscos de privacidade diferentes. Este repositório documenta somente as evidências da plataforma e das interfaces observadas.
 
 Logs brutos de telefonia, bateria, identificadores, caminhos de instalação e estado de usuário permanecem fora do Git. Somente resultados técnicos derivados e sanitizados podem ser reutilizados em uma documentação específica.
 

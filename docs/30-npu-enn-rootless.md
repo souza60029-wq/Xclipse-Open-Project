@@ -21,7 +21,7 @@ A saída do driver foi `[0.032059, 0.087144, 0.236883, 0.643914]`, igual ao resu
 A análise anterior tratava `SOFTMAX` como rejeitado ou inviável com base no benchmark antigo. A nova coleta separa duas perguntas diferentes:
 
 1. **O ENN consegue executar um SOFTMAX pequeno?** Sim, comprovado sem root.
-2. **O ENN é rápido para o SOFTMAX do pipeline do XLIA?** Ainda não. O benchmark anterior mediu aproximadamente 1,0264 ms no ENN contra 0,0104 ms na CPU de referência para um vetor de 1024 elementos.
+2. **O ENN é rápido para um SOFTMAX maior?** Ainda não. O benchmark anterior mediu aproximadamente 1,0264 ms no ENN contra 0,0104 ms na CPU de referência para um vetor de 1024 elementos.
 
 Assim, `SOFTMAX` deve ser removido da lista de operações universalmente rejeitadas. A classificação correta é: **suportado em pelo menos um grafo pequeno, porém com desempenho ruim no benchmark disponível**.
 
@@ -46,13 +46,13 @@ A presença desses elementos é evidência da arquitetura instalada. Ela não au
 
 A interface `vendor.samsung_slsi.hardware.enn_aidl.IEnnInterfaceAidl/default` não foi descoberta pelo processo de teste. O resultado foi nulo em comparação entre UID comum e root. Isso pode significar que o serviço não está registrado naquele momento, que a interface é ativada apenas por consumidores específicos ou que há uma fronteira de namespace/política diferente. A coleta não permite afirmar que a interface não exista no sistema; permite afirmar que ela não foi uma rota funcional no teste realizado.
 
-O endpoint `/dev/vertex10` foi aberto com root depois de desativar temporariamente o enforcing do SELinux, mas o UID comum recebeu `Permission denied`. Os ioctls testados retornaram `EINVAL` ou `EFAULT`. Portanto, o endpoint não é atualmente uma API rootless comprovada e não deve ser usado diretamente pelo XLIA.
+O endpoint `/dev/vertex10` foi aberto com root depois de desativar temporariamente o enforcing do SELinux, mas o UID comum recebeu `Permission denied`. Os ioctls testados retornaram `EINVAL` ou `EFAULT`. Portanto, o endpoint não é atualmente uma API rootless comprovada e não deve ser usado diretamente por aplicativos comuns.
 
-## Implicação para o ENB
+## Implicação para a pesquisa NPU
 
-O ENB pode começar como uma biblioteca de espaço de usuário baseada em NNAPI pública. A primeira implementação deve usar o dispositivo `enn`, consultar operações com `getSupportedOperationsForDevices`, compilar somente subgrafos aceitos e manter CPU como fallback.
+Uma futura biblioteca de pesquisa pode começar como uma camada de espaço de usuário baseada em NNAPI pública. A primeira implementação deve usar o dispositivo `enn`, consultar operações com `getSupportedOperationsForDevices`, compilar somente grafos aceitos e manter CPU como fallback.
 
-O caminho de modelo deve ser particionado. `FULLY_CONNECTED` INT8 já possui evidência de execução e checksum. `SOFTMAX` possui evidência de execução correta em grafo pequeno, mas precisa de otimização e medição. `BATCH_MATMUL` não pode ser enviado ao ENN no formato atual. O decode transformer deve permanecer híbrido até que o custo real seja medido novamente.
+O caminho de modelo deve ser particionado. `FULLY_CONNECTED` INT8 já possui evidência de execução e checksum. `SOFTMAX` possui evidência de execução correta em grafo pequeno, mas precisa de otimização e medição. `BATCH_MATMUL` não pode ser enviado ao ENN no formato atual. Qualquer integração com outro aplicativo deve medir o custo real antes de escolher o backend.
 
 ## Nível de evidência
 
@@ -62,11 +62,11 @@ O caminho de modelo deve ser particionado. `FULLY_CONNECTED` INT8 já possui evi
 | UID comum consegue obter Binder remoto do ENN | Confirmada |
 | UID comum consegue compilar um grafo pequeno no ENN | Confirmada |
 | UID comum consegue executar SOFTMAX no ENN | Confirmada |
-| SOFTMAX é rápido no XLIA | Não demonstrada; benchmark anterior foi ruim |
+| SOFTMAX é rápido em workloads maiores | Não demonstrada; benchmark anterior foi ruim |
 | BATCH_MATMUL é aceito pelo ENN | Negativa para o formato testado |
 | Interface vendor AIDL direta é utilizável por app | Não demonstrada |
 | `/dev/vertex10` é utilizável sem root | Negativa no teste realizado |
-| NPU inteira pode executar o decoder XLIA | Não demonstrada |
+| NPU inteira pode executar um decoder transformer | Não demonstrada |
 
 ## Proveniência
 

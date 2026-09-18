@@ -15,4 +15,4 @@ Os documentos diferenciam observação confirmada, confirmação por fonte, resu
 
 ## Limites
 
-Fontes Samsung são tratadas como referência de proveniência. O repositório não redistribui automaticamente código-fonte, firmware, bibliotecas vendor, executáveis, dumps, credenciais, identificadores ou logs brutos. XLIA e experimentos de subsistemas Exynos permanecem separados da documentação operacional da GPU Xclipse.
+Fontes Samsung são tratadas como referência de proveniência. O repositório não redistribui automaticamente código-fonte, firmware, bibliotecas vendor, executáveis, dumps, credenciais, identificadores ou logs brutos. Experimentos de aplicativos e subsistemas Exynos permanecem separados da documentação operacional da GPU Xclipse.

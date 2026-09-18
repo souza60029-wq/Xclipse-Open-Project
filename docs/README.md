@@ -20,9 +20,9 @@ A documentação pública usa a política de evidências para distinguir inicial
 - [`source-analysis/xclipse-2026-09-06-evidence-map.md`](../source-analysis/xclipse-2026-09-06-evidence-map.md): mapa público de evidências.
 - [`artifacts/MAPA_Xclipse_940_COMPLETO.md`](../artifacts/MAPA_Xclipse_940_COMPLETO.md): mapa textual consolidado.
 - [`public/MAPA_E_RAMIFICACAO_Xclipse_940.md`](../public/MAPA_E_RAMIFICACAO_Xclipse_940.md): ramificação técnica e legenda visual.
-- [`30-npu-enn-rootless.md`](30-npu-enn-rootless.md): prova de execução NNAPI/ENN sem root, limites do caminho vendor e implicações para o ENB.
+- [`30-npu-enn-rootless.md`](30-npu-enn-rootless.md): prova de execução NNAPI/ENN sem root e limites do caminho vendor.
 - [`reports/npu-enn-rootless-2026-09-18.md`](../reports/npu-enn-rootless-2026-09-18.md): resumo da atualização de 18/09/2026.
 
 ## Proveniência
 
-Cada derivado deve manter o identificador do experimento, aparelho, data, ambiente, classificação, hash e limite da interpretação. Os projetos XLIA e Exynos NPU permanecem separados porque possuem objetivos e superfícies de coleta diferentes; o novo documento rootless registra apenas a ponte técnica entre eles.
+Cada derivado deve manter o identificador do experimento, aparelho, data, ambiente, classificação, hash e limite da interpretação. O ramo NPU deste repositório documenta somente a plataforma e a superfície NNAPI/ENN observadas no Exynos; aplicações consumidoras e seus códigos permanecem fora do XOP.

@@ -39,7 +39,7 @@ A **ramificação técnica** representa a estrutura física e lógica do SoC. O 
 
 ## Segurança e proveniência
 
-Código Samsung, firmware, bibliotecas vendor, dumps, logs crus e arquivos de ambiente não são redistribuídos automaticamente. Fontes públicas são tratadas como referência e passam por inventário de licença. O material público é sanitizado; XLIA e coletas de NPU não são misturados aos logs brutos da GPU.
+Código Samsung, firmware, bibliotecas vendor, dumps, logs crus e arquivos de ambiente não são redistribuídos automaticamente. Fontes públicas são tratadas como referência e passam por inventário de licença. O material público é sanitizado e o ramo NPU permanece restrito à documentação da plataforma e de suas interfaces observadas.
 
 ## Referências
 

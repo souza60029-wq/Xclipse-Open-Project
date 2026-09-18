@@ -10,7 +10,7 @@ A saída produzida foi `[0.032059, 0.087144, 0.236883, 0.643914]`, igual ao valo
 
 A descoberta transforma a rota NNAPI/ENN em um caminho comprovadamente **rootless** para os grafos reproduzidos. Ela não depende de copiar bibliotecas vendor para o aplicativo e não usa acesso direto ao device node da NPU.
 
-A nova evidência também corrige a classificação anterior de `SOFTMAX`. O benchmark antigo mostrou desempenho ruim, mas o teste novo comprovou suporte e execução correta em um grafo pequeno. `SOFTMAX` deve ser classificado como funcional, porém ainda não otimizado para o workload do XLIA.
+A nova evidência também corrige a classificação anterior de `SOFTMAX`. O benchmark antigo mostrou desempenho ruim, mas o teste novo comprovou suporte e execução correta em um grafo pequeno. `SOFTMAX` deve ser classificado como funcional, porém ainda não otimizado para workloads maiores.
 
 ## Limites preservados
 
@@ -34,7 +34,7 @@ Subgrafo aceito pelo driver
 Execução NPU e readback
 ```
 
-O ENB pode ser construído sobre essa interface pública, mantendo `FULLY_CONNECTED` INT8 e outros subgrafos aceitos no ENN, enquanto operações não suportadas permanecem na CPU ou em outro backend.
+A futura camada de pesquisa pode ser construída sobre essa interface pública, mantendo `FULLY_CONNECTED` INT8 e outros subgrafos aceitos no ENN, enquanto operações não suportadas permanecem na CPU ou em outro backend.
 
 ## Proveniência
 
